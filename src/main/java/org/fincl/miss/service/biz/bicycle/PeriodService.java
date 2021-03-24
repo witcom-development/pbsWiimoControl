@@ -88,13 +88,13 @@ public class PeriodService{
 		 
 		 QRLogVo QRLog = new QRLogVo();
 		 
-		 int	 nBikeSerial;
+		 String	 nBikeSerial;
 		 
 		 if(ourBikeMap != null)
 		 {
 			//add 자전거 번호 가져오기 2018.09.01
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
-		 	nBikeSerial = Integer.parseInt(bikeNo.substring(4,bikeNo.length()));
+		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");	//ENT_003   DB :002
 		 	
@@ -112,11 +112,12 @@ public class PeriodService{
 		 	QRLog.setBeaconid(vo.getBeaconId());
 		 	
 		 	//추가..
-		 	if(!vo.getUsrseq().equals(("FFFFFFFFFF")))
-		 	{
-		 		QRLog.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+		 	//if(!vo.getUsrseq().equals(("FFFFFFFFFF")))
+		 	//{
+		 		//QRLog.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+		 		QRLog.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
 		 		
-		 	}
+		 	//}
 		 	
 		 	
 		 	QRLog.setUserType(vo.getUsrType());
@@ -220,6 +221,16 @@ public class PeriodService{
 			// battery_info = new CommonUtil().getBattery_Info(vo.getBattery());
 			 GPS.put("battery", String.valueOf(battery));
 			//commonService.InsertBikeGPS_Status(GPS);
+			 
+			 
+			 RentHistVo gps = new RentHistVo();
+			 gps.setRETURN_RACK_ID(com.getRockId());
+			 gps.setRENT_BIKE_ID(com.getBicycleId());
+			 gps.setGPS_X(latitude);
+			 gps.setGPS_Y(longitude);
+			 
+			 bicycleMapper.updateBikeGPS(gps);
+			 
 		 }
 		 if(vo.getBicycleState().equals("00") || vo.getBicycleState().equals("FF"))
 		 {
@@ -603,7 +614,7 @@ public class PeriodService{
       					 bikeService.updateQRLog(QRLog);
       					 
       					 logger.debug("QR_BIKE IS RENTING_PERIOD AND USER TYPE IS ADMIN");
-      					 com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+      					 com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
       					 com.setRockId(bikeInfo.getRent_rack_id());
       					 bikeService.procAdminMove(com);
       				}//대여전 자전거 상태 확인...폐기,분실,수리중이면 대여 안되도록...,도난추정,폐기
@@ -615,7 +626,7 @@ public class PeriodService{
      				}
      				else
      				{
-     					com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+     					com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
      					com.setRockId(bikeInfo.getRent_rack_id());
      				 
      					logger.debug("QR_BIKE IS RENTING_PERIOD BUT HAVE PARKING INFO : bike_status {}",sBike_status);
@@ -908,42 +919,6 @@ public class PeriodService{
 			  * 주차정보가 존재하므로 전달받은 자전거 정보와 비교..
 			  * 일치하면 Pass, 불일치시 업데이트.
 			  */
-			 
-			 /*  20191016
-			 if(vo.getReturnForm().equals("00")){
-				 if(!com.getRockId().equals(parkingMap.get("RACK_ID"))){
-					//다른 곳에 주차된 정보가 있다면 삭제.
-					bikeService.deleteDuplicatedParkingInfo(info); 
-					//해당 거치대에 다른 자전거가 있다면 삭제.
-					bikeService.deleteParkingInfoOnly(info);
-					
-					bikeService.insertPeriodParkingInfo(info);
-					// 자전거 배치 이력 INSERT LOCATION_BIKE
-				
-					//2019.03.20 update 추가 
-					bicycleMapper.rentBikeLocationUpdate(com);
-		             // 자전거 배치 이력 INSERT LOCATION_BIKE
-		             bicycleMapper.insertBikeLocation(info);
-//		         	bikeService.insertPeriodBikeLocation(info);
-				 }
-			 }else{
-				 if(!com.getRockId().equals(parkingMap.get("CASCADE_BIKE_ID"))){
-					bikeService.deleteDuplicatedCascadeParkingInfo(info);
-					bikeService.deleteParkingInfoCascade(info);
-					// 자전거 주차 정보 INSERT PARKING
-					bikeService.insertPeriodParkingInfo(info);
-					// 자전거 배치 이력 INSERT LOCATION_BIKE
-			
-					//2019.03.20 update 추가 
-					bicycleMapper.rentBikeLocationUpdate(com);
-				     // 자전거 배치 이력 INSERT LOCATION_BIKE
-		             bicycleMapper.insertBikeLocation(info);
-//		     		bikeService.insertPeriodBikeLocation(info);
-				 }
-					
-			 }
-			 */
-			 
 		 }
 		 
 		 
@@ -1310,12 +1285,12 @@ public class PeriodService{
 		 Map<String, String> ourBikeMap = new HashMap<String, String>();
 		 ourBikeMap = bikeService.chkOurBike(com);	//ENTRPS_CD : ENT_001(vick) , ENT_002(witcom)  , ENT_003(atech)
 		 
-		 int	 nBikeSerial;
+		 String	 nBikeSerial;
 		 if(ourBikeMap != null)
 		 {
 			//add 자전거 번호 가져오기 2018.09.01
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
-		 	nBikeSerial = Integer.parseInt(bikeNo.substring(4,bikeNo.length()));
+		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
 		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
 		 	
@@ -1360,6 +1335,7 @@ public class PeriodService{
 			 return responseVo;
 		 }
 		 
+		 /*
 		 if(vo.getBeaconId().equals("00000000000000"))
 		 {
 			 
@@ -1372,8 +1348,9 @@ public class PeriodService{
 	  		 return responseVo;
 			 
 		 }
+		 */
 		 
-		 Map<String, Object> stationInfo = commonService.CheckBeaconID(ReqInfo);
+		 Map<String, Object> stationInfo = null;//commonService.CheckBeaconID(ReqInfo);
 		 
 		 if(stationInfo == null)
 		 {

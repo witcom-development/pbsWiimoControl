@@ -49,6 +49,8 @@ public class RentHistVo {
 	private String BIKE_SE_CD;
 	private String STATION_CLOSE_REASON;
 	private String STATION_CLOSE_DATE;
+	private String GPS_X;
+	private String GPS_Y;
 
 	public String getRENT_SEQ() {
 		return RENT_SEQ;
@@ -426,6 +428,24 @@ public class RentHistVo {
 
 	public void setSTATION_CLOSE_DATE(String sTATION_CLOSE_DATE) {
 		STATION_CLOSE_DATE = sTATION_CLOSE_DATE;
+	}
+	
+	
+
+	public String getGPS_X() {
+		return GPS_X;
+	}
+
+	public void setGPS_X(String gPS_X) {
+		GPS_X = gPS_X;
+	}
+
+	public String getGPS_Y() {
+		return GPS_Y;
+	}
+
+	public void setGPS_Y(String gPS_Y) {
+		GPS_Y = gPS_Y;
 	}
 
 	@Override

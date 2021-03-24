@@ -211,6 +211,8 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		// 자전거 정보 UPDATE BIKE
 		bicycleMapper.updateBike(info);
 
+		bicycleMapper.updateBikeGPS(info);
+	
 		rentSeq = String.valueOf(bicycleMapper.getRentSeq(info));
 
 		if (rentSeq != null && rentSeq != "") 
@@ -763,9 +765,11 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		Map<String, Object> hist = new HashMap<String, Object>();
 		hist.put("bicycleId", com.getBicycleId());
 
+		/*
 		if (bicycleMapper.checkRelocateHist(hist) == 0) {
 			bicycleMapper.insertRelocateHist(com);
 		}
+		*/
 	}
 
 	@Override
@@ -780,27 +784,15 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		RentHistVo info = new RentHistVo();
 		AdminMoveRequestVo moveVo = new AdminMoveRequestVo();
 
-		// 반납 시간을 단말기 시간으로 UPDATE
-		// info.setRETURN_DTTM(vo.getRegDttm());
-
 		String bikeId = comm.getBikeId(com);
 
 		info.setRENT_BIKE_ID(bikeId);
-		// info.setUSE_DIST(distance+"");
 
 		com.setBikeId(bikeId);
-
-		// com.setRockId(com.getRockId());
 
 		info.setCASCADE_YN("N");
 		info.setUSE_DIST("0");
 		info.setRETURN_RACK_ID(com.getRockId());
-
-		/* QR CASCADE 없어서 삭제} */
-
-		// 자전거 주차 정보 DELETE PARKING 주석_20170725_JJH_START
-		// bicycleMapper.deleteParkingInfo(info);
-		// 자전거 주차 정보 DELETE PARKING 주석_20170725_JJH_END
 
 		if (comm.checkParkingInfo(com) != null) {
 			bicycleMapper.parkingInfoDelete(com);
@@ -810,10 +802,10 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		bicycleMapper.insertParkingInfo(info);
 
 		// 자전거 배치 이력이 존재하는 경우 이전 데이터 업데이트.
-		bicycleMapper.rentBikeLocationUpdate(com);
+		//bicycleMapper.rentBikeLocationUpdate(com);
 
 		// 자전거 배치 이력 INSERT LOCATION_BIKE
-		bicycleMapper.insertBikeLocation(info);
+		//bicycleMapper.insertBikeLocation(info);
 
 		/**
 		 * 자전거 장애신고 정보가 존재하면, 자전거 정보는 설치 후 고장상태로 변경 저장한다. 반드시 장애가 존재하는 자전거는 사전
@@ -825,36 +817,18 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		if (faultSeq != null) 
 		{
 			com.setUserSeq(faultSeq);
-			// int cnt = comm.hasNetFault(com);
-			// if(cnt >0)
-			// {
 			comm.deleteFaultInfo(com);
 			comm.changeValidBike(com);
-			// faultSeq = comm.getFaultSeq(com);
-			// }
 		}
 
 		// if(faultSeq == null)
 		// {
 		// 자전거 정보를 거치상태로 UPDATE BIKE
 		bicycleMapper.updateBike(info);
-		/*
-		 * } else { // 자전거 정보를 고장상태로 UPDATE BIKE
-		 * bicycleMapper.updateBikeBreakDowon(info); }
-		 */
 
 		// 자전거 재배치 이력 등록.
 		Map<String, Object> hist = new HashMap<String, Object>();
 		hist.put("bicycleId", vo.getBicycleId());
-
-		// vo.setCardNum(com.getCardNum());
-
-		if (bicycleMapper.checkRelocateHist(hist) > 0) 
-		{
-			bicycleMapper.updateRelocateHist(com);
-		} else {
-			bicycleMapper.replaceRelocateHist(com);
-		}
 
 		/**
 		 * 자전거 대여정보가 존재하면 이력정보를 삭제한 후 반납 SMS 발송
@@ -889,7 +863,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 			 * 따라 설치 위치를 이력으로 남길 수도 있음.
 			 */
 			bicycleMapper.insertInvalidRentHist(histInfo);
-			bicycleMapper.deleteRentGPSDATA(histInfo);
+			//bicycleMapper.deleteRentGPSDATA(histInfo);
 			bicycleMapper.deleteRentInfo(info);
 			// SMS전송.
 
@@ -1042,6 +1016,12 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	public void updateBike(RentHistVo info) 
 	{
 		bicycleMapper.updateBike(info);
+	}
+	
+	@Override
+	public void updateBikeGPS(RentHistVo info) 
+	{
+		bicycleMapper.updateBikeGPS(info);
 	}
 
 	@Override

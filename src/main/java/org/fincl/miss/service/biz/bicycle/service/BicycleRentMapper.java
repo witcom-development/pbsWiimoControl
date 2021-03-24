@@ -61,6 +61,8 @@ public interface BicycleRentMapper {
 	void deleteParkingInfo(RentHistVo info);
 	
 	void updateBike(RentHistVo info);
+	
+	void updateBikeGPS(RentHistVo info);
 
 	void updateBikeBreakDowon(RentHistVo info);
 	
@@ -87,7 +89,7 @@ public interface BicycleRentMapper {
 	
 	Map<String, Object> getRentMsgInfo2(CommonVo com);
 
-	int checkRelocateHist(Map<String, Object> hist);
+	//int checkRelocateHist(Map<String, Object> hist);
 	
 	void insertRelocateHist(CommonVo com);
 	

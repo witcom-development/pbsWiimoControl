@@ -69,6 +69,8 @@ public interface BicycleRentService {
 
 	public void updateBike(RentHistVo info);
 	
+	public void updateBikeGPS(RentHistVo info);
+	
 	void deleteDuplicatedParkingInfo(RentHistVo info);
 	
 	void deleteDuplicatedCascadeParkingInfo(RentHistVo info);

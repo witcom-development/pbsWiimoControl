@@ -79,6 +79,7 @@ public class RentalService {
         com.setBicycleId(vo.getBicycleId());
         com.setTimeStamp(vo.getTimestamp());	//추가 
         com.setBikeId(vo.getBicycleId());
+        com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
         
         Map<String, String> ourBikeMap = new HashMap<String, String>();
         
@@ -86,13 +87,13 @@ public class RentalService {
 		 
         QRLogVo QRLog = new QRLogVo();
 		 
-        int	 nBikeSerial;
+        String	 nBikeSerial;
 		 
         if(ourBikeMap != null)
         {
 			//add 자전거 번호 가져오기 2018.09.01
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
-		 	nBikeSerial = Integer.parseInt(bikeNo.substring(4,bikeNo.length()));
+		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");	//ENT_003   DB :002
 		 	
@@ -110,11 +111,13 @@ public class RentalService {
 		 	QRLog.setBeaconid(vo.getBeaconId());
 		 	
 		 	//추가..
-		 	if(!vo.getUsrseq().equals(("FFFFFFFFFF")))
-		 	{
-		 		QRLog.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+		 	//if(!vo.getUsrseq().equals(("FFFFFFFFFF")))
+		 	//{
+		 		//QRLog.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
 		 		
-		 	}
+		 		//String.valueOf(Integer.parseInt(vo.getUsrseq()));
+		 		QRLog.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+		 	//}
 		 	
 		 	
 		 	QRLog.setUserType(vo.getUsrType());
@@ -221,7 +224,8 @@ public class RentalService {
   					 bikeService.updateQRLog(QRLog);
   					 
   					logger.debug("QR_BIKE IS RENTAL_EVENT AND USER TYPE IS ADMIN");
-  					com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+  					//com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+  					com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
   					com.setRockId(bikeInfo.getRent_rack_id());
   					bikeService.procAdminMove(com);
   				}
@@ -235,7 +239,8 @@ public class RentalService {
   					}
   					else
   					{
-  						com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+  						//com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
+  						com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
   						com.setRockId(bikeInfo.getRent_rack_id());
 	  				 
 		  				 // 로그 추가..2020.04.12 
@@ -327,7 +332,7 @@ public class RentalService {
 		     	 			
 		     				com.setStationId(String.valueOf(rentInfo.get("RENT_STATION_ID")));
 		     				com.setUserSeq(String.valueOf(rentInfo.get("USR_SEQ")));
-		     				Map<String, Object> msgInfo = bikeService.getRentMsgInfo2(com);
+		     				Map<String, Object> msgInfo = bikeService.getRentMsgInfo(com);
 		     				
 
 		     				SmsMessageVO sms = new SmsMessageVO();
@@ -338,20 +343,20 @@ public class RentalService {
 		     				//String destno = (String)msgInfo.get("DEST_NO");
 		     				
 		     				
-		     				if(msgInfo.get("DEVICE_MPN_NO") != null && !msgInfo.get("DEVICE_MPN_NO").equals(""))
+		     				if(msgInfo.get("DEST_NO") != null && !msgInfo.get("DEST_NO").equals(""))
 		     				{
 		     				
-			     				String destno = String.valueOf(msgInfo.get("DEVICE_MPN_NO"));
+			     				String destno = String.valueOf(msgInfo.get("DEST_NO"));
 			     				if(destno != null && !destno.equals(""))
 			     				{
-			     					sms2.setCmd_id("81");
+			     					sms2.setCmd_id("3C");
 			     					sms2.setState("01");
-			     					sms2.setDev_state("01");
-			     					sms2.setDev_id(com.getBicycleId());
-			     					sms2.setDev_type("01");
+			     					sms2.setDev_state("02");
+			     					//sms2.setDev_id(com.getBicycleId());
+			     					sms2.setDev_type("00");
 			     					sms2.setUser_type("01");
-			     					sms2.setUser_seq(com.getUserSeq());
-			     					String Message = sms2.getCmd_id() + sms2.getState() + sms2.getDev_state() +  sms2.getDev_id() + sms2.getDev_type()
+			     					sms2.setUser_seq(String.format("%010d", Integer.parseInt(com.getUserSeq())));
+			     					String Message = sms2.getCmd_id() + sms2.getState() + sms2.getDev_state() + sms2.getDev_type()
 			     							+ sms2.getUser_type() + sms2.getUser_seq();
 			     					logger.debug("[Message " + Message + "] [Byte Message   " + Message.getBytes().toString() + "   ]");
 			     					sms.setDestno(destno);

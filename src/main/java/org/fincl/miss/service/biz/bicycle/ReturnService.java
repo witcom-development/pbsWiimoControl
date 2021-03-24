@@ -66,13 +66,13 @@ public class ReturnService  {
         Map<String, String> ourBikeMap = new HashMap<String, String>();
         ourBikeMap = bikeService.chkOurBike(com);	//ENTRPS_CD : ENT_001(vick) , ENT_002(witcom)  , ENT_003(atech) ,BIKE_SE_CD
 		 
-        int	 nBikeSerial;
+        String	 nBikeSerial;
         QRLogVo QRLog = new QRLogVo();
         if(ourBikeMap != null)
         {
 			//add 자전거 번호 가져오기 2018.09.01
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
-		 	nBikeSerial = Integer.parseInt(bikeNo.substring(4,bikeNo.length()));
+		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
 		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
 		 	String	bike_SE_CD = ourBikeMap.get("BIKE_SE_CD");
@@ -183,6 +183,7 @@ public class ReturnService  {
 			logger.debug("##### BIKE RETURN ## BATTERY UPDATE END #####");
 		}
         
+        /*
         if(vo.getBeaconId().equals("00000000000000"))	//비콘 ID 없으면 임시 반납으로 가야함...
 		{
 			 
@@ -198,6 +199,7 @@ public class ReturnService  {
 			return responseVo;
 			 
 		}
+		*/
         
         // 자전거 대여정보 확인
         // 자전거 STATION 정보 죄회 수정 필요 BEACON ID로 
@@ -205,6 +207,8 @@ public class ReturnService  {
         int overPay = 0;
         
         Map<String, String> ReqInfo = new HashMap<String, String>();
+        info.setGPS_X(new CommonUtil().GetGPS(vo.getLatitude()));
+		info.setGPS_Y(new CommonUtil().GetGPS(vo.getLongitude()));
     	ReqInfo.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
     	ReqInfo.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
         
@@ -215,8 +219,6 @@ public class ReturnService  {
     	
     		logger.debug("BIKE RETURN ## BIKE IS  NORMAL_BIKE : TOTAL_RAK {}",vo.getBicycleId());
     			
-    		//stationInfo = commonService.CheckBeaconID(ReqInfo);
-
 			/*	비콬이 없으면 반납 붗가 처리 2020.01.10*/
 			if(stationInfo == null)
 			{
@@ -297,37 +299,9 @@ public class ReturnService  {
      			return responseVo;
      			
      		}
-	     		/*
-        	}
-        	else
-        	{
-        		logger.error("stationInfo is NULL : beconID is not find NO RETURN : {} ", vo.getBeaconId());
-     			
-     			QRLog.setResAck("SBF");
-     			bikeService.updateQRLog(QRLog);
-     			
-     			responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_03"));
-     			responseVo.setErrorId(Constants.CODE.get("ERROR_FE"));	//invalid 정거장
-     			responseVo = setFaiiMsg(responseVo, vo);
-     			 
-     			return responseVo;
-        	}
-     		*/
+
      		// 케스케이드 반납 확인
      		info.setCASCADE_YN("N");
-
-        	
-            
-        	// 방전 error 검출
-        	/**
-        	 * 반납시 전달되는 방전여부는 자가발전여부를 의미.실제로는 주기적인 상태보고에서만 확인하기로 함.
-        	 * 반납시 방전오류는 제거.
-        	*/
-//        	if(vo.getErrorId().equals("E4")){
-//        		// 충전상태 이상 UPdate
-//        		commonService.updateBatteryDischarge(com);
-//        	}
-     		
      		    	
      		// 반납 시간
      		//20191016111015
@@ -348,8 +322,8 @@ public class ReturnService  {
 				e.printStackTrace();
 			}
      		
-     		long diff = Return_dttm.getTime() - Rent_Dttm.getTime();  //밀리 초
-     		int overTime = Math.round(diff/(1000*60));    //분단위로 변경
+     		//long diff = Return_dttm.getTime() - Rent_Dttm.getTime();  //밀리 초
+     		//int overTime = Math.round(diff/(1000*60));    //분단위로 변경
      		
      		
         	int sysTime = Integer.parseInt(info.getUSE_MI().toString());
@@ -358,33 +332,6 @@ public class ReturnService  {
         	info.setTRANSFER_YN("N");
         	info.setOVER_FEE_YN("N");
         	
-        //	double USE_DIST = 0.0;
-        	/* gps 이력으로 하는 부분 막음 2020.03.12 
-        	double USE_DIST = bikeService.getBikeMoveDist(com);
-        	logger.debug("Bike USE DISTANCE {} , {} " ,vo.getBicycleId(), String.valueOf(USE_DIST));
-        	
-        	if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
-					 && !vo.getLongitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
-			{
-	        	Map<String, String> GPS_DATA = new HashMap<String, String>();
-	        	String latitude = new CommonUtil().GetGPS(vo.getLatitude());
-		        String longitude = new CommonUtil().GetGPS(vo.getLongitude());
-	        	GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
-	        	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
-	        	GPS_DATA.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
-	        	int cnt = bikeService.getBikeMoveDist_COUNT(GPS_DATA);
-	        	
-	        	logger.debug("getBikeMoveDist_COUNT {} " ,vo.getBicycleId(), cnt);
-	        	
-	        	if(cnt > 0)
-	        	{
-	        		USE_DIST = USE_DIST + bikeService.getBikeMoveDist_Last(GPS_DATA);
-	        		logger.debug("Bike USE DISTANCE2 {} , {} " ,vo.getBicycleId(), String.valueOf(USE_DIST));
-	        		
-	        	}
-			}
-        	*/
-        	
          	Integer tem_USE_SEQ = 0;
          	
          	Map<String, String> GPS_DATA = new HashMap<String, String>();
@@ -392,43 +339,8 @@ public class ReturnService  {
          	
          	double ACC_DIST = 0.0;
          	
-         	/*
-         	Map<String, Object> bikeData = bikeService.getBikeMoveDist_COUNT(GPS_DATA);
-         	
-			if(bikeData != null)
-			{
-				tem_USE_SEQ = Integer.valueOf(String.valueOf(bikeData.get("USE_SEQ")));
-				int USE_SEQ = tem_USE_SEQ;
-				ACC_DIST = new Double(bikeData.get("ACC_DIST").toString()); //현재까지 누적 데이터 db에서 추출
-        		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
-        		
-        		String latp = new CommonUtil().GetGPS(vo.getLatitude());
-        		String lonp = new CommonUtil().GetGPS(vo.getLongitude());
-        		GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latp));
-	         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(lonp));
-        		
-	         	double dlatp =  Double.parseDouble( latp);
-	         	double dlonp = Double.parseDouble( lonp);
-        		if(dlatp != 0.0 && dlonp != 0.0)
-        		{
-        			double USE_DIST = bikeService.getBikeMoveDist_Last(GPS_DATA);  //db 데이터 최종과 현재 첫번째 데이터와 비교
-        			ACC_DIST += USE_DIST;
-        		}
-        		logger.debug("GPS DISTANCE LAST DB ACC_DIST {} ", ACC_DIST);
-        		
-        		info.setUSE_DIST(ACC_DIST + "");
-        	}
-			else
-			*/
-				info.setUSE_DIST("0");	//gps 로 거리 하는 함수 막음.
-        	//
-        //	info.setUSE_DIST(USE_DIST+"");
-        	
-        	/*
-        	if(overTime >=0)
-        		info.setUSE_MI(overTime+"");
-        	else
-        	*/
+         	info.setUSE_DIST("0");	//gps 로 거리 하는 함수 막음.
+
         	info.setUSE_MI(sysTime+"");
         	
         	int weight = bikeService.getUserWeight(info.getUSR_SEQ());
@@ -436,63 +348,56 @@ public class ReturnService  {
         	double co2 = (((double)ACC_DIST/1000)*0.232);
         	double cal = 5.94 * (weight==0?65:weight) *((double)ACC_DIST/1000) / 15;
         	
-        //	info.setREDUCE_CO2("0");
-        //	info.setCONSUME_CAL("0");
-        	
+
         	info.setREDUCE_CO2(co2+"");
         	info.setCONSUME_CAL(cal+"");
-        	
-        	/*
-        	info.setREDUCE_CO2("0");
-        	
-        	info.setCONSUME_CAL("0");
-        	info.setUSE_DIST("0");
-        	*/
-        	// 자전거 기본 대여시간 분
-        	// 프리미엄 이용권 자전거 기본대여시간 가져오기 (일반권 포함)_20160630_JJH_START
-        	
+        		
         	//프리미엄 이용권 초과요금 적용 시간 가져오기
-        	int baseRentTime = Integer.parseInt((String)commonService.getBaseTime(info).get("BASE_TIME"));
+        	//int baseRentTime = Integer.parseInt((String)commonService.getBaseTime(info).get("BASE_TIME"));
         	// 프리미엄 이용권 자전거 기본대여시간 가져오기 (일반권 포함)_20160630_JJH_END
         	
-        	
+        	int baseRentTime = 0;
         	// 초과 요금 대상
     		//if(overTime > baseRentTime)
-    		if(sysTime > (baseRentTime+1))
-    	    		
+        	if(info.getBIKE_SE_CD().equals("BIK_001"))
+        	{
+        		baseRentTime = 20;
+        	}
+        	else
+        	{
+        		baseRentTime = 0;
+        	}
+    		if(sysTime > baseRentTime)
     		{
-    			logger.debug(" #####  server_time is baseRentTime {}  overTime {} ,sysTime {}"  , (baseRentTime+1), overTime ,sysTime);
+    			logger.debug(" #####  server_time is baseRentTime {}  sysTime {}"  , baseRentTime, sysTime);
     		
     		
     			Map<String, Object> fee = new HashMap<String, Object>();
-    			//T-APP PATCH , 전기 자전거 추가요금
-    			if(info.getPAYMENT_CLS_CD().equals("BIL_021") || info.getPAYMENT_CLS_CD().equals("BIL_022"))
-    			{
-    				fee.put("ADD_FEE_CLS", "D");
-    			}
-    			else
-    			{
-    				fee.put("ADD_FEE_CLS", info.getADD_FEE_CLS());
-    			}
+    			
+    			if(info.getBIKE_SE_CD().equals("BIK_001"))
+            	{
+    				fee.put("ADD_FEE_CLS", "S");
+            	}
+            	else
+            	{
+            		fee.put("ADD_FEE_CLS", "M");
+            	}
+    			
+    			
     			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
     			Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
-    		
-    			//overPay = new CommonUtil().getPay(minPolicy, maxPolicy, overTime);
+    			
     			overPay = new CommonUtil().getPay(minPolicy, maxPolicy, sysTime);
-    
-    			//if(!(info.getUSR_CLS_CD().equals("USR_002")))
-        		//{
-    				info.setOVER_FEE_YN("Y");
-    				info.setOVER_FEE(overPay+"");
-    				//info.setOVER_MI(String.valueOf(overTime-baseRentTime));
-    				info.setOVER_MI(String.valueOf(sysTime - (baseRentTime+1)));
-        		//}
+  
+    			info.setOVER_FEE_YN("Y");
+    			info.setOVER_FEE(overPay+"");
+    			info.setOVER_MI(String.valueOf(sysTime - (baseRentTime)));
     		}
     		else
     		{
     		//	if(overTime < 0)
     				
-    			logger.debug(" ##### systime_time is baseRentTime {} ,sysTime {}", overTime ,sysTime);
+    			logger.debug(" ##### systime_time is baseRentTime {} ,sysTime {}", baseRentTime ,sysTime);
     		}
     		/*  추가만 하고 적용 안함..
     		String faultSeq = commonService.getFaultSeq(com);
@@ -510,7 +415,7 @@ public class ReturnService  {
     		
         	// 반납 프로세스 실행
     		bikeService.parkingInfoDelete(com);
-        	bikeService.procReturn(info);
+    		bikeService.procReturn(info);
         	
         }
         else
@@ -518,7 +423,9 @@ public class ReturnService  {
         	//RentHistVo info = bikeService.getForReturnUse(com);
         	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
         	
-        	Map<String, String> BeaconInfo = commonService.CheckBeacon_Station(ReqInfo);
+        	Map<String, String> BeaconInfo = null;
+        			//commonService.CheckBeacon_Station(ReqInfo);
+        	
         	
         	if(BeaconInfo == null)
         	{
@@ -758,13 +665,13 @@ public class ReturnService  {
         Map<String, String> ourBikeMap = new HashMap<String, String>();
         ourBikeMap = bikeService.chkOurBike(com);	//ENTRPS_CD : ENT_001(vick) , ENT_002(witcom)  , ENT_003(atech) ,BIKE_SE_CD
 		 
-        int	 nBikeSerial;
+        String	 nBikeSerial;
         QRLogVo QRLog = new QRLogVo();
         if(ourBikeMap != null)
         {
 			//add 자전거 번호 가져오기 2018.09.01
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
-		 	nBikeSerial = Integer.parseInt(bikeNo.substring(4,bikeNo.length()));
+		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
 		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
 		 	String	bike_SE_CD = ourBikeMap.get("BIKE_SE_CD");
@@ -873,6 +780,7 @@ public class ReturnService  {
 			logger.debug("##### BIKE RETURN ## BATTERY UPDATE END #####");
 		}
         
+        /*
         if(vo.getBeaconId().equals("00000000000000"))	//비콘 ID 없으면 임시 반납으로 가야함...
 		{
 			 
@@ -888,10 +796,12 @@ public class ReturnService  {
 			return responseVo;
 			 
 		}
-        
+        */
         // 자전거 대여정보 확인
         // 자전거 STATION 정보 죄회 수정 필요 BEACON ID로 
         RentHistVo info = bikeService.getForReturnUse(com);
+        info.setGPS_X(new CommonUtil().GetGPS(vo.getLatitude()));
+		info.setGPS_Y(new CommonUtil().GetGPS(vo.getLongitude()));
         int overPay = 0;
         
         Map<String, String> ReqInfo = new HashMap<String, String>();
@@ -1223,23 +1133,10 @@ public class ReturnService  {
     				
     			logger.debug(" ##### systime_time is baseRentTime {} ,sysTime {}", overTime ,sysTime);
     		}
-    		/*  추가만 하고 적용 안함..
-    		String faultSeq = commonService.getFaultSeq(com);
-    		
-    		if(faultSeq != null)
-    		{
-    			if(commonService.hasNetFault(com))
-    			{
-    				commonService.deleteFaultInfo(com);
-    				commonService.changeValidBike(com);
-    				faultSeq = commonService.getFaultSeq(com);
-    			}
-    		}
-        	*/
     		
         	// 반납 프로세스 실행
     		bikeService.parkingInfoDelete(com);
-        	bikeService.procReturn(info);
+    		bikeService.procReturn(info);
         	
         }
         else
