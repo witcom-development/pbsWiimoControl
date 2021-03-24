@@ -178,14 +178,7 @@
 				ELSE 'RCC_001'
 			END RENT_CLS_CD
 		FROM TB_SVC_VOUCHER
-		WHERE USR_SEQ in 
-		(
-			SELECT USR_SEQ
-			FROM TB_SVC_MB_CARD 
- 			WHERE MB_CARD_NO = dg_encrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', #{cardNum})
-			AND CARD_USE_CLS_CD = 'R' 
-			AND END_DTTM = STR_TO_DATE('9999-12-31 23:59:59','%Y-%m-%d %H:%i:%s')
-		)
+		WHERE USR_SEQ = #{userSeq}
 		AND VOUCHER_STR_DTTM is null
 		AND VOUCHER_END_DTTM is null
 		AND VOUCHER_USE_YN = 'N'
@@ -529,6 +522,18 @@
 			BIKE_ID = #{RENT_BIKE_ID}
 		
 	</update>
+	
+	
+	<update id="updateBikeGPS"		parameterType="org.fincl.miss.service.biz.bicycle.vo.RentHistVo">	
+	
+		UPDATE	TB_OPR_BIKE
+		SET 
+			GPS_X =  #{GPS_X},
+			GPS_Y = #{GPS_Y}
+		WHERE 
+			BIKE_ID = #{RENT_BIKE_ID}
+		
+	</update>
 
 	<update id="updateBikeBreakDowon"		parameterType="org.fincl.miss.service.biz.bicycle.vo.RentHistVo">	
 	
@@ -693,13 +698,11 @@
 	SELECT BIKE.BIKE_NO, 
 		DG_DECRYPT('TB_SVC_USR', 'USR_MPN_NO', USR.USR_MPN_NO) AS USR_MPN_NO,
 		REN.RENT_MTH_CD, dg_decrypt('TB_SVC_USR','USR_BIRTH_DATE',USR.USR_BIRTH_DATE) AS USR_BIRTH_DATE, 
-		DG_DECRYPT('TB_SVC_MB', 'PARENT_MPN_NO', MB.PARENT_MPN_NO) AS PARENT_MPN_NO,
-		DEVICE.DEVICE_MPN_NO
+		DG_DECRYPT('TB_SVC_MB', 'PARENT_MPN_NO', MB.PARENT_MPN_NO) AS PARENT_MPN_NO
 		FROM TB_SVC_RENT REN
 		LEFT JOIN TB_OPR_BIKE BIKE ON REN.RENT_BIKE_ID = BIKE.BIKE_ID
 		LEFT JOIN	TB_SVC_USR USR ON REN.USR_SEQ = USR.USR_SEQ
 		LEFT JOIN	TB_SVC_MB MB ON REN.USR_SEQ = MB.USR_SEQ
-		LEFT JOIN TB_IOT_DEVICE DEVICE ON BIKE.TERMINAL_ID = DEVICE.DEVICE_ID
 	WHERE 1=1 AND REN.USR_SEQ = #{userSeq}
 		AND REN.RENT_YN = 'Y'
 		AND BIKE.BIKE_ID = (
