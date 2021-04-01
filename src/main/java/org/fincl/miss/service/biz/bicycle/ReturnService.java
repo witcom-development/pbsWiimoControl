@@ -125,7 +125,7 @@ public class ReturnService  {
 			 return responseVo;
         }
         
-        //밧데리....
+        //밧데리....beacon 밧데리는 필요없음.
         if(!vo.getBattery().equals(null) && !vo.getBattery().equals("")
 				&& !vo.getBeaconBattery().equals(null) && !vo.getBeaconBattery().equals(""))
 		{
@@ -238,7 +238,7 @@ public class ReturnService  {
 					List<HashMap<String, Object>> stationInfo_List = commonService.CheckStation_ForGPS(GPS);
 					
 					if(stationInfo_List.size() == 0 )
-					 {
+					{
 						 logger.error("Station List Find Error");
 						 responseVo.setErrorId(Constants.CODE.get("ERROR_FD"));
 						 responseVo = setFaiiMsg(responseVo, vo);
@@ -548,8 +548,6 @@ public class ReturnService  {
      	  			 }
      	  		 }
         		
-        		
-
         		QRLog.setResAck("RSUC");
         		bikeService.updateQRLog(QRLog);
         	}

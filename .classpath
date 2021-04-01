@@ -42,6 +42,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/eGovFrameDev-3.5.1-64bit/workspace/qr-biz/lib/jackson-annotations-2.0.6.jar"/>
 	<classpathentry kind="lib" path="D:/eGovFrameDev-3.5.1-64bit/workspace/qr-biz/lib/jackson-core-2.0.6.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wiimo-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Wiimo-Service"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
