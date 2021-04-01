@@ -256,6 +256,7 @@ public class AdministratorService {
 		 ReqInfo.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
 		 ReqInfo.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
 		 
+		 /*
 		 if(vo.getBeaconId().equals("00000000000000"))
 		 {
 			 
@@ -272,6 +273,7 @@ public class AdministratorService {
 	  		 return responseVo;
 			 
 		 }
+		 */
 		 
 		 
 		 

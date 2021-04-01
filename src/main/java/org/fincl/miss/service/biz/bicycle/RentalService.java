@@ -206,7 +206,7 @@ public class RentalService {
 		 }
 		 
 		 
-		 if(vo.getLockState().equals("02"))
+		 if(vo.getLockState().equals("00"))
 		 {
   			BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);	//거치정보 체크 
   			if(bikeInfo == null)

@@ -73,8 +73,8 @@ public class BreakDownService{
 		 	
 		 	QRLog.setDev_BATT(String.valueOf(Integer.parseInt(vo.getBattery(), 16)));
 		 	
-		 	QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconBattery(), 16)));
-		 	QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getBikeBattery(), 16)));
+		 	//QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconBattery(), 16)));
+		 	//QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getBikeBattery(), 16)));
 
 		 	
 		 	if(!vo.getGps_Latitude().equals("00000000") && !vo.getGps_Latitude().substring(0,6).equals("FFFFFF")
