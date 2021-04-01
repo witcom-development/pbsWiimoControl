@@ -111,15 +111,7 @@ public class PeriodService{
 		 	QRLog.setBicycleState(vo.getBicycleState());
 		 	QRLog.setBeaconid(vo.getBeaconId());
 		 	
-		 	//추가..
-		 	//if(!vo.getUsrseq().equals(("FFFFFFFFFF")))
-		 	//{
-		 		//QRLog.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
-		 		QRLog.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
-		 		
-		 	//}
-		 	
-		 	
+		 	QRLog.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
 		 	QRLog.setUserType(vo.getUsrType());
 		 	QRLog.setLock(vo.getLockState());
 		 	QRLog.setBiketype(vo.getBikeType());
@@ -187,6 +179,9 @@ public class PeriodService{
 			 
 			 return responseVo;
 		 }
+		 
+		 int Bike_Speed = Integer.parseInt( vo.getCurrent_speed(), 16 );
+		 logger.debug("current Speed Is " + Bike_Speed);
 		 
 		 //00 01 5E 2A 53   usr_seq 필드 추가함.
 		// 0001944283
@@ -513,14 +508,98 @@ public class PeriodService{
      		 {
      			 //대여 일때  새싹 02 
      			 /* NAVER 루틴*/
-     			 if(vo.getBikeType().equals("02") && vo.getBicycleState().equals("03"))	//
-     			 {
-     				   String hostname = System.getenv("HOSTNAME");
-     				
-     				   String svrname = hostname.substring(hostname.length()-2, hostname.length()); 
-     				   
-     				   logger.debug("SHOOT_QR_BIKE is Service_AREA_OUTBOUND {} bikestate {} host {} " ,vo.getBicycleId() ,  vo.getBicycleState(),svrname);
-     			 }	//biketype 02 새싹 따릉이...
+     			if(vo.getBicycleState().equals("03"))	//
+    			 {
+    				   
+    				    String NAVER_API_KEY ;
+    				    String NAVER_SECRET_KEY;	
+
+		     			//zgyaca9y6t    , JbaXg9LvYDkHHPmeGi2r0DsL20KhhvOIkfJMfEOd
+		     			// 양재영 과장  : a88veypaz2 , kg5bLoJkxE1KcFUURqgjdyf5x0ztBMKRY46y4Med
+		     			NAVER_API_KEY 			= "zgyaca9y6t";     			// 가맹점 코드
+		     			NAVER_SECRET_KEY			= "JbaXg9LvYDkHHPmeGi2r0DsL20KhhvOIkfJMfEOd";  // billing Key
+		     			
+		     			
+    				   
+		     			
+		     			ObjectMapper mapper = new ObjectMapper(); 		  			//jackson json object
+		     			NaverGPSUtil util = new NaverGPSUtil();  
+		     			
+		
+		     			String XPos = new CommonUtil().GetGPS(vo.getLatitude());
+		     			String YPos = new CommonUtil().GetGPS(vo.getLongitude());
+		     			
+		     			
+		     			  			
+		     			String info_String = "coords="+ YPos + "," + XPos +"&output=json&orders=legalcode";
+		     			
+		     			logger.debug("NAVER API_BASIC " + info_String);
+		     			
+		     			
+		     			String info_result = util.GPSSend(info_String, NAVER_API_KEY, NAVER_SECRET_KEY);
+		     			String Data_Result =null;
+		     			JsonNode node;
+		     			try 
+		     			{	
+		     				node = mapper.readTree(info_result);
+		     				logger.debug("SESSAK GPS CHECK POINT 1 " + info_result);
+		     				if(node.has("results"))
+		     				{
+		     					ArrayNode  memberArray = (ArrayNode) node.get("results");
+		     					
+		     					if(memberArray.isArray())
+		     					{
+		     						for(JsonNode jsonNode : memberArray)
+		     						{
+		     							logger.debug("SESSAK NODE " + jsonNode);
+		     							logger.debug("SESSAK GPS CHECK POINT 2 = " + jsonNode.get("region").get("area3").get("name").asText().toString());
+		     							Data_Result = jsonNode.get("region").get("area3").get("name").asText().toString();
+		     						}
+		     					}
+		     					//logger.debug("NAVER GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").toString());
+		     				}
+		     				else 
+		     				{
+		     					logger.debug("SESSAK GPS CHECK POINT 3");
+		     				}
+		     			} 
+		     			catch (JsonProcessingException e) 
+		     			{
+		     				logger.debug("SESSAK GPS JsonProcessingException");
+		     			} 
+		     			catch (IOException e) 
+		     			{
+		     				logger.debug("SESSAK GPS IOException");
+		     			}
+		     			catch (Exception e)
+		     			{
+		     				logger.debug("SESSAK GPS Exception");
+		     				e.printStackTrace();
+		     			}
+		     			
+		     			/*
+		     			Map<String, String> ValidELEC = new HashMap<String, String>();
+		     			ValidELEC = commonService.CheckValidELEC_GPS();
+		     			
+		     			logger.debug("SESSAK GPS CHECK POINT 3 Result State = " + Data_Result);
+		     			logger.debug("SESSAK GPS CHECK POINT 4 = ADD_VAL1 {} ADD_VAL2 {} ADD_VAL3 {}" 
+		     					, ValidELEC.get("ADD_VAL1"), ValidELEC.get("ADD_VAL2"), ValidELEC.get("ADD_VAL3"));
+		     			
+		     			if(Data_Result != null && 
+		     					(Data_Result.equals(String.valueOf(ValidELEC.get("ADD_VAL1"))) 
+		     							|| Data_Result.equals(String.valueOf(ValidELEC.get("ADD_VAL2")))
+		     							|| Data_Result.equals(String.valueOf(ValidELEC.get("ADD_VAL3")))))
+		     			{
+		     			}
+		     			else
+		     			{
+		     				logger.debug("SESSAK_GPS_Not_OUTBOUND : BUT USE_NOT_SHOOT {}!!!!!!",vo.getBicycleId());
+		     						     				
+		     			}
+		     			*/
+		  				
+		     				
+		     		}	//biketype 02 새싹 따릉이...
      			
      		} //GPS 값 체크....!!!!
      		 
@@ -595,7 +674,7 @@ public class PeriodService{
      			 logger.debug("QR_BIKE is RENTING_PERIOD BUT LOCK STATE IS LOCK ON");	//임시 잠금 일수도 있음...
      		}
      	//	 대여 시켜주는 부분을 대여 이벤트로 옮김 4372
-     		else if(vo.getLockState().equals("02") && vo.getSeqNum().equals("00"))
+     		else if(vo.getLockState().equals("00") && vo.getSeqNum().equals("00"))
      		{
      			
      			logger.debug("QR_BIKE IS RENTING_PERIOD BUT BIKE IS RETURN_STATE, LOCK_STATE is OPEN : DB_BIKE {}",sBike_status);
@@ -927,7 +1006,7 @@ public class PeriodService{
 		  */
 		 if(vo.getBicycleState().equals(Constants.CODE.get("BIKE_STATE_02")))
 		 {
-			 if(vo.getLockState().equals("02"))
+			 if(vo.getLockState().equals("00"))
 			 {
 	     			//대여 상태인데 잠금 장치가 잠겨 있다면
 				 logger.debug("QR_BIKE is RETURN_PERIOD BUT LOCK STATE IS RETURN_STATE");

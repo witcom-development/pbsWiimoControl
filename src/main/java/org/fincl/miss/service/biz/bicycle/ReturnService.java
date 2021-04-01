@@ -206,14 +206,15 @@ public class ReturnService  {
         RentHistVo info = bikeService.getForReturnUse(com);
         int overPay = 0;
         
-        Map<String, String> ReqInfo = new HashMap<String, String>();
-        info.setGPS_X(new CommonUtil().GetGPS(vo.getLatitude()));
-		info.setGPS_Y(new CommonUtil().GetGPS(vo.getLongitude()));
-    	ReqInfo.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
-    	ReqInfo.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
+        //Map<String, String> ReqInfo = new HashMap<String, String>();
+        
+    	//ReqInfo.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
+    	//ReqInfo.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
         
         if(info != null)
-        {	
+        {
+        	info.setGPS_X(new CommonUtil().GetGPS(vo.getLatitude()));
+    		info.setGPS_Y(new CommonUtil().GetGPS(vo.getLongitude()));
     		Map<String, Object> stationInfo = null;
     		
     	
@@ -461,7 +462,7 @@ public class ReturnService  {
             			}
             		}
             		
-            		Map<String, Object> stationInfo;
+            		Map<String, Object> stationInfo = null;
             		
             		/*
             		if(vo.getElecbicycle().equals("02"))	//새싹 따릉이....
@@ -475,7 +476,7 @@ public class ReturnService  {
             		*/
             			logger.debug("BIKE RETURN ## BIKE IS  NORMAL_BIKE : TOTAL_RAK {}",vo.getBicycleId());
             			
-            			stationInfo = commonService.CheckBeaconID(ReqInfo);
+            			//stationInfo = commonService.CheckBeaconID(ReqInfo);
             	//	}
     				
     	     		if(stationInfo != null)

@@ -13,11 +13,12 @@ public class QRReturnResultRequestVo extends BicycleVo {
         requestFields.put("bicycleId", 7);
         requestFields.put("elecbicycle", 1);
         requestFields.put("regDttm", 7);
-        requestFields.put("beaconId", 7);
-        requestFields.put("lockState", 1);
+        requestFields.put("beaconId", 5);
+        requestFields.put("current_speed", 1);
+        requestFields.put("batt_lock", 1);      // 배터리 잠금 : lock(0x01) / unlock(0x00)
+        requestFields.put("lockState", 1);		// 모터 잠금 : lock(0x01) / unlock(0x00)
         requestFields.put("battery", 1);
         requestFields.put("beaconBattery", 1);
-        
         requestFields.put("electbatt", 1);
         requestFields.put("latitude", 4);
         requestFields.put("longitude", 4);
@@ -29,6 +30,8 @@ public class QRReturnResultRequestVo extends BicycleVo {
     private String elecbicycle;
     private String regDttm;
     private String beaconId;
+    private String current_speed;
+    private String batt_lock;
     private String lockState;
     private String battery;
     private String beaconBattery;
@@ -38,6 +41,20 @@ public class QRReturnResultRequestVo extends BicycleVo {
     private String errorId;
     
     
+    
+    
+	public String getCurrent_speed() {
+		return current_speed;
+	}
+	public void setCurrent_speed(String current_speed) {
+		this.current_speed = current_speed;
+	}
+	public String getBatt_lock() {
+		return batt_lock;
+	}
+	public void setBatt_lock(String batt_lock) {
+		this.batt_lock = batt_lock;
+	}
 	public String getBicycleState() {
 		return bicycleState;
 	}

@@ -15,16 +15,17 @@ public class RentWaitingRequestVo extends BicycleVo{
         requestFields.put("usrType", 1);	//add 사용자 타입
         requestFields.put("usrseq",5);		//2019.12.26 
         requestFields.put("bikeType", 1);	//add 자전거 Type(전기)
-        requestFields.put("beaconId", 7);	//비콘ID
+        requestFields.put("beaconId", 5);	//비콘ID
+        requestFields.put("current_speed", 1);
+        requestFields.put("batt_lock", 1);      // 배터리 잠금 : lock(0x01) / unlock(0x00)
         requestFields.put("battery", 1);
         requestFields.put("beaconbatt", 1);	//비콘 밧데리 
         requestFields.put("elecbatt", 1);	//전기 밧데리 
-   //     requestFields.put("returnForm", 1);	//기존 거치대,캐스케이드 
         requestFields.put("ble_firmwareVs", 2);
         requestFields.put("modem_firmwareVs", 2);
         requestFields.put("latitude", 4);
         requestFields.put("longitude", 4);
-        requestFields.put("lockState", 1);
+        requestFields.put("lockState", 1);  // 모터 잠금 : lock(0x01) / unlock(0x00)
         
         requestFields.put("errorId", 1);
     }
@@ -35,6 +36,8 @@ public class RentWaitingRequestVo extends BicycleVo{
     private String usrType;
     private String bikeType;
     private String beaconId;
+    private String current_speed;
+    private String batt_lock;
     private String battery;
     private String beaconbatt;
     private String elecbatt;
@@ -46,6 +49,20 @@ public class RentWaitingRequestVo extends BicycleVo{
     private String errorId;
     private String	usrseq;
     
+    
+    
+	public String getCurrent_speed() {
+		return current_speed;
+	}
+	public void setCurrent_speed(String current_speed) {
+		this.current_speed = current_speed;
+	}
+	public String getBatt_lock() {
+		return batt_lock;
+	}
+	public void setBatt_lock(String batt_lock) {
+		this.batt_lock = batt_lock;
+	}
 	public String getBicycleState() {
 		return bicycleState;
 	}
