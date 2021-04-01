@@ -233,6 +233,9 @@ public class ReturnService  {
 					
 					logger.debug("GPS INFO ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
 					 
+					//log 추가 
+					 logger.error("Station List Find Error");
+					 
 					Map<String, String> GPS = new HashMap<String, String>();
 					GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
 					GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
