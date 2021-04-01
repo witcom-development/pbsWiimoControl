@@ -80,13 +80,14 @@ public class ReturnService  {
 		 	
 		 	logger.debug("QR_436F ##### => bike {} ,state {} , company {} ,bike_se_cd {}  ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd(),bike_SE_CD);
 		 	
-		// 	QRLogVo QRLog = new QRLogVo();
+		 	//QRLogVo QRLog = new QRLogVo();
 		 	
 		 	QRLog.setBicycleId(vo.getBicycleId());
 		 	QRLog.setBicycleNo(bikeNo);
 		 	QRLog.setBicycleState(vo.getBicycleState());
 		 	QRLog.setBeaconid(vo.getBeaconId());
 		 	QRLog.setLock(vo.getLockState());
+		 	
 		 	QRLog.setBiketype(vo.getElecbicycle());
 		 	
 		 	QRLog.setDev_BATT(String.valueOf(Integer.parseInt(vo.getBattery(), 16)));
