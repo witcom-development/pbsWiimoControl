@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.fincl.miss.server.annotation.RPCService;
 import org.fincl.miss.server.annotation.RPCServiceGroup;
 import org.fincl.miss.server.message.MessageHeader;
@@ -36,6 +38,7 @@ import org.fincl.miss.service.biz.bicycle.vo.RentalResponseVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.fincl.miss.server.sms.vo.SendSMSVo;
 
@@ -50,6 +53,7 @@ public class RentalService {
 	
 	@Autowired
 	BicycleRentService bikeService;
+	
 	
 	@Autowired
     private BicycleRentMapper bicycleMapper;
@@ -169,6 +173,7 @@ public class RentalService {
 			QRLog.setQr_frame("대여완료보고");
 			
 		 	bikeService.insertQRLog(QRLog);
+		 	
 		 }
 		 else
 		 {
@@ -342,25 +347,16 @@ public class RentalService {
 		     				
 		     				//String destno = (String)msgInfo.get("DEST_NO");
 		     				
-		     				
-		     				if(msgInfo.get("DEST_NO") != null && !msgInfo.get("DEST_NO").equals(""))
+		     				if(msgInfo != null && msgInfo.get("DEST_NO") != null && !msgInfo.get("DEST_NO").equals(""))
 		     				{
 		     				
 			     				String destno = String.valueOf(msgInfo.get("DEST_NO"));
 			     				if(destno != null && !destno.equals(""))
 			     				{
-			     					sms2.setCmd_id("3C");
-			     					sms2.setState("01");
-			     					sms2.setDev_state("02");
-			     					//sms2.setDev_id(com.getBicycleId());
-			     					sms2.setDev_type("00");
-			     					sms2.setUser_type("01");
-			     					sms2.setUser_seq(String.format("%010d", Integer.parseInt(com.getUserSeq())));
-			     					String Message = sms2.getCmd_id() + sms2.getState() + sms2.getDev_state() + sms2.getDev_type()
-			     							+ sms2.getUser_type() + sms2.getUser_seq();
-			     					logger.debug("[Message " + Message + "] [Byte Message   " + Message.getBytes().toString() + "   ]");
+		
+			     					String Message = "대여 되었습니다";
 			     					sms.setDestno(destno);
-			     					sms.setMsg(Message.getBytes().toString());
+			     					sms.setMsg(Message.toString());
 			     					SmsSender.sender(sms);
 			     				}
 		     				}
