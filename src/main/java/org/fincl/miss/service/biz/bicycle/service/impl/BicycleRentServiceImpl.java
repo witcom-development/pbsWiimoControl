@@ -11,10 +11,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.annotation.Resource;
+import com.mainpay.sdk.utils.ParseUtils;
+
+import org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO;
 import org.fincl.miss.server.scheduler.job.sms.SmsMessageVO;
 import org.fincl.miss.server.scheduler.job.sms.TAPPMessageVO;
 import org.fincl.miss.server.sms.SendType;
 import org.fincl.miss.server.sms.SmsSender;
+import org.fincl.miss.server.util.MainPayUtil;
 import org.fincl.miss.service.biz.bicycle.common.CommonVo;
 import org.fincl.miss.service.biz.bicycle.common.QRLogVo;
 import org.fincl.miss.service.biz.bicycle.service.BicycleRentMapper;
@@ -30,8 +35,10 @@ import org.fincl.miss.service.biz.bicycle.vo.SerialNumberRentalRequestVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.fincl.miss.service.biz.bicycle.common.HolidayUtil;
+
 
 @Service
 public class BicycleRentServiceImpl implements BicycleRentService {
@@ -40,11 +47,13 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	/*
 	 * TODO 반납완료 푸시 메세지. 주변상권 홍보및 연계.
 	 */
-	private static final String TARGET_URL = "https://www.bikeseoul.com:446/app/station/moveStationMallPromo.do";
+	//private static final String TARGET_URL = "https://www.bikeseoul.com:446/app/station/moveStationMallPromo.do";
 
 	@Autowired
+	//@Qualifier("bizDataSource")
 	private BicycleRentMapper bicycleMapper;
 	@Autowired
+	//@Qualifier("bizDataSource")
 	private CommonMapper comm;
 
 	private HolidayUtil holidayUtil;
@@ -190,6 +199,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		SimpleDateFormat _sdfh = new SimpleDateFormat("HH");
 		Date today = new Date();
 		String rentSeq = "";
+		boolean b_overfee = false;
 
 		logger.debug("QR_procReturn :: {}", info); // 로그 수정....2018.04.02
 
@@ -225,46 +235,6 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		// 대여 정거장 하고 반납 정거장이 다른면 이용처리 해야함....
 		// 사용시간이 2분 언더일때는 시스템 시간으로 해야할...
 
-		// 전기 자전거 사용시간은 1분 미만 일대 바우처 null 2020.07.16 BIL_022 은 따로 처리 해야함.
-		if (info.getPAYMENT_CLS_CD().equals("BIL_021")) // 티머니
-		{
-			logger.debug("QR_TMONEY_VOUCHER :: {} useMi :: {}", info.getVOUCHER_SEQ(), info.getUSE_MI()); // 로그
-																// 수정....2018.04.02
-
-			if ((info.getPAYMENT_CLS_CD().equals("BIL_021")) && Integer.parseInt(info.getUSE_MI()) <= 2 
-					&& info.getRENT_STATION_ID().equals(info.getRETURN_STATION_ID())) 
-			{
-				// UPDATE TB_SVC_VOUCHER
-				// 사용안함 처리..(같은 정거장이면)
-				bicycleMapper.updatevoucherTAPP_2MIN_UNDER(info.getVOUCHER_SEQ());
-			} else if ((info.getPAYMENT_CLS_CD().equals("BIL_021")) && !info.getRENT_STATION_ID().equals(info.getRETURN_STATION_ID())) 
-			{
-				// 사용처리
-				bicycleMapper.updatevoucherTAPP_2MIN_OVER(info.getVOUCHER_SEQ());
-
-			} 
-			else if ((info.getPAYMENT_CLS_CD().equals("BIL_021")) && Integer.parseInt(info.getUSE_MI()) > 2)
-			{
-				// UPDATE TB_SVC_VOUCHER
-				bicycleMapper.updatevoucherTAPP_2MIN_OVER(info.getVOUCHER_SEQ());
-			}
-		} // 전기 자전거
-		else if (info.getPAYMENT_CLS_CD().equals("BIL_022") || info.getPAYMENT_CLS_CD().equals("BIL_023")) 
-		{
-			logger.debug("QR_ELECTBIKE_VOUCHER :: {} useMi :: {}", info.getVOUCHER_SEQ(), info.getUSE_MI());
-
-			// 사용시간 1분 미만 이면 바우처 null 처리
-			if (Integer.parseInt(info.getUSE_MI()) < 1) 
-			{
-				bicycleMapper.updatevoucherTAPP_2MIN_UNDER(info.getVOUCHER_SEQ());
-
-			} 
-			else 
-			{
-				bicycleMapper.updatevoucherTAPP_2MIN_OVER(info.getVOUCHER_SEQ());
-			}
-		}
-
 		// 대여 이력 INSERT RENT_HIST
 		bicycleMapper.insertRentHist(info);
 
@@ -287,6 +257,69 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 			// TB_SVC_RENT_OVER_FEE
 			// (OVER_FEE_PROCESS_CLS_CD
 			// -> OPD_002
+			
+			MainPayUtil MainPayutil = new MainPayUtil();
+			OverFeeVO fee = comm.getOverFeeRETURN(info.getUSR_SEQ());
+			HashMap<String, String> parameters = new HashMap<String, String>();
+			String billkey = fee.getBillingKey() ;
+    		if( billkey != null && !"".equals(billkey)) {	// 빌링키 없음 실패		
+    			parameters.put("billkey", billkey);	// 정기결제 인증 키
+    		}
+    		parameters.put("goodsId", "BIL_009");
+    		parameters.put("goodsName", "추가과금");
+    		parameters.put("amount", fee.getOverFee());
+        	
+        	
+    		String responseJson = MainPayutil.approve(parameters,"Y");
+    		
+    		
+    		
+    		Map responseMap = ParseUtils.fromJson(responseJson, Map.class);
+			String resultCode = (String) responseMap.get("resultCode");
+			String resultMessage = (String) responseMap.get("resultMessage");
+		    
+			if(!"200".equals(resultCode)) {	// API 호출 실패
+				logger.debug("Return Pay Fail-->> ["+resultMessage + "]");
+				comm.setOverFeePayReset(fee);
+			}
+			else
+			{	// API 호출 성공
+				try 
+				{
+					fee.setPaymentMethodCd("BIM_001");
+					fee.setResultCD("0000");
+					fee.setPaymentStusCd("BIS_001");
+					fee.setMb_serial_no(parameters.get("mbrRefNo"));
+					fee.setPaymentConfmNo(parameters.get("mbrRefNo"));
+					fee.setTotAmt(fee.getOverFee());
+					
+					//fee.setOrderCertifyKey(orderCertifyKey);
+					fee.setProcessReasonDesc(resultMessage);
+					Map<String, String> returnMap = new HashMap<String, String>();
+					returnMap = comm.getPaymentInfoExist(fee);
+					logger.debug("check-->> " +returnMap.get("PAYMENT_INFO_EXIST"));
+					if(returnMap.get("PAYMENT_INFO_EXIST").equals("N"))
+					{
+						logger.debug("##### 초과요금 결제정보가 없다. #####");
+						int result = comm.addTicketPayment(fee);
+					}else{
+						logger.debug("##### 초과요금 결제정보가 이미 있다. #####");
+					}
+					
+					b_overfee = true;
+					
+					int result = comm.setOverFeePayComplete(fee);
+					
+				} 
+				catch (Exception e)
+				{
+				}
+			}
+			
+			
+			
+			
+			
 		}
 
 		// getReportTimeHistory(info); // 반납 상태시간 HISTORY INSERT_20161220_JJH
@@ -315,144 +348,33 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		// 번호가져오기_20161121_JJH
 		logger.debug("#### SMS_MESSAGE ==>station {} state {} " , returnStationNo,info.getSTATION_USE_YN());
 
-		if (info.getRENT_MTH_CD() == null || info.getRENT_MTH_CD().equals("CHN_001"))
+	
+		if (info.getUSR_MPN_NO() != null && !info.getUSR_MPN_NO().equals(""))
 		{
-			if (info.getUSR_MPN_NO() != null && !info.getUSR_MPN_NO().equals(""))
-			{
-				SimpleDateFormat sdf;
-
-				sdf = new SimpleDateFormat("MM월dd일 HH시mm분");
-
-				try 
-				{
-					
-					if(info.getSTATION_USE_YN() != null && !info.getSTATION_USE_YN().equals(""))
-					{
-						if(info.getSTATION_USE_YN().equals("S"))
-						{
-							SmsMessageVO smsVo = new SmsMessageVO();
-							smsVo.setDestno(info.getUSR_MPN_NO());
-							smsVo.setMsg(SendType.SMS_098, info.getBIKE_NO(),
-									String.valueOf(sdf.format(today)), returnStationName,
-									info.getSTATION_CLOSE_REASON(),
-									info.getSTATION_CLOSE_DATE());
-							SmsSender.sender(smsVo);
-						}
-						else if(info.getSTATION_USE_YN().equals("T"))
-						{
-							SmsMessageVO smsVo = new SmsMessageVO();
-							smsVo.setDestno(info.getUSR_MPN_NO());
-							smsVo.setMsg(SendType.SMS_096, info.getBIKE_NO(),
-									String.valueOf(sdf.format(today)), returnStationName,
-									info.getSTATION_CLOSE_REASON(),
-									info.getSTATION_CLOSE_DATE());
-							SmsSender.sender(smsVo);
-							
-						}
-						else
-						{
-							if(info.getSTATION_USE_YN() != null && info.getBIKE_SE_CD().equals("BIK_003"))
-							{
-								SmsMessageVO smsVo = new SmsMessageVO();
-								smsVo.setDestno(info.getUSR_MPN_NO());
-								smsVo.setMsg(SendType.SMS_090, info.getBIKE_NO(),
-										String.valueOf(sdf.format(today)), returnStationName);
-								SmsSender.sender(smsVo);
-							}
-							else
-							{
-								SmsMessageVO smsVo = new SmsMessageVO();
-								smsVo.setDestno(info.getUSR_MPN_NO());
-								smsVo.setMsg(SendType.SMS_090, info.getBIKE_NO(),
-										String.valueOf(sdf.format(today)), returnStationName);
-								SmsSender.sender(smsVo);
-							}
-						}
-					}
-					else
-					{
-						if(info.getSTATION_USE_YN() != null && info.getBIKE_SE_CD().equals("BIK_003"))
-						{
-							SmsMessageVO smsVo = new SmsMessageVO();
-							smsVo.setDestno(info.getUSR_MPN_NO());
-							smsVo.setMsg(SendType.SMS_090, info.getBIKE_NO(),
-									String.valueOf(sdf.format(today)), returnStationName);
-							SmsSender.sender(smsVo);
-						}
-						else
-						{
-							SmsMessageVO smsVo = new SmsMessageVO();
-							smsVo.setDestno(info.getUSR_MPN_NO());
-							smsVo.setMsg(SendType.SMS_090, info.getBIKE_NO(),
-									String.valueOf(sdf.format(today)), returnStationName);
-							SmsSender.sender(smsVo);
-						}
-					}
-				} 
-				catch (Exception e) 
-				{
-
-				}
-			}
-		} 
-		else if (info.getRENT_MTH_CD().equals("CHN_002")) 
-		{
-			// T-APP 전송
 			SimpleDateFormat sdf;
+
 			sdf = new SimpleDateFormat("MM월dd일 HH시mm분");
 
-			TAPPMessageVO TAPPVo = new TAPPMessageVO();
-			TAPPVo.setUsr_seq(info.getUSR_SEQ());
-			TAPPVo.setBike_no(info.getBIKE_NO());
-			TAPPVo.setOver_fee(info.getOVER_FEE());
-			TAPPVo.setOver_mi(info.getOVER_MI());
-			TAPPVo.setNotice_se(SendType.SMS_002.getCode());
-			if(info.getSTATION_USE_YN() != null && info.getBIKE_SE_CD().equals("BIK_003"))
+			try 
 			{
-				TAPPVo.setMsg(SendType.SMS_090, info.getBIKE_NO(), String.valueOf(sdf.format(today)), returnStationNo);
-			}
-			else
-			{
-				TAPPVo.setMsg(SendType.SMS_090, info.getBIKE_NO(), String.valueOf(sdf.format(today)), returnStationNo);
-			}
-			SmsSender.TAPPsender(TAPPVo);
-		}
-
-		SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
-		Date usrBirthDay;
-		try 
-		{
-			if (info.getUSR_BIRTH_DATE() != null && !String.valueOf(info.getUSR_BIRTH_DATE()).equals("null") && !String.valueOf(info.getUSR_BIRTH_DATE()).equals("")) 
-			{
-				usrBirthDay = transFormat.parse(String.valueOf(info.getUSR_BIRTH_DATE()));
-				int usrBirth = getAgeFromBirthday(usrBirthDay);
-				if (usrBirth < 14) 
+				SmsMessageVO smsVo = new SmsMessageVO();
+				smsVo.setDestno(info.getUSR_MPN_NO());
+				smsVo.setMsg("반납되었습니다");
+				SmsSender.sender(smsVo);
+				
+				if(b_overfee == true)
+					
 				{
-					if (info.getPARENT_MPN_NO() != null && !info.getPARENT_MPN_NO().equals("")) 
-					{
-						SimpleDateFormat sdf;
-						sdf = new SimpleDateFormat("MM월dd일 HH시mm분");
-
-						try 
-						{
-							SmsMessageVO smsVo = new SmsMessageVO();
-							smsVo.setDestno(info.getPARENT_MPN_NO());
-							smsVo.setMsg(SendType.SMS_090, info.getBIKE_NO(), String.valueOf(sdf.format(today)), returnStationName);
-							SmsSender.sender(smsVo);
-						} 
-						catch (Exception e) 
-						{
-
-						}
-					}
+					smsVo.setDestno(info.getUSR_MPN_NO());
+					smsVo.setMsg("과금되었습니다");
+					SmsSender.sender(smsVo);
 				}
+			} 
+			catch (Exception e) 
+			{
+
 			}
-
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			// e1.printStackTrace();
 		}
-
 	}
 
 	public static int getAgeFromBirthday(Date birthday) 

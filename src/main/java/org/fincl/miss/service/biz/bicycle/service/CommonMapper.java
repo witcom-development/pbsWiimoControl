@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+import org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO;
 import org.fincl.miss.service.biz.bicycle.common.CommonVo;
 import org.fincl.miss.service.biz.bicycle.vo.AdminMoveRequestVo;
 import org.fincl.miss.service.biz.bicycle.vo.PeriodicStateReportsRequestVo;
@@ -50,6 +51,16 @@ public interface CommonMapper {
 	
 	public void InsertQR_RACK_0(Map<String, String> STATION_INFO);
 	public void InsertQR_RACK_99(Map<String, String> STATION_INFO);
+	
+	public OverFeeVO getOverFeeRETURN(String USR_SEQ);
+	
+	int addTicketPayment(OverFeeVO fee);
+
+	int setOverFeePayComplete(OverFeeVO fee);
+
+	java.util.Map<String, String> getPaymentInfoExist(OverFeeVO fee);
+	
+	int setOverFeePayReset(OverFeeVO fee);
 
 	public int checkBreakDown(CommonVo com);
 

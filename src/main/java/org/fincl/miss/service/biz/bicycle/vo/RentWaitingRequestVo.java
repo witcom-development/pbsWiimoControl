@@ -26,7 +26,6 @@ public class RentWaitingRequestVo extends BicycleVo{
         requestFields.put("latitude", 4);
         requestFields.put("longitude", 4);
         requestFields.put("lockState", 1);  // 모터 잠금 : lock(0x01) / unlock(0x00)
-        
         requestFields.put("errorId", 1);
     }
     

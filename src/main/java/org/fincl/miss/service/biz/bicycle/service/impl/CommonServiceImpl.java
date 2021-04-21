@@ -1,5 +1,6 @@
 package org.fincl.miss.service.biz.bicycle.service.impl;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.fincl.miss.server.scheduler.job.bikeRob.BikeRobAlarmMapper;
+import org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO;
 import org.fincl.miss.server.scheduler.job.sms.SmsMessageVO;
 import org.fincl.miss.server.scheduler.job.sms.TAPPMessageVO;
 import org.fincl.miss.server.sms.SendType;
@@ -27,7 +31,10 @@ import org.fincl.miss.service.biz.bicycle.vo.RentHistVo;
 import org.fincl.miss.service.biz.bicycle.vo.RentalRequestVo;
 import org.fincl.miss.service.biz.bicycle.vo.TheftReportRequestVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.fincl.miss.service.biz.bicycle.vo.RentHistVo;
 
 import com.ibatis.common.logging.Log;
@@ -40,9 +47,11 @@ import com.ibatis.common.logging.Log;
 public class CommonServiceImpl implements CommonService {
 	
 	@Autowired
+	//@Qualifier("bizDataSource")
 	private CommonMapper comm;
 	
 	@Autowired
+	//@Qualifier("bizDataSource")
 	 private BicycleRentMapper bicycleMapper;
 	
 	@Autowired
@@ -725,6 +734,35 @@ public class CommonServiceImpl implements CommonService {
 	{
 		comm.InsertQR_RACK_99(STATION_INFO);
 	}
+	
+	public OverFeeVO getOverFeeRETURN(String USR_SEQ)
+	{
+		return comm.getOverFeeRETURN(USR_SEQ);
+	}
+	
+	@Override
+	@Transactional(readOnly=false, propagation= Propagation.REQUIRED, rollbackFor={Exception.class, SQLException.class})
+	public int setOverFeePayComplete(OverFeeVO fee) {
+		return comm.setOverFeePayComplete(fee);
+	}
+
+	@Override
+	@Transactional(readOnly=false, propagation= Propagation.REQUIRED, rollbackFor={Exception.class, SQLException.class})
+	public int addTicketPayment(OverFeeVO fee) {
+		// TODO Auto-generated method stub
+		return comm.addTicketPayment(fee);
+	}
+	
+	public java.util.Map<String, String> getPaymentInfoExist(OverFeeVO fee){
+		return comm.getPaymentInfoExist(fee);
+	}
+	
+	@Override
+	@Transactional(readOnly=false, propagation= Propagation.REQUIRED, rollbackFor={Exception.class, SQLException.class})
+	public int setOverFeePayReset(OverFeeVO fee) {
+		return comm.setOverFeePayReset(fee);
+	}
+	
 	
 	public Map<String, String> CheckValidELEC_GPS()
 	{

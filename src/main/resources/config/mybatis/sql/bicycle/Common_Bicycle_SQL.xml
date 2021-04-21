@@ -11,8 +11,8 @@
 			DEVICE_USE_TYPE   ,
 			IP_V4_ADDR        ,
 			IP_V6_ADDR        ,
- 			dg_decrypt('TB_IOT_DEVICE', 'AUTH_ID', AUTH_ID) as 'AUTH_ID'           ,
- 			dg_decrypt('TB_IOT_DEVICE', 'AUTH_PWD', AUTH_PWD) as 'AUTH_PWD'          ,
+ 			AUTH_ID as 'AUTH_ID'           ,
+ 			AUTH_PWD as 'AUTH_PWD'          ,
 			DEVICE_LATITUDE   ,
 			DEVICE_LONGITUDE  ,
 			DEVICE_STUS_CD    ,
@@ -172,14 +172,14 @@
 		SELECT 
 			A.USR_SEQ, 
 			MB_ID, 
- 			dg_decrypt('TB_SVC_MB', 'MB_TEL_NO', MB_TEL_NO) as 'MB_TEL_NO',
- 			dg_decrypt('TB_SVC_MB', 'MB_EMAIL_NAME', MB_EMAIL_NAME) as 'MB_EMAIL_NAME',
+ 			MB_TEL_NO as 'MB_TEL_NO',
+ 			MB_EMAIL_NAME as 'MB_EMAIL_NAME',
 			MB_POST_NO, 
 			MB_ADDR1, 
 			MB_ADDR2, 
 			PARENT_SEX_CD, 
- 			dg_decrypt_date('TB_SVC_MB', 'PARENT_BIRTH_DATE', PARENT_BIRTH_DATE) as 'PARENT_BIRTH_DATE',
-         	dg_decrypt('TB_SVC_MB', 'PARENT_MPN_NO', PARENT_MPN_NO) as  'PARENT_MPN_NO',
+ 			PARENT_BIRTH_DATE as 'PARENT_BIRTH_DATE',
+         	PARENT_MPN_NO as  'PARENT_MPN_NO',
         	EMAIL_SEND_AGREE_YN, 
         	LAST_LOGIN_DTTM, 
         	MB_WGT, 
@@ -191,17 +191,17 @@
 			MPN_LOST_YN, 
 			MPN_LOST_DTTM, 
 			MB_CARD_SEQ, 
- 			dg_decrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', MB_CARD_NO) as 'MB_CARD_NO',
+ 			MB_CARD_NO as 'MB_CARD_NO',
 			STR_DTTM, 
 			END_DTTM, 
 			CARD_TYPE_CD, 
 			CARD_USE_CLS_CD, 
- 			dg_decrypt('TB_SVC_MB_CARD', 'TRANSFER_REPLC_CARD_NO', TRANSFER_REPLC_CARD_NO) as 'TRANSFER_REPLC_CARD_NO',
+ 			TRANSFER_REPLC_CARD_NO as 'TRANSFER_REPLC_CARD_NO',
 			CARD_REG_STATION_ID, 
 			REG_DTTM
 		FROM TB_SVC_MB A, TB_SVC_MB_CARD B
 		WHERE A.USR_SEQ = B.USR_SEQ
- 		AND B.MB_CARD_NO = dg_encrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', #{cardNum})
+ 		AND B.MB_CARD_NO = #{cardNum}
 		AND B.CARD_USE_CLS_CD ='R' 
 		AND B.END_DTTM = STR_TO_DATE('9999-12-31 23:59:59','%Y-%m-%d %H:%i:%s')
 		ORDER BY END_DTTM DESC limit 1
@@ -215,16 +215,16 @@
 			ADMIN_GRP_SEQ,
 			ASSIGN_STATION_ID, 
 			ASSIGN_CENTER_ID, 
- 			dg_decrypt('TB_SYS_ADMIN', 'ENC_PWD', ENC_PWD) as 'ENC_PWD',
+ 			ENC_PWD as 'ENC_PWD',
 			ADMIN_NAME, 
 			DEPT_NAME, 
- 			dg_decrypt('TB_SYS_ADMIN', 'ADMIN_TEL_NO', ADMIN_TEL_NO) as 'ADMIN_TEL_NO',
- 			dg_decrypt('TB_SYS_ADMIN', 'ADMIN_MPN_NO', ADMIN_MPN_NO) as 'ADMIN_MPN_NO',
- 			dg_decrypt('TB_SYS_ADMIN', 'ADMIN_EMAIL_NAME', ADMIN_EMAIL_NAME) as 'ADMIN_EMAIL_NAME',
+ 			ADMIN_TEL_NO as 'ADMIN_TEL_NO',
+ 			ADMIN_MPN_NO as 'ADMIN_MPN_NO',
+ 			ADMIN_EMAIL_NAME as 'ADMIN_EMAIL_NAME',
 			ADMIN_DESC, 
 			LOGIN_FAIL_CNT, 
- 			dg_decrypt('TB_SYS_ADMIN', 'ADMIN_CARD_NO', ADMIN_CARD_NO) as 'ADMIN_CARD_NO',
- 			dg_decrypt('TB_SYS_ADMIN', 'ADMIN_CARD_PWD', ADMIN_CARD_PWD) as 'ADMIN_CARD_PWD', 
+ 			ADMIN_CARD_NO as 'ADMIN_CARD_NO',
+ 			ADMIN_CARD_PWD as 'ADMIN_CARD_PWD', 
 			EMAIL_RECV_YN, 
 			USE_YN, 
 			ACCS_CTRL_YN, 
@@ -232,8 +232,7 @@
 			CRE_DTTM, 
 			MOD_DTTM
 		FROM TB_SYS_ADMIN
-		WHERE ADMIN_CARD_NO =  DG_ENCRYPT('TB_SYS_ADMIN', 'ADMIN_CARD_NO', 
-									CONCAT(SUBSTR(#{AdmincardNum},1,4),'-',SUBSTR(#{AdmincardNum},5,4),'-',SUBSTR(#{AdmincardNum},9,4),'-',SUBSTR(#{AdmincardNum},13,4)) 
+		WHERE ADMIN_CARD_NO = CONCAT(SUBSTR(#{AdmincardNum},1,4),'-',SUBSTR(#{AdmincardNum},5,4),'-',SUBSTR(#{AdmincardNum},9,4),'-',SUBSTR(#{AdmincardNum},13,4) 
 								)
 		AND USE_YN = 'Y'
 		
@@ -248,7 +247,7 @@
 		VALUES
 		(
 			#{userSeq},
- 			dg_encrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', #{cardNum}) ,
+ 			#{cardNum} ,
 			(now() + INTERVAL 1 SECOND),
 			STR_TO_DATE('9999-12-31 23:59:59','%Y-%m-%d %H:%i:%s'),
 			#{cardTypeCd},
@@ -284,7 +283,7 @@
 		SELECT count(*)
 		FROM TB_SVC_USR_BLKLIST A, TB_SVC_MB_CARD B
 		WHERE A.USR_SEQ = B.USR_SEQ
- 		AND B.MB_CARD_NO = dg_encrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', #{cardNum}) 
+ 		AND B.MB_CARD_NO = #{cardNum} 
 		AND CARD_USE_CLS_CD = 'R' 
 		AND END_DTTM = STR_TO_DATE('9999-12-31 23:59:59','%Y-%m-%d %H:%i:%s')
 	</select>
@@ -300,7 +299,7 @@
 		(
 			SELECT USR_SEQ
 			FROM TB_SVC_MB_CARD 
- 			WHERE MB_CARD_NO = dg_encrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', #{cardNum})
+ 			WHERE MB_CARD_NO = #{cardNum}
 			AND CARD_USE_CLS_CD = 'R' 
 			AND END_DTTM = STR_TO_DATE('9999-12-31 23:59:59','%Y-%m-%d %H:%i:%s')
 		)
@@ -536,7 +535,7 @@
         SELECT COUNT(MB_CARD_SEQ)
           FROM spb.TB_SVC_MB_CARD
          WHERE CARD_USE_CLS_CD = 'R'
-           AND MB_CARD_NO =dg_encrypt('TB_SVC_MB_CARD', 'MB_CARD_NO', #{cardNum})
+           AND MB_CARD_NO = #{cardNum}
            AND END_DTTM = STR_TO_DATE('9999-12-31 23:59:59','%Y-%m-%d %H:%i:%s')
     </select>
 
@@ -545,8 +544,7 @@
         FROM spb.TB_SYS_ADMIN
          WHERE 
          	ADMIN_CARD_NO = 
-		         dg_encrypt('TB_SYS_ADMIN', 'ADMIN_CARD_NO',
-					concat(SUBSTR(#{AdmincardNum},1,4),'-',SUBSTR(#{AdmincardNum},5,4),'-',SUBSTR(#{AdmincardNum},9,4),'-',SUBSTR(#{AdmincardNum},13,4))
+		         concat(SUBSTR(#{AdmincardNum},1,4),'-',SUBSTR(#{AdmincardNum},5,4),'-',SUBSTR(#{AdmincardNum},9,4),'-',SUBSTR(#{AdmincardNum},13,4)
 				) 
     </select>
     
@@ -668,12 +666,9 @@
 	<select id="checkAdminPwd"		parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo"		resultType="int">
 		
 		SELECT 
-			CASE WHEN MAX(ADMIN_CARD_PWD) = dg_encrypt('TB_SYS_ADMIN', 'ADMIN_CARD_PWD', #{password}) THEN 1 ELSE 0 END as 'CHK_PWD'
+			CASE WHEN MAX(ADMIN_CARD_PWD) = #{password} THEN 1 ELSE 0 END as 'CHK_PWD'
 		FROM TB_SYS_ADMIN
-		WHERE ADMIN_CARD_NO = 
-								dg_encrypt('TB_SYS_ADMIN', 'ADMIN_CARD_NO', 
-									concat(SUBSTR(#{AdmincardNum},1,4),'-',SUBSTR(#{AdmincardNum},5,4),'-',SUBSTR(#{AdmincardNum},9,4),'-',SUBSTR(#{AdmincardNum},13,4)) 
-								) 
+		WHERE ADMIN_CARD_NO = concat(SUBSTR(#{AdmincardNum},1,4),'-',SUBSTR(#{AdmincardNum},5,4),'-',SUBSTR(#{AdmincardNum},9,4),'-',SUBSTR(#{AdmincardNum},13,4)) 
 		AND USE_YN = 'Y'
 		
 	</select>
@@ -850,7 +845,7 @@
 									 FROM TB_SYS_COM_CD
 									 WHERE 1=1
 									 AND COM_UP_CD = 'BAT'
-									 AND ADD_VAL1 = #{BATTERY_INFO}), USE_CNT = #{BATTERY}
+									 AND ADD_VAL1 = #{BATTERY_INFO}), ELEC_BATT = #{BATTERY}
 		WHERE 1=1
 		AND TERMINAL_ID = #{BICYCLE_ID}
 	</update>
@@ -963,7 +958,7 @@
 		SELECT B.BIKE_NO,
  				 R.RENT_DTTM,
  				 S.STATION_NAME,
-   				 DG_DECRYPT('TB_SVC_USR', 'USR_MPN_NO', U.USR_MPN_NO) AS USR_MPN_NO,
+   				 U.USR_MPN_NO AS USR_MPN_NO,
    				 R.RENT_MTH_CD,U.USR_SEQ
  		FROM TB_SVC_RENT R LEFT JOIN TB_OPR_BIKE B ON R.RENT_BIKE_ID = B.TERMINAL_ID
  			  LEFT JOIN TB_OPR_MLANG_STATION S ON R.RENT_STATION_ID = S.STATION_ID AND S.LANG_CLS_CD = 'LAG_001'
@@ -1099,5 +1094,97 @@
 		select ADD_VAL1 from TB_SYS_COM_CD where COM_UP_CD = 'SHOOT' AND USE_YN = 'Y'
 	</select>
 	
+	
+	<select id="getOverFeeRETURN" parameterType="string" resultType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO">
+    <![CDATA[
+		SELECT 
+			P.BILLING_KEY           AS billingKey,
+			P.BILLING_CERTIFY_KEY   AS billingCertifyKey,
+			P.PAYMENT_METHOD_CD     AS paymentMethodCd,
+			RF.RENT_HIST_SEQ        AS rentHistSeq,
+			RH.RENT_DTTM            AS rentDttm,
+			RF.PAYMENT_ATT_CNT         AS paymentAttCnt,
+			RF.OVER_FEE                AS overFee,
+			IFNULL(MB.MB_ID,'GUEST') AS mbId,
+			U.USR_SEQ               AS usrSeq,
+			RF.OVER_MI              AS overMi,
+			IFNULL( dg_decrypt('TB_SVC_MB', 'MB_EMAIL_NAME', MB.MB_EMAIL_NAME),'GUEST') AS mbEmailName,
+			CAST(dg_decrypt('TB_SVC_USR', 'USR_MPN_NO', U.USR_MPN_NO) AS CHAR)   AS usrMpnNo,
+			V.PAYMENT_CLS_CD
+		FROM  (SELECT * FROM TB_SVC_RENT_OVER_FEE WHERE OVER_FEE_PAYMENT_YN = 'N' AND PAYMENT_ATT_CNT < ( SELECT ADD_VAL1*2 FROM TB_SYS_COM_CD  WHERE COM_CD='MSI_005')  ORDER BY RENT_HIST_SEQ DESC LIMIT 100) RF
+			INNER JOIN TB_SVC_RENT_HIST RH ON RH.RENT_HIST_SEQ = RF.RENT_HIST_SEQ
+			INNER JOIN TB_SVC_USR U ON U.USR_SEQ = RH.USR_SEQ
+			INNER JOIN TB_SVC_VOUCHER V ON V.VOUCHER_SEQ = RH.VOUCHER_SEQ
+			INNER JOIN TB_SVC_PAYMENT PAY ON V.PAYMENT_SEQ = PAY.PAYMENT_SEQ
+			LEFT JOIN TB_SVC_PAYMENT_METHOD P ON P.USR_SEQ = U.USR_SEQ
+			LEFT JOIN TB_SVC_MB MB ON MB.USR_SEQ = U.USR_SEQ
+		WHERE 1=1
+			AND P.BILLING_KEY <> ''
+			AND U.USR_SEQ = #{usr_seq}
+		ORDER BY rentDttm desc
+		LIMIT 1;
+    ]]>
+    </select>
+    
+    <insert id="addTicketPayment" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO" useGeneratedKeys="true" keyProperty="paymentSeq">
+        INSERT INTO TB_SVC_PAYMENT (
+                 PAYMENT_DTTM
+                ,USR_SEQ
+                ,PAYMENT_CLS_CD
+                ,PAYMENT_METHOD_CD
+                ,PAYMENT_STUS_CD
+                ,PAYMENT_CONFM_NO
+                ,TOT_AMT
+                ,MILEAGE_PAYMENT_AMT
+                ,RENT_OVER_FEE_SUM
+                ,MB_SERIAL_NO
+        ) VALUES (
+                now()
+               ,#{usrSeq}
+               ,'BIL_009'
+               ,#{paymentMethodCd}
+               ,'BIS_001'
+               ,#{paymentConfmNo}
+               ,#{totAmt}
+               ,0
+               ,0
+               ,#{mb_serial_no}
+        )
+    </insert>
+    
+    <update id="setOverFeePayComplete" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
+        UPDATE TB_SVC_RENT_OVER_FEE
+           SET PAYMENT_SEQ = #{paymentSeq}
+             <if test='resultCD == "0000"' >
+             , OVER_FEE_PROCESS_CLS_CD = 'OPD_004'
+             , OVER_FEE_PAYMENT_YN = 'Y'
+             , PAYMENT_DTTM = (SELECT PAYMENT_DTTM FROM TB_SVC_PAYMENT WHERE PAYMENT_SEQ = #{paymentSeq})
+             </if>
+             , PAYMENT_ATT_CNT = (CONVERT(#{paymentAttCnt}, UNSIGNED)+1)
+             , PROCESS_REASON_DESC = #{processReasonDesc}
+         WHERE RENT_HIST_SEQ = #{rentHistSeq}
+    </update>
+    
+    <select id="getPaymentInfoExist" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO" resultType="java.util.Map">
+    <![CDATA[
+		SELECT CASE
+			   	WHEN COUNT(PAYMENT_CONFM_NO) > 0
+			   	THEN 'Y'
+			   	ELSE 'N'
+			   END AS PAYMENT_INFO_EXIST, COUNT(*)
+		FROM TB_SVC_PAYMENT
+		WHERE 1=1
+		AND USR_SEQ = #{usrSeq}
+		AND PAYMENT_CONFM_NO = #{paymentConfmNo}
+		AND MB_SERIAL_NO = #{mb_serial_no}
+    ]]>  
+    </select>
+    
+    
+    <update id="setOverFeePayReset" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
+        UPDATE TB_SVC_RENT_OVER_FEE
+         SET PAYMENT_ATT_CNT = 0
+         WHERE RENT_HIST_SEQ = #{rentHistSeq}
+    </update>
 	
 </mapper>

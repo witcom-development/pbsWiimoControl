@@ -364,6 +364,7 @@ public class ReturnService  {
         	int baseRentTime = 0;
         	// 초과 요금 대상
     		//if(overTime > baseRentTime)
+        	/*
         	if(info.getBIKE_SE_CD().equals("BIK_001"))
         	{
         		baseRentTime = 20;
@@ -372,31 +373,43 @@ public class ReturnService  {
         	{
         		baseRentTime = 0;
         	}
-    		if(sysTime > baseRentTime)
-    		{
-    			logger.debug(" #####  server_time is baseRentTime {}  sysTime {}"  , baseRentTime, sysTime);
+        	*/
+    		//if(sysTime > baseRentTime)
+    		//{
+        	logger.debug(" #####  server_time is baseRentTime {}  sysTime {}"  , baseRentTime, sysTime);
     		
     		
-    			Map<String, Object> fee = new HashMap<String, Object>();
+			Map<String, Object> fee = new HashMap<String, Object>();
+			
+			fee.put("ADD_FEE_CLS", info.getPAYMENT_CLS_CD());
+			fee.put("BIKE_SE_CD", info.getBIKE_SE_CD());
+			
+			/*
+			if(info.getBIKE_SE_CD().equals("BIK_001"))
+        	{
+				fee.put("ADD_FEE_CLS", "B");
+        	}
+        	else
+        	{
+        		fee.put("ADD_FEE_CLS", "K");
+        	}
+        	*/
+			
+			
+			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
+			Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
     			
-    			if(info.getBIKE_SE_CD().equals("BIK_001"))
-            	{
-    				fee.put("ADD_FEE_CLS", "S");
-            	}
-            	else
-            	{
-            		fee.put("ADD_FEE_CLS", "M");
-            	}
-    			
-    			
-    			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
-    			Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
-    			
-    			overPay = new CommonUtil().getPay(minPolicy, maxPolicy, sysTime);
+			overPay = new CommonUtil().getPay(minPolicy, maxPolicy, sysTime);
   
-    			info.setOVER_FEE_YN("Y");
-    			info.setOVER_FEE(overPay+"");
-    			info.setOVER_MI(String.valueOf(sysTime - (baseRentTime)));
+			if(overPay >0)
+			{
+				info.setOVER_FEE_YN("Y");
+			
+				info.setOVER_FEE(overPay+"");
+				baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString()) -1;
+				info.setOVER_MI(String.valueOf(sysTime - (baseRentTime)));
+			}
+    			/*
     		}
     		else
     		{
@@ -404,6 +417,7 @@ public class ReturnService  {
     				
     			logger.debug(" ##### systime_time is baseRentTime {} ,sysTime {}", baseRentTime ,sysTime);
     		}
+    		*/
     		/*  추가만 하고 적용 안함..
     		String faultSeq = commonService.getFaultSeq(com);
     		
