@@ -42,7 +42,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-
 @RPCServiceGroup(serviceGroupName = "주기")
 @Service
 public class PeriodService{
@@ -61,6 +60,7 @@ public class PeriodService{
 	
 	@Autowired
     private BicycleRentMapper bicycleMapper;
+ 
 	
 	// 주기적인 상태 보고 
 	 @RPCService(serviceId = "Bicycle_11", serviceName = "주기적인 상태보고 Request", description = "주기적인 상태보고 Request")
@@ -68,6 +68,8 @@ public class PeriodService{
 		 
 		 logger.debug("######################## 435F_Bicycle_11 ");
 		 logger.debug("QR_PeriodicStateReportsRequestVo vo :::::::::::{} " , vo);
+		 
+		 
 		 	
 		// double latitude = 0.0d, longitude = 0.0d;
 		 String latitude = null;
@@ -509,7 +511,7 @@ public class PeriodService{
      			 //대여 일때  새싹 02 
      			 /* NAVER 루틴*/
      			if(vo.getBicycleState().equals("03"))	//
-    			 {
+     			{
     				   
     				    String NAVER_API_KEY ;
     				    String NAVER_SECRET_KEY;	
@@ -647,23 +649,42 @@ public class PeriodService{
      	    		}
      	    		else
      	    		{
-	     	  			 for(HashMap<String, String> PeriodMap : PeriodList)
-	     	  			 {
-	     	  				 
-	     	  				 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
-	     	  				 {
-	     	  					 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
-	     	  					 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
-	     	  					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
-	     	  					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
-	     	  					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
-	     	  					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
-	     	  				 }
-	     	  			 }
-	     	  		 }
-     	    		
-     	    		
-     	    		 
+     	    			if(vo.getBicycleState().equals("03"))
+     	    			{
+     	    				for(HashMap<String, String> PeriodMap : PeriodList)
+     	    				{
+   	     	  				 
+     	    					if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_039"))
+     	    					{
+     	    						logger.debug("######################## MSI_039 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+	     	    					//responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+     	    						int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+     	    						int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+     	    						responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+     	    						responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+     	    					}
+     	    				}
+     	    			
+     	    			}
+     	    			else if(vo.getBicycleState().equals("04"))
+     	    			{
+     	    				for(HashMap<String, String> PeriodMap : PeriodList)
+     	    				{
+   	     	  				 
+     	    					if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_037"))
+     	    					{
+     	    						logger.debug("######################## MSI_037 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+	     	    					//responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+     	    						int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+     	    						int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+     	    						responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+     	    						responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+     	    					}
+     	    				}
+     	    			
+     	    			}
+	     	  			 
+     	    		}
      	    		return responseVo;
      			}	//강제반납 시 
      		}
@@ -842,19 +863,41 @@ public class PeriodService{
     		}
     		else
     		{
- 	  			 for(HashMap<String, String> PeriodMap : PeriodList)
- 	  			 {
- 	  				 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_039"))	//2020.04.14
- 	  				 {
- 	  					 logger.debug("######################## MSI_039 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
- 	  					 //responseVo.setRentPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
- 	  					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
- 	  					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
- 	  					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
- 	  					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
- 	  				 }
- 	  			 }
- 	  		 }
+    			if(vo.getBicycleState().equals("03"))
+    			{
+    				for(HashMap<String, String> PeriodMap : PeriodList)
+    				{
+	  				 
+    					if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_039"))
+    					{
+    						logger.debug("######################## MSI_039 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+    					//responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+    						int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+    						int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+    						responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+    						responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+    					}
+    				}
+    			
+    			}
+    			else if(vo.getBicycleState().equals("04"))
+    			{
+    				for(HashMap<String, String> PeriodMap : PeriodList)
+    				{
+	  				 
+    					if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_037"))
+    					{
+    						logger.debug("######################## MSI_037 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+    					//responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+    						int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+    						int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+    						responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+    						responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+    					}
+    				}
+    			
+    			}
+    		}
     		 
     		return responseVo;
      	
