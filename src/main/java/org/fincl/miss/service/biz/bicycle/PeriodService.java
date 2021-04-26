@@ -262,10 +262,9 @@ public class PeriodService{
 					 GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
 					 //못찾았을 경우 반납 승인 거절 
 					 
-					 List<HashMap<String, Object>> stationInfo_List = commonService.CheckStation_ForGPS(GPS);
+					 stationInfo = commonService.CheckStation_ForGPS(GPS);
 					 
-					 
-					 if(stationInfo_List.size() == 0 )
+					 if(stationInfo == null)
 					 {
 						 logger.error("Station List Find Error");
 						 responseVo.setErrorId(Constants.CODE.get("ERROR_FD"));
@@ -273,27 +272,9 @@ public class PeriodService{
 				  		
 						 return responseVo;
 					 }
-					 
 					 else
 					 {
-						 logger.debug("##### QR_PERIOD ## GPS STATION FIND START! #####");
-						 for(HashMap<String, Object> stationTmp : stationInfo_List)
-						 {
-							 
-							 if( Double.parseDouble(String.valueOf(stationTmp.get("DISTANCE_DATA")))   < Double.parseDouble(String.valueOf(stationTmp.get("DSTNC_LT"))))
-							 {
-								 stationInfo = stationTmp;
-								 logger.debug("##### QR_PERIOD ## GPS STATION ID[" + String.valueOf(stationTmp.get("STATION_ID")) + "] ENTERED");
-								 break;
-							 }
-							 else
-							 {
-								 logger.debug("##### QR_PERIOD ## GPS STATION ID[" + String.valueOf(stationTmp.get("STATION_ID")) 
-										+ "] GPS NOT ENTERED GPS DISTANCE[" + String.valueOf(stationTmp.get("DISTANCE_DATA")) 
-										+ "] STATION RANGE[" + String.valueOf(stationTmp.get("DSTNC_LT")) + "] #####");
-							 }
-						 }
-						 logger.debug("##### QR_PERIOD ## GPS STATION FIND END! #####");
+						 logger.debug("##### QR_PERIOD ## GPS STATION ID[" + String.valueOf(stationInfo.get("STATION_ID")) + "] ENTERED");
 					 }
 					 
 				 }

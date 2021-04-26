@@ -35,7 +35,7 @@ public interface CommonMapper {
 
 	public Map<String, Object> checkMount(CommonVo com);
 	
-	public List<HashMap<String, Object>> CheckStation_ForGPS(Map<String, String> GPS_DATA);
+	public HashMap<String, Object> CheckStation_ForGPS(Map<String, String> GPS_DATA);
 	
 	public void InsertBikeGPS_Status(Map<String, String> GPS_DATA);
 	

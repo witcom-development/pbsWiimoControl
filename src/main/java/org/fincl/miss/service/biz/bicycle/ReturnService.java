@@ -240,9 +240,9 @@ public class ReturnService  {
 					GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
 					GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
 					GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
-					List<HashMap<String, Object>> stationInfo_List = commonService.CheckStation_ForGPS(GPS);
+					stationInfo = commonService.CheckStation_ForGPS(GPS);
 					
-					if(stationInfo_List.size() == 0 )
+					if(stationInfo == null )
 					{
 						 logger.error("Station List Find Error");
 						 responseVo.setErrorId(Constants.CODE.get("ERROR_FD"));
@@ -253,30 +253,11 @@ public class ReturnService  {
 					 else
 					 {
 						 logger.debug("##### BIKE RETURN ## GPS STATION FIND START! #####");
-						 
-						 for(HashMap<String, Object> stationTmp : stationInfo_List)
-						 {
+						 logger.debug("##### BIKE RETURN ## GPS STATION ID[" + String.valueOf(stationInfo.get("STATION_ID")) + "] ENTERED");;
 							 
-							 if( Double.parseDouble(String.valueOf(stationTmp.get("DISTANCE_DATA")))   < Double.parseDouble(String.valueOf(stationTmp.get("DSTNC_LT"))))
-							 {
-								 stationInfo = stationTmp;
-								 logger.debug("##### BIKE RETURN ## GPS STATION ID[" + String.valueOf(stationTmp.get("STATION_ID")) + "] ENTERED");
-								 break;
-							 }
-							 else
-							 {
-								 logger.debug("##### BIKE RETURN ## GPS STATION ID[" + String.valueOf(stationTmp.get("STATION_ID")) 
-										+ "] GPS NOT ENTERED GPS DISTANCE[" + String.valueOf(stationTmp.get("DISTANCE_DATA")) 
-										+ "] STATION RANGE[" + String.valueOf(stationTmp.get("DSTNC_LT")) + "] #####");
-							 }
-						 }
-						 
-						 //2020.01.20 test 에서 gps 로 반납이 안되도록 함.
-						 //logger.debug("##### BIKE RETURN ## GPS STATION FIND END! (TEST_FORCE TO BUT RETURN is FAILED)  #####");
-						 
-						 //stationInfo = null;
-					 } 
-				 }
+					 }
+				} 
+				 
 			}	//stationInfo is null : gps 체크 안함....
      		
      		

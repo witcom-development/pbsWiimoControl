@@ -695,7 +695,7 @@ public class CommonServiceImpl implements CommonService {
 		return comm.getPeriodSetInfo();
 	}
 	
-	public List<HashMap<String, Object>> CheckStation_ForGPS(Map<String, String> GPS_DATA){
+	public HashMap<String, Object> CheckStation_ForGPS(Map<String, String> GPS_DATA){
 		return comm.CheckStation_ForGPS(GPS_DATA);
 	}
 	
