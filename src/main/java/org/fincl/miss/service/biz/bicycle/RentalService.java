@@ -244,7 +244,6 @@ public class RentalService {
   					}
   					else
   					{
-  						//com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
   						com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
   						com.setRockId(bikeInfo.getRent_rack_id());
 	  				 
@@ -341,7 +340,6 @@ public class RentalService {
 		     				
 
 		     				SmsMessageVO sms = new SmsMessageVO();
-		     				SendSMSVo sms2 = new SendSMSVo();
 		     				sms.setTitle("대여안내");
 		     				sms.setType("S");
 		     				
@@ -353,8 +351,16 @@ public class RentalService {
 			     				String destno = String.valueOf(msgInfo.get("DEST_NO"));
 			     				if(destno != null && !destno.equals(""))
 			     				{
+			     					String Message = null;
+			     					if(msgInfo.get("BIKE_SE_CD").equals("BIK_001"))
+			     					{
 		
-			     					String Message = "대여 되었습니다";
+			     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 자전거 대여완료. 10분마다 추가요금 200원 발생합니다.";
+			     					}
+			     					else
+			     					{
+			     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
+			     					}
 			     					sms.setDestno(destno);
 			     					sms.setMsg(Message.toString());
 			     					SmsSender.sender(sms);
