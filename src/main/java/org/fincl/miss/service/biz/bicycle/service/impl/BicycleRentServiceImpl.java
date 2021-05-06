@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
 import com.mainpay.sdk.utils.ParseUtils;
 
 import org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO;
@@ -249,6 +250,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 
 		// 대여 예약도 DELET RENT
 		bicycleMapper.deleteRentInfo_rserved(info);
+		OverFeeVO fee = new OverFeeVO();
 
 		// 대여 초과 요금 여부 확인 INSERT RENT_OVER_FEE
 		if (info.getOVER_FEE_YN().equals("Y")) 
@@ -259,7 +261,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 			// -> OPD_002
 			
 			MainPayUtil MainPayutil = new MainPayUtil();
-			OverFeeVO fee = comm.getOverFeeRETURN(info.getUSR_SEQ());
+			fee = comm.getOverFeeRETURN(info.getUSR_SEQ());
 			HashMap<String, String> parameters = new HashMap<String, String>();
 			String billkey = fee.getBillingKey() ;
     		if( billkey != null && !"".equals(billkey)) {	// 빌링키 없음 실패		
@@ -290,10 +292,10 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 					fee.setResultCD("0000");
 					fee.setPaymentStusCd("BIS_001");
 					fee.setMb_serial_no(parameters.get("mbrRefNo"));
-					fee.setPaymentConfmNo(parameters.get("mbrRefNo"));
+					Map dataMap = (Map)responseMap.get("data");
+					fee.setPaymentConfmNo((String) dataMap.get("refNo"));
 					fee.setTotAmt(fee.getOverFee());
-					
-					//fee.setOrderCertifyKey(orderCertifyKey);
+					fee.setOrder_certify_key((String)responseMap.get("applNo"));
 					fee.setProcessReasonDesc(resultMessage);
 					Map<String, String> returnMap = new HashMap<String, String>();
 					returnMap = comm.getPaymentInfoExist(fee);
@@ -360,13 +362,29 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 				SmsMessageVO smsVo = new SmsMessageVO();
 				smsVo.setDestno(info.getUSR_MPN_NO());
 				smsVo.setMsg("반납되었습니다");
+				
+				if(info.getBIKE_SE_CD().equals("BIK_001"))
+				{
+					smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 자전거 반납완료. 이용시간은 "+ fee.getOverMi() + "분 입니다.");
+				}
+				else
+				{
+					smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 킥보드 반납완료. 이용시간은 "+ fee.getOverMi() + "분 입니다.");
+				}
 				SmsSender.sender(smsVo);
 				
 				if(b_overfee == true)
 					
 				{
 					smsVo.setDestno(info.getUSR_MPN_NO());
-					smsVo.setMsg("과금되었습니다");
+					if(info.getBIKE_SE_CD().equals("BIK_001"))
+					{
+						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 자전거는 이용시간 "+ fee.getOverMi() + "분으로 " + fee.getOverFee() + "원의 이용금액이 결제되었습니다.");
+					}
+					else
+					{
+						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 킥보드는 이용시간 "+ fee.getOverMi() + "분으로 " + fee.getOverFee() + "원의 이용금액이 결제되었습니다.");
+					}
 					SmsSender.sender(smsVo);
 				}
 			} 
@@ -1113,5 +1131,17 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	public void insertRentMove_Info(Map<String, String> GPS_DATA) 
 	{
 		bicycleMapper.insertRentMove_Info(GPS_DATA);
+	}
+	
+	@Override
+	public void updateBikeCnt(String voucherseq) 
+	{
+		bicycleMapper.updateBikeCnt(voucherseq);
+	}
+	
+	@Override
+	public void updateKickCnt(String voucherseq) 
+	{
+		bicycleMapper.updateKickCnt(voucherseq);
 	}
 }
