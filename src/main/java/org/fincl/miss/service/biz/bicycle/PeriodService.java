@@ -749,6 +749,13 @@ public class PeriodService{
      					else
      					{
 						// 대여 주기시 이벤트시 대여 이력 없으면 대여 완료 넣어주기.
+     						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))
+    						{
+    							if(voucher.getRent_cls_cd().equals("RCC_001"))
+    							{
+    								voucher.setRent_cls_cd("RCC_002");
+    							}
+    						}
      						bikeService.reservationInsert(com, voucher);
      						logger.error("RENT PERIOD USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO");
      					}
@@ -756,7 +763,8 @@ public class PeriodService{
 	     			// 대여 정보 
      					Map<String, Object> rentInfo = commonService.reservationCheck(com);
 	     			
-     					if(rentInfo == null){
+     					if(rentInfo == null)
+     					{
 		     				QRLog.setResAck("RESNO");
 		     	 			bikeService.updateQRLog(QRLog);
 		     				logger.error("reservationCheck is null" );
@@ -764,7 +772,66 @@ public class PeriodService{
 		     	    		responseVo = setFaiiMsg(responseVo, vo);
 		     	    		
 		     	    		return responseVo;
-     					}	
+     					}
+     					
+     					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
+    					{
+    						if(!voucher.getBike_voucher_cnt().equals("99"))
+    						{
+    							if((Integer.parseInt(voucher.getBike_use_cnt())) >= (Integer.parseInt(voucher.getBike_voucher_cnt())))
+    							{
+    								//대여 실패
+    								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
+    		  						QRLog.setResAck("VOUNO3");
+    		  						bikeService.updateQRLog(QRLog);
+    		  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+    		  						responseVo = setFaiiMsg(responseVo, vo);
+    										 
+    		  						return responseVo;
+    							}
+    							else
+    							{
+    								//대여 성공
+    								bikeService.updateBikeCnt(voucher.getVoucher_seq());
+    							}
+    						}
+    						else
+    						{
+    							//대여 성공
+    							//bikeService.updateBikeCnt(voucher.getVoucher_seq());
+    						
+    						}
+    					}
+    					else
+    					{
+    						
+    						if(!voucher.getKick_voucher_cnt().equals("99"))
+    						{
+    							if((Integer.parseInt(voucher.getKick_use_cnt())) >= (Integer.parseInt(voucher.getKick_voucher_cnt())))
+    							{
+    								//대여 실패
+    								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
+    		  						QRLog.setResAck("VOUNO4");
+    		  						bikeService.updateQRLog(QRLog);
+    		  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+    		  						responseVo = setFaiiMsg(responseVo, vo);
+    										 
+    		  						return responseVo;
+    							}
+    							else
+    							{
+    								//대여 성공
+    								bikeService.updateKickCnt(voucher.getVoucher_seq());
+    							}
+    						}
+    						else
+    						{
+    							//대여 성공
+    							bikeService.updateKickCnt(voucher.getVoucher_seq());
+    						
+    						}
+    					
+    					}
 	     			 
 	     			 
 		     			if(!bikeService.rentProcUpdate(com, rentInfo))

@@ -187,4 +187,9 @@ public interface BicycleRentMapper {
 	void deleteRentGPSDATA(RentHistVo HistVo) ;
 	
 	void insertRentMove_Info(Map<String, String> GPS_DATA);
+	
+	void updateBikeCnt(String voucherseq);
+	
+	void updateKickCnt(String voucherseq);
 }
+

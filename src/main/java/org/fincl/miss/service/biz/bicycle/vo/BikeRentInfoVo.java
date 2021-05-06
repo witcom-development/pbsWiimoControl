@@ -10,7 +10,10 @@ public class BikeRentInfoVo {
 	private String  rent_cls_cd;
 	private String  cascade_yn;
 	private String  now_locate_id;
-	
+	private String	bike_use_cnt;
+	private String	kick_use_cnt;
+	private String	bike_voucher_cnt;
+	private String	kick_voucher_cnt;
 	
 	public String getCascade_yn() {
 		return cascade_yn;
@@ -59,6 +62,30 @@ public class BikeRentInfoVo {
 	}
 	public void setRent_cls_cd(String rent_cls_cd) {
 		this.rent_cls_cd = rent_cls_cd;
+	}
+	public String getBike_use_cnt() {
+		return bike_use_cnt;
+	}
+	public void setBike_use_cnt(String bike_use_cnt) {
+		this.bike_use_cnt = bike_use_cnt;
+	}
+	public String getKick_use_cnt() {
+		return kick_use_cnt;
+	}
+	public void setKick_use_cnt(String kick_use_cnt) {
+		this.kick_use_cnt = kick_use_cnt;
+	}
+	public String getBike_voucher_cnt() {
+		return bike_voucher_cnt;
+	}
+	public void setBike_voucher_cnt(String bike_voucher_cnt) {
+		this.bike_voucher_cnt = bike_voucher_cnt;
+	}
+	public String getKick_voucher_cnt() {
+		return kick_voucher_cnt;
+	}
+	public void setKick_voucher_cnt(String kick_voucher_cnt) {
+		this.kick_voucher_cnt = kick_voucher_cnt;
 	}
 	
 

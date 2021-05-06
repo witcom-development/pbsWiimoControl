@@ -127,21 +127,21 @@
 		
 		SELECT 
 			RENT_SEQ, 
-			USR_SEQ, 
-			(SELECT LANG_CLS_CD FROM TB_SVC_MB WHERE USR_SEQ = A.USR_SEQ) AS LANG_CLS_CD,
+			RENT.USR_SEQ, 
+			MB.LANG_CLS_CD AS LANG_CLS_CD,
 			VOUCHER_SEQ, 
 			RENT_STATION_ID, 
 			RENT_RACK_ID, 
-			IFNULL(RENT_BIKE_ID, (SELECT BIKE_ID FROM TB_OPR_BIKE WHERE TERMINAL_ID = #{bicycleId} )) as 'RENT_BIKE_ID', 
+			RENT_BIKE_ID, 
 			RENT_CLS_CD, 
 			IFNULL(TERMINAL_CARD_REG_YN,'N') as 'TERMINAL_CARD_REG_YN', 
-			RENT_YN, RENT_DTTM, 
-			RENT_END_SMS_SEND_YN, 
-			RENT_OVER_SMS_SEND_YN, 
-			LONGTR_NRETURN_SMS_SEND_YN
-		FROM TB_SVC_RENT A 
+			RENT_YN, RENT_DTTM,
+			BIKE.BIKE_SE_CD
+		FROM TB_SVC_RENT RENT, TB_SVC_MB MB, TB_OPR_BIKE BIKE
 		WHERE RENT_RACK_ID = #{rockId} AND RENT_YN = 'N'
-		AND USR_SEQ = #{userSeq}
+		AND RENT.USR_SEQ = #{userSeq}
+		AND RENT.USR_SEQ = MB.USR_SEQ
+		AND RENT.RENT_BIKE_ID = BIKE.BIKE_ID
 		limit 1
 	
 	</select>
@@ -1110,7 +1110,7 @@
 			RF.OVER_MI              AS overMi,
 			IFNULL( dg_decrypt('TB_SVC_MB', 'MB_EMAIL_NAME', MB.MB_EMAIL_NAME),'GUEST') AS mbEmailName,
 			CAST(dg_decrypt('TB_SVC_USR', 'USR_MPN_NO', U.USR_MPN_NO) AS CHAR)   AS usrMpnNo,
-			V.PAYMENT_CLS_CD
+			V.PAYMENT_CLS_CD, P.CARD_NO AS PAYMENT_CARD_NO,P.MPN_NO AS CARD_COMPANY
 		FROM  (SELECT * FROM TB_SVC_RENT_OVER_FEE WHERE OVER_FEE_PAYMENT_YN = 'N' AND PAYMENT_ATT_CNT < ( SELECT ADD_VAL1*2 FROM TB_SYS_COM_CD  WHERE COM_CD='MSI_005')  ORDER BY RENT_HIST_SEQ DESC LIMIT 100) RF
 			INNER JOIN TB_SVC_RENT_HIST RH ON RH.RENT_HIST_SEQ = RF.RENT_HIST_SEQ
 			INNER JOIN TB_SVC_USR U ON U.USR_SEQ = RH.USR_SEQ
@@ -1138,6 +1138,9 @@
                 ,MILEAGE_PAYMENT_AMT
                 ,RENT_OVER_FEE_SUM
                 ,MB_SERIAL_NO
+                ,ORDER_CERTIFY_KEY
+                ,PAYMENT_CARD_NO
+                ,CARD_COMPANY
         ) VALUES (
                 now()
                ,#{usrSeq}
@@ -1149,6 +1152,9 @@
                ,0
                ,0
                ,#{mb_serial_no}
+               ,#{order_certify_key}
+               ,#{payment_card_no}
+               ,#{card_company}
         )
     </insert>
     

@@ -128,19 +128,6 @@ public class RentalService {
 		 	QRLog.setLock(vo.getLockState());
 		 	QRLog.setBiketype(vo.getBikeType());
 		 	
-		 	/*
-		 	if(!vo.getBattery().equals(null) && !vo.getBattery().equals(""))
-    		{
-    			int beacon_battery = Integer.parseInt(vo.getBeaconbatt(), 16);
-        		Map<String, String> beacon_battery_map = new HashMap<String, String>();
-        		beacon_battery_map.put("BATTERY", String.valueOf(beacon_battery));
-        		beacon_battery_map.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
-        		
-
-				commonService.updateBeaconBatteryInfo(beacon_battery_map);
-    		}
-    		*/
-		 	
 		 	QRLog.setDev_BATT(String.valueOf(Integer.parseInt(vo.getBattery(), 16)));
 		 	QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconbatt(), 16)));
 		 	QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getElecbatt(), 16)));
@@ -162,13 +149,6 @@ public class RentalService {
 		 	
 		 	QRLog.setTimeStamp(vo.getTimestamp());
 			QRLog.setMessage(vo.getReqMessage());
-			/*
-			if(vo.getLockState().equals("01"))
-			{
-				QRLog.setQr_frame("반납 이벤트");
-			}
-			else
-			*/
 			
 			QRLog.setQr_frame("대여완료보고");
 			
@@ -211,12 +191,11 @@ public class RentalService {
 		 }
 		 
 		 
-		 if(vo.getLockState().equals("00"))
-		 {
-  			BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);	//거치정보 체크 
+        if(vo.getLockState().equals("00"))
+        {
+        	BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);	//거치정보 체크 
   			if(bikeInfo == null)
   			{
-  				//logger.debug("QR_BIKE IS RENTING_PERIOD BUT LOCK STATE AND PARKING DATA HAVEN'T DB");
   				 QRLog.setResAck("APP");
 				 bikeService.updateQRLog(QRLog);
 				 
@@ -236,138 +215,186 @@ public class RentalService {
   				}
   				else
   				{
-  					if(bikeInfo.getRent_rack_id().equals("45800999900000"))
-  					{
-  						 QRLog.setResAck("NORAK");
-  	  					 bikeService.updateQRLog(QRLog);
-  						logger.debug("enforce_return !!! rent is impossilbe");
-  					}
-  					else
-  					{
-  						com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
-  						com.setRockId(bikeInfo.getRent_rack_id());
+  					com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+  					com.setRockId(bikeInfo.getRent_rack_id());
 	  				 
-		  				 // 로그 추가..2020.04.12 
-		  				 logger.debug("QR_BIKE IS RENTAL_EVENT BUT HAVE PARKING INFO :usr_seq{}",com.getUserSeq());
-		  				 BikeRentInfoVo voucher = bikeService.getUseVoucherInfo(com);	//2020.02. 단체권 포함되도록 수정...
+  					// 로그 추가..2020.04.12 
+  					logger.debug("QR_BIKE IS RENTAL_EVENT BUT HAVE PARKING INFO :usr_seq{}",com.getUserSeq());
+  					BikeRentInfoVo voucher = bikeService.getUseVoucherInfo(com);	//2020.02. 단체권 포함되도록 수정...
 		  				 
-		  				 if(voucher == null)
-		  				 {
-		  					 logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
-		  					 QRLog.setResAck("VOUNO");
-		  					 bikeService.updateQRLog(QRLog);
-		  					 responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-		  					 responseVo = setFaiiMsg(responseVo, vo);
+  					if(voucher == null)
+  					{
+  						logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
+  						QRLog.setResAck("VOUNO");
+  						bikeService.updateQRLog(QRLog);
+  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+  						responseVo = setFaiiMsg(responseVo, vo);
 								 
-		  					 return responseVo;
-						}
-							 
-						Map<String, Object> useBike = bikeService.getUseBikeInfoFULL(com);
-						if(useBike != null)
+  						return responseVo;
+  					}
+	 
+					Map<String, Object> useBike = bikeService.getUseBikeInfoFULL(com);
+					if(useBike != null)
+					{
+						logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS RENT INFO NOT COMPLETE");
+							
+						//add
+						String	rack_id = String.valueOf(useBike.get("RENT_RACK_ID"));
+						String	bike_id = String.valueOf(useBike.get("RENT_BIKE_ID"));
+							
+						logger.debug("RENT_EVENT  getUseBikeInfoFULL CHECK_RENT usr_seq {} ,{},{} ",com.getUserSeq(),rack_id,bike_id);
+							
+						if(rack_id == null || rack_id.equals("") || bike_id == null || bike_id.equals(""))
 						{
-							logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS RENT INFO NOT COMPLETE");
-							
-							//add
-							String	rack_id = String.valueOf(useBike.get("RENT_RACK_ID"));
-							String	bike_id = String.valueOf(useBike.get("RENT_BIKE_ID"));
-							
-							logger.debug("RENT_EVENT  getUseBikeInfoFULL CHECK_RENT usr_seq {} ,{},{} ",com.getUserSeq(),rack_id,bike_id);
-							
-							if(rack_id == null || rack_id.equals("") || bike_id == null || bike_id.equals(""))
-							{
-								logger.error("RENTAL_EVENT  USR_SEQ set rentTableUpdate2 ");
+							logger.error("RENTAL_EVENT  USR_SEQ set rentTableUpdate2 ");
 								
-								bicycleMapper.rentTableUpdate2(com);
-								//BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);
+							bicycleMapper.rentTableUpdate2(com);
+							//BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);
+						}
+						//TB_SVC_RNET 에 없는 경우 있는 이런경우 업데이타 해서 reservation 하도록 해줘야할듯..	
+					}
+					else
+					{
+						// 대여 주기시 이벤트시 대여 이력 없으면 대여 완료 넣어주기.
+						
+						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))
+						{
+							if(voucher.getRent_cls_cd().equals("RCC_001"))
+							{
+								voucher.setRent_cls_cd("RCC_002");
 							}
-							//TB_SVC_RNET 에 없는 경우 있는 이런경우 업데이타 해서 reservation 하도록 해줘야할듯..
+						}
+						bikeService.reservationInsert(com, voucher);
 							
-							/*
-							 logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RETURN BIKE");
-							 responseVo.setErrorId(Constants.CODE.get("ERROR_DA"));
-							 responseVo = setFaiiMsg(responseVo, vo);
-							 
-							 return responseVo;
-							 */
-							
+						logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO : INSERT_RESERVATION ");
+					}
+		     			 
+					// 대여 정보 
+					Map<String, Object> rentInfo = commonService.reservationCheck(com);
+		     			
+					if(rentInfo == null)
+					{
+						QRLog.setResAck("RVRNO");
+						bikeService.updateQRLog(QRLog);
+						logger.error("reservationCheck is null" );
+						responseVo.setErrorId(Constants.CODE.get("ERROR_EF"));
+						responseVo = setFaiiMsg(responseVo, vo);
+		     	    		
+						return responseVo;
+					}
+					
+					
+					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
+					{
+						if(!voucher.getBike_voucher_cnt().equals("99"))
+						{
+							if((Integer.parseInt(voucher.getBike_use_cnt())) >= (Integer.parseInt(voucher.getBike_voucher_cnt())))
+							{
+								//대여 실패
+								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
+		  						QRLog.setResAck("VOUNO2");
+		  						bikeService.updateQRLog(QRLog);
+		  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+		  						responseVo = setFaiiMsg(responseVo, vo);
+										 
+		  						return responseVo;
+							}
+							else
+							{
+								//대여 성공
+								bikeService.updateBikeCnt(voucher.getVoucher_seq());
+							}
 						}
 						else
 						{
-							// 대여 주기시 이벤트시 대여 이력 없으면 대여 완료 넣어주기.
-							bikeService.reservationInsert(com, voucher);
-							
-							logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO : INSERT_RESERVATION ");
+							//대여 성공
+							bikeService.updateBikeCnt(voucher.getVoucher_seq());
+						
 						}
-		     			 
-		     			// 대여 정보 
-		     			Map<String, Object> rentInfo = commonService.reservationCheck(com);
-		     			
-		     			if(rentInfo == null){
-		     				QRLog.setResAck("RVRNO");
-		     	 			bikeService.updateQRLog(QRLog);
-		     				logger.error("reservationCheck is null" );
-		     	    		responseVo.setErrorId(Constants.CODE.get("ERROR_EF"));
-		     	    		responseVo = setFaiiMsg(responseVo, vo);
-		     	    		
-		     	    		return responseVo;
-		     			}
-		     			 
-		     			 
-		     			if(!bikeService.rentProcUpdate(com, rentInfo))
-		     			{
-		     				logger.error("rentProcUpdate: invalid voucher:ERROR_E5" );
+					}
+					else
+					{
+						
+						if(!voucher.getKick_voucher_cnt().equals("99"))
+						{
+							if((Integer.parseInt(voucher.getKick_use_cnt())) >= (Integer.parseInt(voucher.getKick_voucher_cnt())))
+							{
+								//대여 실패
+								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
+		  						QRLog.setResAck("VOUNO3");
+		  						bikeService.updateQRLog(QRLog);
+		  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+		  						responseVo = setFaiiMsg(responseVo, vo);
+										 
+		  						return responseVo;
+							}
+							else
+							{
+								//대여 성공
+								bikeService.updateKickCnt(voucher.getVoucher_seq());
+							}
+						}
+						else
+						{
+							//대여 성공
+							//bikeService.updateKickCnt(voucher.getVoucher_seq());
+						
+						}
+					
+					}
+	 
+					if(!bikeService.rentProcUpdate(com, rentInfo))
+					{
+						logger.error("rentProcUpdate: invalid voucher:ERROR_E5" );
 		     				
-		     				QRLog.setResAck("RENFA");
-							 bikeService.updateQRLog(QRLog);
-		     				responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-		     				responseVo = setFaiiMsg(responseVo, vo);
+						QRLog.setResAck("RENFA");
+						bikeService.updateQRLog(QRLog);
+						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+						responseVo = setFaiiMsg(responseVo, vo);
 		     	    		
-		     				return responseVo;
-		     			}
-		     			else
-		     			{
-		     				/**
-		     				 * 대여정보가 정상적으로 저장된 경우, SMS발송
-		     				 */
-		     				logger.debug("RENT_EVENT  rentProcUpdate usr_seq {} ",com.getUserSeq());
+						return responseVo;
+					}
+					else
+					{
+						/**
+						 * 대여정보가 정상적으로 저장된 경우, SMS발송
+						 */
+						logger.debug("RENT_EVENT  rentProcUpdate usr_seq {} ",com.getUserSeq());
 		     				
-		     				QRLog.setResAck("RENT");
-		     	 			bikeService.updateQRLog(QRLog);
+						QRLog.setResAck("RENT");
+						bikeService.updateQRLog(QRLog);
 		     	 			
-		     				com.setStationId(String.valueOf(rentInfo.get("RENT_STATION_ID")));
-		     				com.setUserSeq(String.valueOf(rentInfo.get("USR_SEQ")));
-		     				Map<String, Object> msgInfo = bikeService.getRentMsgInfo(com);
+						com.setStationId(String.valueOf(rentInfo.get("RENT_STATION_ID")));
+						com.setUserSeq(String.valueOf(rentInfo.get("USR_SEQ")));
+						Map<String, Object> msgInfo = bikeService.getRentMsgInfo(com);
 		     				
 
-		     				SmsMessageVO sms = new SmsMessageVO();
-		     				sms.setTitle("대여안내");
-		     				sms.setType("S");
+						SmsMessageVO sms = new SmsMessageVO();
+						sms.setTitle("대여안내");
+						sms.setType("S");
 		     				
-		     				//String destno = (String)msgInfo.get("DEST_NO");
+						if(msgInfo != null && msgInfo.get("DEST_NO") != null && !msgInfo.get("DEST_NO").equals(""))
+						{
 		     				
-		     				if(msgInfo != null && msgInfo.get("DEST_NO") != null && !msgInfo.get("DEST_NO").equals(""))
-		     				{
-		     				
-			     				String destno = String.valueOf(msgInfo.get("DEST_NO"));
-			     				if(destno != null && !destno.equals(""))
-			     				{
-			     					String Message = null;
-			     					if(msgInfo.get("BIKE_SE_CD").equals("BIK_001"))
-			     					{
-		
-			     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 자전거 대여완료. 10분마다 추가요금 200원 발생합니다.";
-			     					}
-			     					else
-			     					{
-			     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
-			     					}
-			     					sms.setDestno(destno);
-			     					sms.setMsg(Message.toString());
-			     					SmsSender.sender(sms);
-			     				}
+							String destno = String.valueOf(msgInfo.get("DEST_NO"));
+							if(destno != null && !destno.equals(""))
+							{
+		     					String Message = null;
+		     					if(msgInfo.get("BIKE_SE_CD").equals("BIK_001"))
+		     					{
+	
+		     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 자전거 대여완료. 10분마다 추가요금 200원 발생합니다.";
+		     					}
+		     					else
+		     					{
+		     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
+		     					}
+		     					sms.setDestno(destno);
+		     					sms.setMsg(Message.toString());
+		     					SmsSender.sender(sms);
 		     				}
-		     			}
-	     			}//rent
+						}
+					}
   				}//usrtype =01
   			}	//거치정보 있을때
   		}	//락상태 여림 (02)
