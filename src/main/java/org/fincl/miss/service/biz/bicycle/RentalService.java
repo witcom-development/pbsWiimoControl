@@ -103,7 +103,7 @@ public class RentalService {
 		 	
 		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
 		 	
-		 	logger.debug("QR_435F ##### => bike {} ,state {} ,usrType {} , company {} ,lock {}",vo.getBicycleId(),vo.getBicycleState(),vo.getUsrType(),com.getCompany_cd(),vo.getLockState());
+		 	logger.debug("QR_4372 ##### => bike {} ,state {} ,usrType {}, company {} ,lock {}",vo.getBicycleId(),vo.getBicycleState(),vo.getUsrType(),com.getCompany_cd(),vo.getLockState());
 		 	 
 		 	//Map<String, String> qrlog = new HashMap<String, String>();
 		 	
@@ -120,7 +120,7 @@ public class RentalService {
 		 		//QRLog.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));
 		 		
 		 		//String.valueOf(Integer.parseInt(vo.getUsrseq()));
-		 		QRLog.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+		 	QRLog.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
 		 	//}
 		 	
 		 	
