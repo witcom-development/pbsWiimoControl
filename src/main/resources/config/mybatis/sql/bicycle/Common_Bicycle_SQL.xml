@@ -1141,6 +1141,7 @@
                 ,ORDER_CERTIFY_KEY
                 ,PAYMENT_CARD_NO
                 ,CARD_COMPANY
+                ,RENT_HIST_SEQ
         ) VALUES (
                 now()
                ,#{usrSeq}
@@ -1155,6 +1156,7 @@
                ,#{order_certify_key}
                ,#{payment_card_no}
                ,#{card_company}
+               ,#{rentHistSeq}
         )
     </insert>
     
