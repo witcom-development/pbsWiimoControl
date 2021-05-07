@@ -297,12 +297,16 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 					fee.setTotAmt(fee.getOverFee());
 					fee.setOrder_certify_key((String)responseMap.get("applNo"));
 					fee.setProcessReasonDesc(resultMessage);
+					
+					fee.setRentHistSeq(info.getRENT_HIST_SEQ());	//add rent_hist_seq by dearkim
+					
 					Map<String, String> returnMap = new HashMap<String, String>();
 					returnMap = comm.getPaymentInfoExist(fee);
 					logger.debug("check-->> " +returnMap.get("PAYMENT_INFO_EXIST"));
 					if(returnMap.get("PAYMENT_INFO_EXIST").equals("N"))
 					{
-						logger.debug("##### 초과요금 결제정보가 없다. #####");
+						logger.debug("##### 초과요금 결제정보가 없다. insert payment_seq ##### {}",fee.getRentHistSeq());
+						
 						int result = comm.addTicketPayment(fee);
 					}else{
 						logger.debug("##### 초과요금 결제정보가 이미 있다. #####");
