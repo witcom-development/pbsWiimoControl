@@ -261,7 +261,34 @@ public class ReturnService  {
          	
          	double ACC_DIST = 0.0;
          	
-         	info.setUSE_DIST("0");	//gps 로 거리 하는 함수 막음.
+         	Map<String, Object> bikeData = bikeService.getBikeMoveDist_COUNT(GPS_DATA);
+         	
+			if(bikeData != null)
+			{
+				tem_USE_SEQ = Integer.valueOf(String.valueOf(bikeData.get("USE_SEQ")));
+				int USE_SEQ = tem_USE_SEQ;
+				ACC_DIST = new Double(bikeData.get("ACC_DIST").toString()); //현재까지 누적 데이터 db에서 추출
+        		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
+        		
+        		String latp = new CommonUtil().GetGPS(vo.getLatitude());
+        		String lonp = new CommonUtil().GetGPS(vo.getLongitude());
+        		GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latp));
+	         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(lonp));
+        		
+	         	double dlatp =  Double.parseDouble( latp);
+	         	double dlonp = Double.parseDouble( lonp);
+        		if(dlatp != 0.0 && dlonp != 0.0)
+        		{
+        			double USE_DIST = bikeService.getBikeMoveDist_Last(GPS_DATA);  //db 데이터 최종과 현재 첫번째 데이터와 비교
+        			ACC_DIST += USE_DIST;
+        		}
+        		logger.debug("GPS DISTANCE LAST DB ACC_DIST {} ", ACC_DIST);
+        		
+        		info.setUSE_DIST(ACC_DIST + "");
+        	}
+			else
+				info.setUSE_DIST("0");	//gps 로 거리 하는 함수 막음.
+         	
 
         	info.setUSE_MI(sysTime+"");
         	

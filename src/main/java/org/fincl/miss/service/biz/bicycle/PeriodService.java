@@ -201,24 +201,13 @@ public class PeriodService{
 			 //TB_OPR_QR_BIKE_GPS_HIST
 			//gps
 			 
+			 
+			 
 			 latitude = new CommonUtil().GetGPS(vo.getLatitude());
 			 longitude = new CommonUtil().GetGPS(vo.getLongitude());
 			 
 			 //logger.debug("GPS INFO ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
 			 logger.debug("GPS INFO ##### => : {} , {} ",latitude,longitude);
-			 Map<String, String> GPS = new HashMap<String, String>();
-			 GPS.put("BIKE_LATITUDE", latitude);
-			 GPS.put("BIKE_LONGITUDE", longitude);
-			 GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
-			 
-			 
-			 int battery = Integer.parseInt(vo.getBattery(), 16);
-			// String battery_info = null;
-			 
-			// battery_info = new CommonUtil().getBattery_Info(vo.getBattery());
-			 GPS.put("battery", String.valueOf(battery));
-			//commonService.InsertBikeGPS_Status(GPS);
-			 
 			 
 			 RentHistVo gps = new RentHistVo();
 			 gps.setRETURN_RACK_ID(com.getRockId());
@@ -512,7 +501,7 @@ public class PeriodService{
 		     			String XPos = new CommonUtil().GetGPS(vo.getLatitude());
 		     			String YPos = new CommonUtil().GetGPS(vo.getLongitude());
 		     			
-		     			
+		     			/*
 		     			  			
 		     			String info_String = "coords="+ YPos + "," + XPos +"&output=json&orders=legalcode";
 		     			
@@ -559,29 +548,98 @@ public class PeriodService{
 		     				logger.debug("SESSAK GPS Exception");
 		     				e.printStackTrace();
 		     			}
-		     			
-		     			/*
-		     			Map<String, String> ValidELEC = new HashMap<String, String>();
-		     			ValidELEC = commonService.CheckValidELEC_GPS();
-		     			
-		     			logger.debug("SESSAK GPS CHECK POINT 3 Result State = " + Data_Result);
-		     			logger.debug("SESSAK GPS CHECK POINT 4 = ADD_VAL1 {} ADD_VAL2 {} ADD_VAL3 {}" 
-		     					, ValidELEC.get("ADD_VAL1"), ValidELEC.get("ADD_VAL2"), ValidELEC.get("ADD_VAL3"));
-		     			
-		     			if(Data_Result != null && 
-		     					(Data_Result.equals(String.valueOf(ValidELEC.get("ADD_VAL1"))) 
-		     							|| Data_Result.equals(String.valueOf(ValidELEC.get("ADD_VAL2")))
-		     							|| Data_Result.equals(String.valueOf(ValidELEC.get("ADD_VAL3")))))
-		     			{
-		     			}
-		     			else
-		     			{
-		     				logger.debug("SESSAK_GPS_Not_OUTBOUND : BUT USE_NOT_SHOOT {}!!!!!!",vo.getBicycleId());
-		     						     				
-		     			}
-		     			*/
-		  				
 		     				
+		     			*/
+		     			
+		     			
+		     			if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
+    							 && !vo.getLatitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
+    					 {
+		     				
+		     				//BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);
+		     				com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+	     					//com.setRockId(bikeInfo.getRent_rack_id());
+		     				Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
+		     				
+		     				if(rentInfo != null)
+	     					{
+
+	    						 latitude = new CommonUtil().GetGPS(vo.getLatitude());
+	    						 longitude = new CommonUtil().GetGPS(vo.getLongitude());
+	
+	    						 logger.debug("GPS INFO ##### => : {} , {} ",latitude,longitude);
+	
+								 Map<String, String> GPS_DATA = null;
+								 double USE_DIST = 0.0;
+								 int		USE_SEQ = 0;
+								 double		ACC_DIST = 0.0;
+								 
+								 
+								 
+								 logger.debug("QR_GPS_SIZE : rentseq : {}, latitude : {}, longitude : {}",rentInfo.get("RENT_SEQ").toString(), latitude , longitude);
+								 Integer tem_USE_SEQ = 0;
+					         	
+								 GPS_DATA = new HashMap<String, String>();
+								 GPS_DATA.put("RENT_SEQ", rentInfo.get("RENT_SEQ").toString());
+					         	
+					         	Map<String, Object> bikeData = bikeService.getBikeMoveDist_COUNT(GPS_DATA);
+								if(bikeData != null)
+								{
+									tem_USE_SEQ = Integer.valueOf(String.valueOf(bikeData.get("USE_SEQ")));
+									USE_SEQ = tem_USE_SEQ;
+									ACC_DIST = new Double(bikeData.get("ACC_DIST").toString()); //현재까지 누적 데이터 db에서 추출
+					        		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
+					        		
+					        		
+					        		GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
+						         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
+					        		
+					        		
+					        		USE_DIST = bikeService.getBikeMoveDist_Last(GPS_DATA);  //db 데이터 최종과 현재 첫번째 데이터와 비교
+					        		ACC_DIST += USE_DIST;
+					        		logger.debug("GPS DISTANCE LAST DB ACC_DIST {} ", ACC_DIST);
+					        		
+					        		GPS_DATA = new HashMap<String, String>();
+					        		
+						         	GPS_DATA.put("RENT_SEQ", rentInfo.get("RENT_SEQ").toString());
+						         	
+						         	USE_SEQ++;
+						         	GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
+						         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
+						        	GPS_DATA.put("USE_SEQ", String.valueOf(USE_SEQ));
+						        	GPS_DATA.put("BIKE_ID", vo.getBicycleId());
+						        	GPS_DATA.put("USE_DIST", String.valueOf(USE_DIST));
+						        	GPS_DATA.put("ACC_DIST", String.valueOf(ACC_DIST));
+						        	
+						        	logger.debug("QR_GPS_DATA  tolatp : {} , tolongfp : {} -> szlatp :{}  , szlongp : {}, USE_DIST : {}, ACC_DIST : {}"  , String.valueOf(bikeData.get("GPS_X")),String.valueOf(bikeData.get("GPS_Y")), latitude, longitude,String.valueOf(USE_DIST), String.valueOf(ACC_DIST));
+						        	bikeService.insertRentGPSDATA(GPS_DATA);
+						         	
+						         	
+					        	}
+								else
+								{
+									USE_SEQ = 0;
+					        		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
+					        		logger.debug("GPS DISTANCE LAST DB ACC_DIST {} ", ACC_DIST);
+					        		
+					        		GPS_DATA = new HashMap<String, String>();
+	
+						        	GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
+						         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
+						         	GPS_DATA.put("RENT_SEQ", rentInfo.get("RENT_SEQ").toString());
+						         	
+						         	USE_SEQ++;
+						        	GPS_DATA.put("USE_SEQ", String.valueOf(USE_SEQ));
+						        	GPS_DATA.put("BIKE_ID", vo.getBicycleId());
+						        	GPS_DATA.put("USE_DIST", String.valueOf(USE_DIST));
+						        	GPS_DATA.put("ACC_DIST", String.valueOf(ACC_DIST));
+						        	
+						        	logger.debug("QR_GPS_DATA  szlatp :{}  , szlongp : {}  USE_DIST : {}, ACC_DIST : {}"  , latitude, longitude,String.valueOf(USE_DIST), String.valueOf(ACC_DIST));
+						        	bikeService.insertRentGPSDATA(GPS_DATA);
+								}
+	     					}
+    						 
+    					 }
 		     		}	//biketype 02 새싹 따릉이...
      			
      		} //GPS 값 체크....!!!!
@@ -760,7 +818,7 @@ public class PeriodService{
      						logger.error("RENT PERIOD USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO");
      					}
 	     			 
-	     			// 대여 정보 
+     					// 대여 정보 
      					Map<String, Object> rentInfo = commonService.reservationCheck(com);
 	     			
      					if(rentInfo == null)
@@ -827,12 +885,12 @@ public class PeriodService{
     						else
     						{
     							//대여 성공
-    							bikeService.updateKickCnt(voucher.getVoucher_seq());
+    							//bikeService.updateKickCnt(voucher.getVoucher_seq());
     						
     						}
     					
     					}
-	     			 
+     					
 	     			 
 		     			if(!bikeService.rentProcUpdate(com, rentInfo))
 		     			{
@@ -847,6 +905,85 @@ public class PeriodService{
 		     			}
 		     			else
 		     			{
+		     				if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
+	    							 && !vo.getLatitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
+	    					 {
+
+	    						 latitude = new CommonUtil().GetGPS(vo.getLatitude());
+	    						 longitude = new CommonUtil().GetGPS(vo.getLongitude());
+	
+	    						 logger.debug("GPS INFO ##### => : {} , {} ",latitude,longitude);
+	
+								 Map<String, String> GPS_DATA = null;
+								 double USE_DIST = 0.0;
+								 int		USE_SEQ = 0;
+								 double		ACC_DIST = 0.0;
+								 
+								 
+								 
+								 logger.debug("QR_GPS_SIZE : rentseq : {}, latitude : {}, longitude : {}",rentInfo.get("RENT_SEQ").toString(), latitude , longitude);
+								 Integer tem_USE_SEQ = 0;
+					         	
+								 GPS_DATA = new HashMap<String, String>();
+								 GPS_DATA.put("RENT_SEQ", rentInfo.get("RENT_SEQ").toString());
+					         	
+					         	Map<String, Object> bikeData = bikeService.getBikeMoveDist_COUNT(GPS_DATA);
+								if(bikeData != null)
+								{
+									tem_USE_SEQ = Integer.valueOf(String.valueOf(bikeData.get("USE_SEQ")));
+									USE_SEQ = tem_USE_SEQ;
+									ACC_DIST = new Double(bikeData.get("ACC_DIST").toString()); //현재까지 누적 데이터 db에서 추출
+					        		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
+					        		
+					        		
+					        		GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
+						         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
+					        		
+					        		
+					        		USE_DIST = bikeService.getBikeMoveDist_Last(GPS_DATA);  //db 데이터 최종과 현재 첫번째 데이터와 비교
+					        		ACC_DIST += USE_DIST;
+					        		logger.debug("GPS DISTANCE LAST DB ACC_DIST {} ", ACC_DIST);
+					        		
+					        		GPS_DATA = new HashMap<String, String>();
+					        		
+						         	GPS_DATA.put("RENT_SEQ", rentInfo.get("RENT_SEQ").toString());
+						         	
+						         	USE_SEQ++;
+						         	GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
+						         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
+						        	GPS_DATA.put("USE_SEQ", String.valueOf(USE_SEQ));
+						        	GPS_DATA.put("BIKE_ID", vo.getBicycleId());
+						        	GPS_DATA.put("USE_DIST", String.valueOf(USE_DIST));
+						        	GPS_DATA.put("ACC_DIST", String.valueOf(ACC_DIST));
+						        	
+						        	logger.debug("QR_GPS_DATA  tolatp : {} , tolongfp : {} -> szlatp :{}  , szlongp : {}, USE_DIST : {}, ACC_DIST : {}"  , String.valueOf(bikeData.get("GPS_X")),String.valueOf(bikeData.get("GPS_Y")), latitude, longitude,String.valueOf(USE_DIST), String.valueOf(ACC_DIST));
+						        	bikeService.insertRentGPSDATA(GPS_DATA);
+						         	
+						         	
+					        	}
+								else
+								{
+									USE_SEQ = 0;
+					        		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
+					        		logger.debug("GPS DISTANCE LAST DB ACC_DIST {} ", ACC_DIST);
+					        		
+					        		GPS_DATA = new HashMap<String, String>();
+	
+						        	GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latitude));
+						         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(longitude));
+						         	GPS_DATA.put("RENT_SEQ", rentInfo.get("RENT_SEQ").toString());
+						         	
+						         	USE_SEQ++;
+						        	GPS_DATA.put("USE_SEQ", String.valueOf(USE_SEQ));
+						        	GPS_DATA.put("BIKE_ID", vo.getBicycleId());
+						        	GPS_DATA.put("USE_DIST", String.valueOf(USE_DIST));
+						        	GPS_DATA.put("ACC_DIST", String.valueOf(ACC_DIST));
+						        	
+						        	logger.debug("QR_GPS_DATA  szlatp :{}  , szlongp : {}  USE_DIST : {}, ACC_DIST : {}"  , latitude, longitude,String.valueOf(USE_DIST), String.valueOf(ACC_DIST));
+						        	bikeService.insertRentGPSDATA(GPS_DATA);
+								}
+	    					 }
+		     					
 		     				
 		     				
 		     				logger.debug("RENTING_PERIOD  rentProcUpdate usr_seq {} ",com.getUserSeq());

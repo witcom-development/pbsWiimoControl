@@ -634,7 +634,9 @@ public class RentalService {
 			responseVo = setFaiiMsg(responseVo, vo);
     		
 			return responseVo;
-		}else{
+		}
+		else
+		{
 			/**
 			 * 대여정보가 정상적으로 저장된 경우, SMS발송
 			 */

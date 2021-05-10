@@ -21,6 +21,7 @@ import org.fincl.miss.server.scheduler.job.sms.TAPPMessageVO;
 import org.fincl.miss.server.sms.SendType;
 import org.fincl.miss.server.sms.SmsSender;
 import org.fincl.miss.server.util.MainPayUtil;
+import org.fincl.miss.service.biz.bicycle.common.CommonUtil;
 import org.fincl.miss.service.biz.bicycle.common.CommonVo;
 import org.fincl.miss.service.biz.bicycle.common.QRLogVo;
 import org.fincl.miss.service.biz.bicycle.service.BicycleRentMapper;
@@ -65,6 +66,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat sdfh = new SimpleDateFormat("HH");
 		Date today = new Date();
+		
 
 		com.setRent_seq(userInfo.get("RENT_SEQ") + "");
 		com.setVoucher_seq(userInfo.get("VOUCHER_SEQ") + "");
@@ -93,7 +95,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		// 자전거 정보 대여로 업데이트 BKS_010
 		com.setBikeStusCd("BKS_010");
 		bicycleMapper.rentBikeUpdate(com);
-
+		
 		// 자전거 배치 이력
 		// bicycleMapper.rentBikeLocationUpdate(com);
 
@@ -243,8 +245,8 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		GPS_DATA.put("RENT_SEQ", rentSeq);
 		GPS_DATA.put("RENT_HIST_SEQ", info.getRENT_HIST_SEQ());
 		//bicycleMapper.insertRentMove_Info(GPS_DATA);
-
-	//	bicycleMapper.deleteRentGPSDATA(info);
+		
+		bicycleMapper.deleteRentGPSDATA(info);
 		// 대여 정보 DELETE RENT
 		bicycleMapper.deleteRentInfo(info);
 
