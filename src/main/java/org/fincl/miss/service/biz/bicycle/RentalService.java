@@ -196,8 +196,13 @@ public class RentalService {
         	BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);	//거치정보 체크 
   			if(bikeInfo == null)
   			{
-  				 QRLog.setResAck("APP");
-				 bikeService.updateQRLog(QRLog);
+  				QRLog.setResAck("NOPARK");
+				bikeService.updateQRLog(QRLog);
+				logger.error("TB_SVC_RENT_BIKE_PARKING DATA NOT FOUND" );
+				responseVo.setErrorId(Constants.CODE.get("ERROR_F4"));
+				responseVo = setFaiiMsg(responseVo, vo);
+     	    		
+				return responseVo;
 				 
   			}
   			else	//거치 정보 있다고 판단되면 
