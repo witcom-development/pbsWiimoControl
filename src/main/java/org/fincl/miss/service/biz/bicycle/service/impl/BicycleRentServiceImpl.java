@@ -369,30 +369,33 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 				smsVo.setDestno(info.getUSR_MPN_NO());
 				smsVo.setMsg("반납되었습니다");
 				
-				if(info.getBIKE_SE_CD().equals("BIK_001"))
+				if(b_overfee == false)
 				{
-					smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 자전거 반납완료. 이용시간은 "+ fee.getOverMi() + "분 입니다.");
+					if(info.getBIKE_SE_CD().equals("BIK_001"))
+					{
+						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 자전거 반납완료. 이용시간은 "+ info.getUSE_MI() + "분 입니다.");
+					}
+					else
+					{
+						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 킥보드 반납완료. 이용시간은 "+ info.getUSE_MI() + "분 입니다.");
+					}
 				}
-				else
-				{
-					smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 킥보드 반납완료. 이용시간은 "+ fee.getOverMi() + "분 입니다.");
-				}
-				SmsSender.sender(smsVo);
+				//SmsSender.sender(smsVo);
 				
-				if(b_overfee == true)
+				else
 					
 				{
 					smsVo.setDestno(info.getUSR_MPN_NO());
 					if(info.getBIKE_SE_CD().equals("BIK_001"))
 					{
-						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 자전거는 이용시간 "+ fee.getOverMi() + "분으로 " + fee.getOverFee() + "원의 이용금액이 결제되었습니다.");
+						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 자전거  "+ info.getUSE_MI() + "분이용 반납완료. 초과이용은 " + fee.getOverMi() + "분으로 " +  fee.getOverFee() + "원 결제완료");
 					}
 					else
 					{
-						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 킥보드는 이용시간 "+ fee.getOverMi() + "분으로 " + fee.getOverFee() + "원의 이용금액이 결제되었습니다.");
+						smsVo.setMsg("<위고> " + info.getBIKE_NO() +" 킥보드  "+ info.getUSE_MI() + "분이용 반납완료. 초과이용은 " + fee.getOverMi() + "분으로 " + fee.getOverFee() + "원 결제완료");
 					}
-					SmsSender.sender(smsVo);
 				}
+				SmsSender.sender(smsVo);
 			} 
 			catch (Exception e) 
 			{
