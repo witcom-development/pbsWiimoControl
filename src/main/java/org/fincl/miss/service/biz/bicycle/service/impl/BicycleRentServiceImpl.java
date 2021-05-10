@@ -248,7 +248,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		
 		bicycleMapper.deleteRentGPSDATA(info);
 		// 대여 정보 DELETE RENT
-		bicycleMapper.deleteRentInfo(info);
+	//	bicycleMapper.deleteRentInfo(info);		////이동 함. 2021.05.10
 
 		// 대여 예약도 DELET RENT
 		bicycleMapper.deleteRentInfo_rserved(info);
@@ -349,6 +349,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		 */
 		bicycleMapper.updateDeviceState(info);
 
+		bicycleMapper.deleteRentInfo(info);		//2021.05.10 rent 지우기 문자전으로 이동.함.
 		// SMS전송.
 
 		String returnStationNo = String.valueOf(bicycleMapper.getStationNo(String.valueOf(info.getRETURN_RACK_ID()))); // 대여소
