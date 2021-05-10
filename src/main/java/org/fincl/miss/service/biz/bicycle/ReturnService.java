@@ -317,16 +317,19 @@ public class ReturnService  {
 			
 			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
 			Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
-    			
-			overPay = new CommonUtil().getPay(minPolicy, maxPolicy, sysTime);
-  
-			if(overPay >0)
-			{
-				info.setOVER_FEE_YN("Y");
+			baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());
 			
+			if(sysTime - baseRentTime > 0)
+			{
+				info.setOVER_FEE_YN("Y");		
+				overPay = new CommonUtil().getPay(minPolicy, maxPolicy, (sysTime - baseRentTime));
 				info.setOVER_FEE(overPay+"");
 				baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());
-				info.setOVER_MI(String.valueOf(sysTime - (baseRentTime)));
+				
+				
+				
+				
+				info.setOVER_MI(String.valueOf(sysTime - baseRentTime));
 			}
 			// 반납 프로세스 실행
 			bikeService.parkingInfoDelete(com);
