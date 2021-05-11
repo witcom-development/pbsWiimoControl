@@ -43,6 +43,8 @@ public class CommonVo {
     private String rent_return_flag;	// 대여면 1/반납이면 2
     private String company_cd;
     private String fileSeq;
+    private String GPS_X;
+    private String GPS_Y;
     
     private String serverhost;			//2018.03.28 해당 서버 host 명 
     
@@ -244,6 +246,22 @@ public class CommonVo {
 	public void setServerHost(String serverHost) {
 		this.serverhost = serverHost;
 	}
+	
+	
+	
+	public String getGPS_X() {
+		return GPS_X;
+	}
+	public void setGPS_X(String gPS_X) {
+		GPS_X = gPS_X;
+	}
+	public String getGPS_Y() {
+		return GPS_Y;
+	}
+	public void setGPS_Y(String gPS_Y) {
+		GPS_Y = gPS_Y;
+	}
+	
 	
 	@Override
 	public String toString() {

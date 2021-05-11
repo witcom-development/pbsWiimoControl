@@ -441,12 +441,12 @@
 	<insert id="insertBrokenBikeErr"	parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo">
 		INSERT INTO TB_MTC_FAULT_INFO
 		(
-			EQUIPMENT_ID, EQUIPMENT_CLS_CD, READ_CLS_CD, MOD_ID
+			EQUIPMENT_ID, EQUIPMENT_CLS_CD, READ_CLS_CD, MOD_ID,GPS_X,GPS_Y
 		)
 		VALUES
 		(
 			( SELECT  BIKE_ID FROM TB_OPR_BIKE WHERE TERMINAL_ID = #{bikeId})
-			,'DEV_001', 'S', 'IFS'
+			,'DEV_001', 'S', 'IFS',#{GPS_X},#{GPS_Y}
 		) 
 		<selectKey resultType="string" keyProperty="userSeq" order="AFTER">
         	SELECT LAST_INSERT_ID() 
@@ -474,11 +474,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_002', SYSDATE()
+			#{userSeq} ,'ERB_002', SYSDATE(),#{GPS_X},#{GPS_Y}
 		)
 	</insert>
 	
@@ -715,11 +715,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_007', SYSDATE()
+			#{userSeq} ,'ERB_007', SYSDATE(),#{GPS_X},#{GPS_Y}
 		)
 	</insert>
 	
@@ -727,11 +727,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_008', SYSDATE()
+			#{userSeq} ,'ERB_008', SYSDATE(),#{GPS_X},#{GPS_Y}
 		)
 	</insert>
 	
@@ -740,11 +740,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_005', SYSDATE()
+			#{userSeq} ,'ERB_005', SYSDATE(),#{GPS_X},#{GPS_Y}
 		)
 	</insert>
 	
@@ -752,11 +752,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_003', SYSDATE()
+			#{userSeq} ,'ERB_003', SYSDATE(),#{GPS_X},#{GPS_Y}
 		)
 	</insert>
 	

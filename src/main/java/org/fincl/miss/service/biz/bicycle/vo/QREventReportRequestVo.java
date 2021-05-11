@@ -72,29 +72,26 @@ public class QREventReportRequestVo extends BicycleVo{
 	public void setBattery(String battery) {
 		this.battery = battery;
 	}
+	
+	
+	
 	public String getGps_Latitude() {
 		return gps_Latitude;
 	}
+	public void setGps_Latitude(String gps_Latitude) {
+		this.gps_Latitude = gps_Latitude;
+	}
 	public String getGps_Longitude() {
 		return gps_Longitude;
+	}
+	public void setGps_Longitude(String gps_Longitude) {
+		this.gps_Longitude = gps_Longitude;
 	}
 	public String getLockState() {
 		return lockState;
 	}
 	public void setLockState(String lockState) {
 		this.lockState = lockState;
-	}
-	public String getGPS_Latitude() {
-		return gps_Latitude;
-	}
-	public void setGps_Latitude(String gps_Latitude) {
-		this.gps_Latitude = gps_Latitude;
-	}
-	public String getGPS_Longitude() {
-		return gps_Longitude;
-	}
-	public void setGps_Longitude(String gps_Longitude) {
-		this.gps_Longitude = gps_Longitude;
 	}
 	public String getEventType() {
 		return eventType;

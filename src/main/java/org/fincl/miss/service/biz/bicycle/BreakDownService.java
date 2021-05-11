@@ -82,6 +82,8 @@ public class BreakDownService{
 		 	{
 		 		QRLog.setXpos(new CommonUtil().GetGPS(vo.getGps_Latitude()));
 		 		QRLog.setYpos(new CommonUtil().GetGPS(vo.getGps_Longitude()));
+		 		com.setGPS_X(new CommonUtil().GetGPS(vo.getGps_Latitude()));
+		 		com.setGPS_Y(new CommonUtil().GetGPS(vo.getGps_Longitude()));
 		 	}
 		 	else
             {
