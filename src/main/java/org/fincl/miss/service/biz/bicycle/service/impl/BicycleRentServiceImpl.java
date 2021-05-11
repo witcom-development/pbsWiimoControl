@@ -341,7 +341,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 		info.setMILEAGE_POLICY_OPEN_CD("MSI_032");
 		info.setMILEAGE_POLICY_NM("절감탄소량");
 
-		mileagePolicyProc(info);
+		//mileagePolicyProc(info);
 		// 절감탄소량 마일리지 Proc_20160113_END
 
 		/**
