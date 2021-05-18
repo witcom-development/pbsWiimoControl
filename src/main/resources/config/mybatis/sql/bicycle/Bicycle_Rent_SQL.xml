@@ -306,7 +306,7 @@
 		WHERE ADD_FEE_CLS = #{ADD_FEE_CLS}
 		AND BIKE_SE_CD = #{BIKE_SE_CD}
 		<![CDATA[
-			AND OVER_END_MI <> 0
+			AND OVER_END_MI = 0
 		]]>
 	
 	</select>
