@@ -224,7 +224,7 @@ public class RentalService {
   					com.setRockId(bikeInfo.getRent_rack_id());
 	  				 
   					// 로그 추가..2020.04.12 
-  					logger.debug("QR_BIKE IS RENTAL_EVENT BUT HAVE PARKING INFO :usr_seq{}",com.getUserSeq());
+  					logger.debug("QR_BIKE IS RENTAL_EVENT  usr_seq{} is request ",com.getUserSeq());
   					BikeRentInfoVo voucher = bikeService.getUseVoucherInfo(com);	//2020.02. 단체권 포함되도록 수정...
 		  				 
   					if(voucher == null)
@@ -261,17 +261,33 @@ public class RentalService {
 					else
 					{
 						// 대여 주기시 이벤트시 대여 이력 없으면 대여 완료 넣어주기.
-						
-						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))
+						// 킥보드는 이력 안넣어주고 에러 로 표시  , 자전거는 bluetooh 로 넣어주기...2021.05.18
+						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))	//킥보드
 						{
-							if(voucher.getRent_cls_cd().equals("RCC_001"))
-							{
-								voucher.setRent_cls_cd("RCC_002");
-							}
-						}
-						bikeService.reservationInsert(com, voucher);
 							
-						logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO : INSERT_RESERVATION ");
+							logger.error("RENT_INFO is NULL  USR_SEQ {} is rent failed ",com.getUserSeq());
+							
+							QRLog.setResAck("RFAIL");
+	  						bikeService.updateQRLog(QRLog);
+	  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+	  						responseVo = setFaiiMsg(responseVo, vo);
+									 
+	  						return responseVo;
+	  						
+						}
+						else
+						{
+							if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))
+							{
+								if(voucher.getRent_cls_cd().equals("RCC_001"))
+								{
+									voucher.setRent_cls_cd("RCC_002");
+								}
+							}
+							bikeService.reservationInsert(com, voucher);
+								
+							logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO : INSERT_RESERVATION ");
+						}
 					}
 		     			 
 					// 대여 정보 
