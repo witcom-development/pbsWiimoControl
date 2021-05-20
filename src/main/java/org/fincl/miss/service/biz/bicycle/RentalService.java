@@ -191,7 +191,7 @@ public class RentalService {
 		 }
 		 
 		 
-        if(vo.getLockState().equals("00"))
+        if(vo.getLockState().equals("00") ||vo.getLockState().equals("01") )
         {
         	BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);	//거치정보 체크 
   			if(bikeInfo == null)
@@ -419,7 +419,19 @@ public class RentalService {
   				}//usrtype =01
   			}	//거치정보 있을때
   		}	//락상태 여림 (02)
-        
+        else
+        {
+        	//락 상태 이상 
+        	logger.error("rentProcUpdate: invalid LOCK_STATUS :ERROR_E5" );
+				
+			QRLog.setResAck("RENFA");
+			bikeService.updateQRLog(QRLog);
+			responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+			responseVo = setFaiiMsg(responseVo, vo);
+ 	    		
+			return responseVo;
+        	
+        }
         responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
 		 
 		responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
