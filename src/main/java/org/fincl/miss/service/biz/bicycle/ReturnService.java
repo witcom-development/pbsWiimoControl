@@ -102,6 +102,9 @@ public class ReturnService  {
 		 	}
 		 	else
             {
+		 		vo.setLatitude("00000000");
+		 		vo.setLongitude("00000000");
+		 		
 		 		QRLog.setXpos(vo.getLatitude());
 		 		QRLog.setYpos(vo.getLongitude());        
             }
