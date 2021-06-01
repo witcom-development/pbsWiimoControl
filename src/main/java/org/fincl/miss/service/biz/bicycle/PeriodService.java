@@ -144,8 +144,11 @@ public class PeriodService{
 		 	}
 		 	else
             {
-		 		QRLog.setXpos(vo.getLatitude());
-		 		QRLog.setYpos(vo.getLongitude());        
+		 		QRLog.setXpos("00000000");
+		 		QRLog.setYpos("00000000"); 
+		 		
+		 	//	QRLog.setXpos(vo.getLatitude());
+		 	//	QRLog.setYpos(vo.getLongitude());        
             }
 		 	
 		 	
