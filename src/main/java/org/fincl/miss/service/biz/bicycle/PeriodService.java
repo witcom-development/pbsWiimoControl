@@ -75,6 +75,7 @@ public class PeriodService{
 		 String latitude = null;
 		 String longitude = null;
 		 String	sBike_status=null;
+		 String  BIKE_SE_CD=null;
 		 
 		 PeriodicStateReportsResponseVo responseVo = new PeriodicStateReportsResponseVo();
 		 
@@ -99,10 +100,11 @@ public class PeriodService{
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");	//ENT_003   DB :002
+		 	  BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
 		 	
 		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
 		 	
-		 	logger.debug("QR_435F ##### => biketype {} ,bike {} ,state {} ,usrType {} , company {} ,lock {}",vo.getBikeType(),vo.getBicycleId(),vo.getBicycleState(),vo.getUsrType(),com.getCompany_cd(),vo.getLockState());
+		 	logger.debug("QR_435F ##### => BIKE_SE_CD {} ,  biketype {} ,bike {} ,state {} ,usrType {} , company {} ,lock {}",BIKE_SE_CD,vo.getBikeType(),vo.getBicycleId(),vo.getBicycleState(),vo.getUsrType(),com.getCompany_cd(),vo.getLockState());
 		 	 
 		 	//Map<String, String> qrlog = new HashMap<String, String>();
 		 	
@@ -399,7 +401,7 @@ public class PeriodService{
 			 
 		//	 logger.debug("deviceInfo : {} ",deviceInfo);	//막음.
 		 
-		 }	//if(!vo.getBicycleState().equals("03"))
+		 }	//자전거 상태 01, 02 반납 일대 처리.
 		 
 		 // 방전 error 검출
 		 if(vo.getErrorId().equals("E4") || vo.getBattery().equals("03"))
@@ -646,10 +648,13 @@ public class PeriodService{
 		     		}	//biketype 02 새싹 따릉이...
      			
      		} //GPS 값 체크....!!!!
-     		 
-     		if((vo.getBicycleState().equals("04") || vo.getBicycleState().equals("03")) && vo.getLockState().equals("01"))
+     		
+     		//대여 상태 (자전거/킥보드  락상태가 다르므로 락 제거)
+     	//	if((vo.getBicycleState().equals("04") || vo.getBicycleState().equals("03")) && vo.getLockState().equals("01"))
+     		if(vo.getBicycleState().equals("04") || vo.getBicycleState().equals("03"))
      		{
      			logger.debug("QR_BIKE is Status " + sBike_status);
+     			
      			if(sBike_status.equals("BKS_003") || sBike_status.equals("BKS_012"))
      			{
      				logger.debug("QR_BIKE is RENTING_PERIOD AND LOCKSTATE IS ON BIKE IS WAIT PERIOD : ENFORE PROCESS #########################");
@@ -737,9 +742,12 @@ public class PeriodService{
      			 logger.debug("QR_BIKE is RENTING_PERIOD BUT LOCK STATE IS LOCK ON");	//임시 잠금 일수도 있음...
      		}
      	//	 대여 시켜주는 부분을 대여 이벤트로 옮김 4372
+     		//BIKE_SE_CD  BIK_001 자전거 BIK_002 킥보드 
+     		//막음..
+     		/* 2021.06.07  주기보고시 대여 시키는 부분 막음.
      		else if(vo.getLockState().equals("00") && vo.getSeqNum().equals("00"))
      		{
-     			
+     			//위모에서는 실행하지 않음 - 2021.06.08
      			logger.debug("QR_BIKE IS RENTING_PERIOD BUT BIKE IS RETURN_STATE, LOCK_STATE is OPEN : DB_BIKE {}",sBike_status);
      			
      			BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);
@@ -1022,6 +1030,7 @@ public class PeriodService{
      				}//사용자
      			}//반납 정보있을때
      		}//락이 2일때 대여 시키는 부분
+     		*/
      		
      		
      		logger.debug("RENTING_PERIOD BIKE STATE UPDATE ::::::::::::: ");
@@ -1092,9 +1101,10 @@ public class PeriodService{
      	}	//락 상태가 03,04 일때 대여 중일때 는 바로 리턴 
      	
      	String faultSeq = commonService.getFaultSeq(com);
-     	 
-     	/* start 2019.05.23 강제 반납 관련 */
      	String bike_status = commonService.checkdBikeStateInfo(com);
+     	
+     	/* start 2019.05.23 강제 반납 관련 도 막음...2021.06.08
+     	
      	
      	if(bike_status != null)
      	{
@@ -1117,6 +1127,7 @@ public class PeriodService{
      		}
      		
      	}
+     	*/
      	
      	/* end 2019.05.23 강제 반납 관련 */
    //  	logger.debug("START : checkParkingInfo !!!!!!!!! ");
@@ -1202,8 +1213,9 @@ public class PeriodService{
 			 //rack_id 하고 비콘으로 조회한 rack_id...
 			 if(vo.getLockState().equals("01") && vo.getBicycleState().equals("02"))	//락이 잠기고 반납 
 			 {
-				 if(!com.getRockId().equals(parkingMap.get("RACK_ID"))){	//비콘으로 가져온 거치대 ID 가 다를때 ...
-				 {
+				 if(!com.getRockId().equals(parkingMap.get("RACK_ID")))
+				  {	//비콘으로 가져온 거치대 ID 가 다를때 ...
+					 
 					 logger.debug("START : PERIOD : ParkingInfo_location insert !!!!!!! {} {} {} ",vo.getBicycleId(),com.getRockId(),parkingMap.get("RACK_ID"));
 					//다른 곳에 주차된 정보가 있다면 삭제.
 					//bikeService.deleteDuplicatedParkingInfo(info); 
@@ -1220,10 +1232,10 @@ public class PeriodService{
 			        bicycleMapper.insertBikeLocation(info);
 
 						 
-				 }
-			 }//락이 잠겨있고, 반납 있때만 처리...
-				 
-				 
+					 
+				  }//락이 잠겨있고, 반납 있때만 처리...
+
+		
 			 }
 			 /**
 			  * 주차정보가 존재하므로 전달받은 자전거 정보와 비교..
@@ -1237,6 +1249,8 @@ public class PeriodService{
 		  */
 		 if(vo.getBicycleState().equals(Constants.CODE.get("BIKE_STATE_02")))
 		 {
+			 //BIK_001 자전거     BIK_002 킥보드 01 반납 
+			 // 
 			 if(vo.getLockState().equals("00"))
 			 {
 	     			//대여 상태인데 잠금 장치가 잠겨 있다면
