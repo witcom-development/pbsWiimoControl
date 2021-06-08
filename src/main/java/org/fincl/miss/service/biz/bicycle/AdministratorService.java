@@ -474,6 +474,7 @@ public class AdministratorService {
 		 // 버전 체크
 		 Map<String, Object> serverVersion = fileService.getVersion(com);
 
+		 /*
 		 logger.debug("##### Admin Mount : BLE firmware_time_update=> " + serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_BLE_BIKE_CAN_DOWN"));
 		 
 		 if(serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") != null )
@@ -522,7 +523,8 @@ public class AdministratorService {
 			 logger.debug("##### Admin Mount BLE FIRMWARE : FIRM VERSION IS NO GET#####");
 			 responseVo.setBle_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 		 }
-		 
+		 */
+		 responseVo.setBle_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_00"));
 		 if(responseVo.getBle_firmwareUpdate().equals(Constants.CODE.get("WIFI_UPDATE_00")))  //BLE UPDATE 대상이므로 MODEM 진행 안함
 		 {
 			 logger.debug("##### Admin Mount : MODEM firmware_time_update=> " + serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN"));
