@@ -197,7 +197,8 @@ public class AdministratorService {
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 	
 		 	logger.debug("QR_437C ##### => bike {} ,state {} , company {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd());
 		 	
@@ -323,6 +324,18 @@ public class AdministratorService {
 		 }
 		 else
 		 {
+			 com.setStationId("ST-999");
+			 if(ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001"))
+			 {
+				 com.setRockId("45800099900000");
+			 }
+			 else
+			 {
+				 com.setRockId("45800099900099");
+			 }
+			 logger.error("QRAdminMounting_BEACON : staionInfo is NOT FOUNT BUT DEFAULT LOCATE SET {}",com.getStationId());
+			 
+			 /*
 			 
 			 if(ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_002"))
 				 QRLog.setResAck("RAFA");
@@ -340,6 +353,7 @@ public class AdministratorService {
 			 
 			 return responseVo;
 			 //GPS 반납 거절 전송
+			  */
 		 }
 
 		 //com.setUserSeq(new CommonUtil().GetUSRSeq(vo.getUsrseq()));

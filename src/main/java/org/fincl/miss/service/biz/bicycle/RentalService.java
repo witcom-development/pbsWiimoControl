@@ -100,8 +100,9 @@ public class RentalService {
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");	//ENT_003   DB :002
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
 		 	
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,ENTRPS_CD.length()));
 		 	
 		 	logger.debug("QR_4372 ##### => bike {} ,state {} ,usrType {}, company {} ,lock {}",vo.getBicycleId(),vo.getBicycleState(),vo.getUsrType(),com.getCompany_cd(),vo.getLockState());
 		 	 

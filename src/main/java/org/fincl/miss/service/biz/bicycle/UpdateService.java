@@ -72,7 +72,8 @@ public class UpdateService {
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 	
 		 	logger.debug("QR_4350 ##### => bike {} ,state {} , company {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd());
 		 	
@@ -103,11 +104,11 @@ public class UpdateService {
         
         // 버전 체크
         Map<String, Object> serverVersion = fileService.getVersion(com);
-        double requsetbleFw  = Double.parseDouble(vo.getBle_firmwareVs().substring(0,2) + "." + vo.getBle_firmwareVs().substring(2, 4));
+        //double requsetbleFw  = Double.parseDouble(vo.getBle_firmwareVs().substring(0,2) + "." + vo.getBle_firmwareVs().substring(2, 4));
 		double requsetModemFw = Double.parseDouble(vo.getModem_firmwareVs().substring(0,2) + "." + vo.getModem_firmwareVs().substring(2, 4));
 		
 		 
-        double serverbleFw = Double.parseDouble(serverVersion.get("FIRMWARE_BLE_VER").toString());
+       // double serverbleFw = Double.parseDouble(serverVersion.get("FIRMWARE_BLE_VER").toString());
         double serverModemFw = Double.parseDouble(serverVersion.get("FIRMWARE_MODEM_VER").toString());
         
 
@@ -116,8 +117,9 @@ public class UpdateService {
 		
 		String fileSeq = "";
 		
-		 logger.debug("requsetVersion FW{}, MW{} serverVersion FW{},MW{}", requsetbleFw,requsetModemFw,serverbleFw,serverModemFw);
-		 
+		logger.debug("requsetVersion MW{} serverVersion MW{}", requsetModemFw,serverModemFw);
+		// logger.debug("requsetVersion FW{}, MW{} serverVersion FW{},MW{}", requsetbleFw,requsetModemFw,serverbleFw,serverModemFw);
+		 /*
         if((requsetbleFw < serverbleFw) && fwbleUseYn)
         {
         	logger.debug("### YES : FIRMWARE UPDATE ###  BLE FIRMWARE UPATE START BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID")) + ", COMPANY_CD : " + String.valueOf(com.getCompany_cd()));
@@ -127,7 +129,7 @@ public class UpdateService {
         	responseVo.setUpdate(Constants.CODE.get("UPDATE_01")); // BLE FIRMWARE UPDATE
         	responseVo.setVersion(versionToHex(String.valueOf(serverbleFw)));
         }
-        else if((requsetModemFw < serverModemFw) && fwmodemUseYn)
+        else */if((requsetModemFw < serverModemFw) && fwmodemUseYn)
         {
         	logger.debug("### YES : FIRMWARE UPDATE ###  MODEM FIRMWARE UPATE START BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID")) + ", COMPANY_CD : " + String.valueOf(com.getCompany_cd()));
 			
@@ -454,7 +456,8 @@ public class UpdateService {
 		if(ourBikeMap != null)
 		 {
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 }
 		 else
 		 {
@@ -664,7 +667,8 @@ public class UpdateService {
 		 {
 			 //add 자전거 번호 가져오기 2018.09.01
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 }
 		 else
 		 {
@@ -769,7 +773,8 @@ public class UpdateService {
 		 	//add 자전거 번호 가져오기 2018.09.01
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 	
 		 	logger.debug("QR_4300_UPDATE_FINISH ##### => bike {} ,state {} , company {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd());
 		 	
@@ -848,7 +853,8 @@ public class UpdateService {
 		 {
 			 //add 자전거 번호 가져오기 2018.09.01
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 }
 		 else
 		 {
@@ -1118,11 +1124,13 @@ public class UpdateService {
     	Map<String, String> ourBikeMap = new HashMap<String, String>();
 		ourBikeMap = bikeService.chkOurBike(com);
 		
+		/*
 		if(String.valueOf(ourBikeMap.get("FIRMWARE_DOWN_YN")).equals("Y")){
 			com.setCompany_cd("CPN_001");
 		}else{
 			com.setCompany_cd("CPN_002");
 		}
+		*/
     	
     	Map<String, Object> serverVersion = fileService.getVersion(com);
     	boolean sdUseYn = serverVersion.get("VOICE_USE_YN").equals("Y");

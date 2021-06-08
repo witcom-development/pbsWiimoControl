@@ -74,11 +74,11 @@ public class ReturnService  {
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
-		 	String	bike_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		// 	com.setBikeStusCd(bike_SE_CD);
 		 	
-		 	logger.debug("QR_436F ##### => bike {} ,state {} , company {} ,bike_se_cd {}  ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd(),bike_SE_CD);
+		 	logger.debug("QR_436F ##### => bike {} ,state {} , company {} ,bike_se_cd {}  ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd(),BIKE_SE_CD);
 		 	
 		 	//QRLogVo QRLog = new QRLogVo();
 		 	

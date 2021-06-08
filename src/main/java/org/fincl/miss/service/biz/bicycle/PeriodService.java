@@ -100,9 +100,9 @@ public class PeriodService{
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");	//ENT_003   DB :002
-		 	  BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
 		 	
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 	
 		 	logger.debug("QR_435F ##### => BIKE_SE_CD {} ,  biketype {} ,bike {} ,state {} ,usrType {} , company {} ,lock {}",BIKE_SE_CD,vo.getBikeType(),vo.getBicycleId(),vo.getBicycleState(),vo.getUsrType(),com.getCompany_cd(),vo.getLockState());
 		 	 
@@ -1314,7 +1314,7 @@ public class PeriodService{
 		 //   Row: FWD_001, 30.11, 37, Y, Y, N
 		 
 		 logger.debug("##### period status : BLE firmware_time_update=> " + serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_BLE_BIKE_CAN_DOWN"));
-		 
+		 /*
 		 if(serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") != null )
 		 {
 			 double serverFw = Double.parseDouble(serverVersion.get("FIRMWARE_BLE_VER").toString());
@@ -1361,6 +1361,8 @@ public class PeriodService{
 			 logger.debug("##### PERIOD UPDATE BLE FIRMWARE : FIRM VERSION IS NO GET#####");
 			 responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 		 }
+		 */
+		 responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 		 
 		 if(responseVo.getBle_fwupdate().equals(Constants.CODE.get("WIFI_UPDATE_00")))  //BLE UPDATE 대상이므로 MODEM 진행 안함
 		 {
@@ -1616,7 +1618,8 @@ public class PeriodService{
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
 		 	nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 	
 		 	logger.debug("QR_436F ##### => bike {} ,state {} , company {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd());
 		 	 

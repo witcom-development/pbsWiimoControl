@@ -48,7 +48,7 @@ public class FileUpdateServiceImpl implements FileUpdateService {
 			vs.put("FIRMWARE_BLE_TIME_CAN_DOWN", "Y");
 			vs.put("FIRMWARE_BLE_BIKE_CAN_DOWN", "Y");
 		}
-		
+		/*
 		com.setFirmwareClsCd("FWD_002");
 		tmp = fileMapper.getVersion(com);
 		
@@ -65,7 +65,7 @@ public class FileUpdateServiceImpl implements FileUpdateService {
 			vs.put("FIRMWARE_MODEM_TIME_CAN_DOWN", "Y");
 			vs.put("FIRMWARE_MODEM_BIKE_CAN_DOWN", "Y");
 		}
-		
+		*/
 		/*
 		com.setFirmwareClsCd("FWD_003");
 		tmp = fileMapper.getVersion(com);

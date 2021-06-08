@@ -58,7 +58,8 @@ public class BreakDownService{
 			String  bikeNo = ourBikeMap.get("BIKE_NO");
 			nBikeSerial = bikeNo.substring(2,bikeNo.length());
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
-		 	com.setCompany_cd("CPN_" + ENTRPS_CD.substring(4,ENTRPS_CD.length()));
+		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
+		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
 		 	
 		 	logger.debug("QR_4370 ##### => bike {} ,state {} , company {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd());
 		 	 
