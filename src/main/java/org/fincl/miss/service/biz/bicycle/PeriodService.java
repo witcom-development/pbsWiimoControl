@@ -1313,7 +1313,7 @@ public class PeriodService{
 		 //Columns: FIRMWARE_CLS_CD, FIRMWARE_VER, FIRMWARE_SEQ, USE_YN, TIME_CAN_DOWN, BIKE_CAN_DOWN
 		 //   Row: FWD_001, 30.11, 37, Y, Y, N
 		 
-		 logger.debug("##### period status : BLE firmware_time_update=> " + serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_BLE_BIKE_CAN_DOWN"));
+		 //logger.debug("##### period status : BLE firmware_time_update=> " + serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_BLE_BIKE_CAN_DOWN"));
 		 /*
 		 if(serverVersion.get("FIRMWARE_BLE_TIME_CAN_DOWN") != null )
 		 {

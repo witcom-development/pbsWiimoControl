@@ -36,17 +36,17 @@ public class FileUpdateServiceImpl implements FileUpdateService {
 		Map<String, Object> tmp = fileMapper.getVersion(com);
 		
 		if(tmp != null){
-			vs.put("FIRMWARE_BLE_VER", tmp.get("FIRMWARE_VER"));
-			vs.put("FIRMWARE_BLE_SEQ", tmp.get("FIRMWARE_SEQ"));
-			vs.put("FIRMWARE_BLE_USE_YN", tmp.get("USE_YN"));
-			vs.put("FIRMWARE_BLE_TIME_CAN_DOWN", tmp.get("TIME_CAN_DOWN"));
-			vs.put("FIRMWARE_BLE_BIKE_CAN_DOWN", tmp.get("BIKE_CAN_DOWN"));
+			vs.put("FIRMWARE_MODEM_VER", tmp.get("FIRMWARE_VER"));
+			vs.put("FIRMWARE_MODEM_SEQ", tmp.get("FIRMWARE_SEQ"));
+			vs.put("FIRMWARE_MODEM_USE_YN", tmp.get("USE_YN"));
+			vs.put("FIRMWARE_MODEM_TIME_CAN_DOWN", tmp.get("TIME_CAN_DOWN"));
+			vs.put("FIRMWARE_MODEM_BIKE_CAN_DOWN", tmp.get("BIKE_CAN_DOWN"));
 		}else{
-			vs.put("FIRMWARE_BLE_VER", "0.0");
-			vs.put("FIRMWARE_BLE_SEQ", 0);
-			vs.put("FIRMWARE_BLE_USE_YN", "Y");
-			vs.put("FIRMWARE_BLE_TIME_CAN_DOWN", "Y");
-			vs.put("FIRMWARE_BLE_BIKE_CAN_DOWN", "Y");
+			vs.put("FIRMWARE_MODEM_VER", "0.0");
+			vs.put("FIRMWARE_MODEM_SEQ", 0);
+			vs.put("FIRMWARE_MODEM_USE_YN", "N");
+			vs.put("FIRMWARE_MODEM_TIME_CAN_DOWN", "N");
+			vs.put("FIRMWARE_MODEM_BIKE_CAN_DOWN", "N");
 		}
 		/*
 		com.setFirmwareClsCd("FWD_002");
