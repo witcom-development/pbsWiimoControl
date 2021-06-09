@@ -484,7 +484,7 @@ public class UpdateService {
     	}
     	else
     	{
-    		logger.debug( " ############# DOWNLOAD ## UPDATE DATA ERROR");
+    		logger.debug( " ############# DOWNLOAD ## UPDATE DATA ERROR filenum {}",vo.getFileNum());
 			responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
 			responseVo = setFaiiMsg(responseVo, vo);
 			
@@ -507,7 +507,7 @@ public class UpdateService {
     		}
     		else
     		{
-    			logger.debug( " ############# DOWNLOAD ## UPDATE DATA ERROR2");
+    			logger.debug( " ############# DOWNLOAD ## UPDATE DATA ERROR2 filenum {}",vo.getFileNum());
     			responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
     			responseVo = setFaiiMsg(responseVo, vo);
     			
