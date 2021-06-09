@@ -112,7 +112,7 @@ public class UpdateService {
         double serverModemFw = Double.parseDouble(serverVersion.get("FIRMWARE_MODEM_VER").toString());
         
 
-		boolean fwbleUseYn = serverVersion.get("FIRMWARE_BLE_USE_YN").equals("Y");
+		//boolean fwbleUseYn = serverVersion.get("FIRMWARE_BLE_USE_YN").equals("Y");
 		boolean fwmodemUseYn = serverVersion.get("FIRMWARE_MODEM_USE_YN").equals("Y");
 		
 		String fileSeq = "";
@@ -214,13 +214,13 @@ public class UpdateService {
         			}
         			
         			//2019.12.19 추가 ble 01 , mode 02
-        			if(fwbleUseYn){
-        				responseVo.setFileCnt(Constants.CODE.get("UPDATE_01"));
-        			}
-        			else
-        			{
+        			//if(fwbleUseYn){
+        				//responseVo.setFileCnt(Constants.CODE.get("UPDATE_01"));
+        			//}
+        			//else
+        			//{
         				responseVo.setFileCnt(Constants.CODE.get("UPDATE_02"));
-        			}
+        			//}
         			
         		}
         		else
@@ -474,11 +474,12 @@ public class UpdateService {
     	Map<String, Object> deviceVersion = fileService.getVersion(com);
     	//파일번호 00이면 ble 01이면 modem
     	boolean fwUseYn = false;
-    	if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_01")))
-    	{
-    		fwUseYn = deviceVersion.get("FIRMWARE_BLE_USE_YN").equals("Y");
-    	}
-    	else if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_02")))
+    	//if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_01")))
+    	//{
+    		//fwUseYn = deviceVersion.get("FIRMWARE_BLE_USE_YN").equals("Y");
+    	//}
+    	//else 
+    	if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_02")))
     	{
     		fwUseYn = deviceVersion.get("FIRMWARE_MODEM_USE_YN").equals("Y");
     	}
@@ -497,11 +498,12 @@ public class UpdateService {
     	
     	if(fwUseYn)
     	{
-    		if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_01")))
-    		{
-    			fileSeq = deviceVersion.get("FIRMWARE_BLE_SEQ").toString();
-    		}
-    		else if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_02")))
+    		//if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_01")))
+    		//{
+    			//fileSeq = deviceVersion.get("FIRMWARE_BLE_SEQ").toString();
+    		//}
+    		//else 
+    		if(vo.getFileNum().equals(Constants.CODE.get("UPDATE_02")))
     		{
     			fileSeq = deviceVersion.get("FIRMWARE_MODEM_SEQ").toString();
     		}
