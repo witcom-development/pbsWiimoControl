@@ -88,8 +88,12 @@ public class BreakDownService{
 		 	}
 		 	else
             {
-		 		QRLog.setXpos(vo.getGps_Latitude());
-		 		QRLog.setYpos(vo.getGps_Longitude());        
+		 		
+		 		QRLog.setXpos("00000000");
+		 		QRLog.setYpos("00000000"); 
+		 		
+		 	//	QRLog.setXpos(vo.getGps_Latitude());
+		 		//QRLog.setYpos(vo.getGps_Longitude());        
             }
 
 		 	
