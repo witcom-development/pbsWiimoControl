@@ -358,19 +358,63 @@ public class ReturnService  {
 		}
         else
         {
-        	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
+        	
+        	if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
+        	{
+        		logger.error("RentHistVo is NOT EXIST : BIKE_TEST SUCCESS");
+        		responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
+                responseVo.setSeqNum(vo.getSeqNum());
+                responseVo.setCommandId(Constants.CID_RES_RETURNBIKE);
+                responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_02"));
+                responseVo.setBicycleId(vo.getBicycleId());
+                
+                
+                List<HashMap<String, String>> PeriodList = commonService.CheckPeriodTime();
+         		 
+         		if(PeriodList.size() == 0 )
+         		{
+        	  			 logger.error("Period Information Find Error");
+        	  			 responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
+        	  			 responseVo = setFaiiMsg(responseVo, vo);
+        	           	
+        	  			 return responseVo;
+         		}
+         		else
+         		{
+         			for(HashMap<String, String> PeriodMap : PeriodList)
+         			{
+         				if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
+         				{
+          					 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+          					 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+          					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+          					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+          					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+          					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+         				}
+         			}
+         		}
+                
+                
+                return responseVo;
+        		
+        	}
+        	else
+        	{
+	        	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
+		        	
 	        	
-        	
-    		responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_03"));
-    	
-    		responseVo.setErrorId(Constants.CODE.get("ERROR_F6"));
-    		responseVo = setFaiiMsg(responseVo, vo);
-    	
-    		QRLog.setResAck("RF:00");
-    	
-    		bikeService.updateQRLog(QRLog);
-        	
-        	return responseVo;
+	    		responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_03"));
+	    	
+	    		responseVo.setErrorId(Constants.CODE.get("ERROR_F6"));
+	    		responseVo = setFaiiMsg(responseVo, vo);
+	    	
+	    		QRLog.setResAck("RF:00");
+	    	
+	    		bikeService.updateQRLog(QRLog);
+	        	
+	        	return responseVo;
+        	}
         }
         
         

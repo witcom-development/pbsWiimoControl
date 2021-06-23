@@ -234,13 +234,62 @@ public class RentalService {
 		  				 
   					if(voucher == null)
   					{
-  						logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
-  						QRLog.setResAck("VOUNO");
-  						bikeService.updateQRLog(QRLog);
-  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-  						responseVo = setFaiiMsg(responseVo, vo);
-								 
-  						return responseVo;
+  						//test
+  						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
+  						{
+  							
+  							logger.debug("QR_BIKE IS RENTAL_EVENT  BIKE_TEST  ");
+  							
+  							responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
+  							 
+  							responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
+  						
+  							responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
+  							responseVo.setSeqNum(vo.getSeqNum());
+  							responseVo.setCommandId(Constants.CID_RES_RENTWAIT);
+  							responseVo.setBicycleState(vo.getBicycleState());
+  							responseVo.setBicycleId(vo.getBicycleId());
+  							responseVo.setDayAndNight("00");
+  							
+  					
+  							List<HashMap<String, String>> PeriodList = commonService.CheckPeriodTime();
+  					  		 
+  					 		if(PeriodList.size() == 0 )
+  					 		{
+  						  			 logger.error("Period Information Find Error");
+  						  			 responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
+  						  			 responseVo = setFaiiMsg(responseVo, vo);
+  						           	
+  						  			 return responseVo;
+  					 		}
+  					 		else
+  					 		{
+  					 			for(HashMap<String, String> PeriodMap : PeriodList)
+  					 			{
+  					 				if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_039"))	//2020.04.14
+  					 				{
+  					  					 logger.debug("######################## MSI_039 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+  					  					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+  					  					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+  					  					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+  					  					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+  					 				}
+  					 			}
+  					 		}
+
+  					        return responseVo;
+  					  							
+  						}
+  						else
+  						{
+	  						logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
+	  						QRLog.setResAck("VOUNO");
+	  						bikeService.updateQRLog(QRLog);
+	  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+	  						responseVo = setFaiiMsg(responseVo, vo);
+									 
+	  						return responseVo;
+  						}
   					}
 	 
 					Map<String, Object> useBike = bikeService.getUseBikeInfoFULL(com);
