@@ -1301,5 +1301,12 @@
 		WHERE VOUCHER_SEQ = #{voucherseq}
 	</update>
 	
+	<select id="getBikeRETURN_GPS"		parameterType="string"	resultType="java.util.HashMap">
+		<![CDATA[
+		SELECT BIKE_LATITUDE,BIKE_LONGITUDE FROM TB_OPR_BIKE_RETURN_GPS_HIST
+			WHERE RENT_SEQ = #{RENT_SEQ} ORDER BY GPS_HIST_SEQ DESC limit 1
+		]]>
+	</select>
+	
 	
 </mapper>

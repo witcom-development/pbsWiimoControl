@@ -1154,4 +1154,11 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	{
 		bicycleMapper.updateKickCnt(voucherseq);
 	}
+	
+	
+	@Override
+	public Map<String, Object> getBikeRETURN_GPS(String RENT_SEQ)
+	{
+		return bicycleMapper.getBikeRETURN_GPS(RENT_SEQ);
+	}
 }

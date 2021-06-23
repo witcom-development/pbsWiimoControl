@@ -103,14 +103,11 @@ public class ReturnService  {
 		 	else
             {
 		 		
-		 	//	02181D1B 07A69BCD 
-		 		vo.setLatitude("02181D1B");
-		 		vo.setLongitude("07A69BCD");
-		 		
+		 	//	02181D1B 07A69BCD 	
 		 	//	QRLog.setXpos(vo.getLatitude());
 		 	//	QRLog.setYpos(vo.getLongitude());    
-		 		QRLog.setXpos(new CommonUtil().GetGPS(vo.getLatitude()));
-		 		QRLog.setYpos(new CommonUtil().GetGPS(vo.getLongitude()));
+		 		QRLog.setXpos("00000000");
+		 		QRLog.setYpos("00000000");
 		 		
             }
 		 	
@@ -162,52 +159,65 @@ public class ReturnService  {
         
         if(info != null)
         {
-        	info.setGPS_X(new CommonUtil().GetGPS(vo.getLatitude()));
-    		info.setGPS_Y(new CommonUtil().GetGPS(vo.getLongitude()));
     		Map<String, Object> stationInfo = null;
     		
     	
-    		logger.debug("BIKE RETURN ## BIKE IS  NORMAL_BIKE : TOTAL_RAK {}",vo.getBicycleId());
-    			
-			/*	비콬이 없으면 반납 붗가 처리 2020.01.10*/
-			if(stationInfo == null)
+    		logger.debug("BIKE RETURN ## BIKE IS  NORMAL_BIKE {}",vo.getBicycleId());
+
+			if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
+					 && !vo.getLongitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
 			{
-				if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
-						 && !vo.getLongitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
-				{
-										
-					String latitude = new CommonUtil().GetGPS(vo.getLatitude());
-			        String longitude = new CommonUtil().GetGPS(vo.getLongitude());
-					
-					logger.debug("GPS INFO ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
-					 
-					//log 추가 
-					 logger.error("Station List Find Error");
-					 
-					Map<String, String> GPS = new HashMap<String, String>();
-					GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
-					GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
-					GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
-					stationInfo = commonService.CheckStation_ForGPS(GPS);
-					
-					if(stationInfo == null )
-					{
-						 logger.error("Station List Find Error");
-						 responseVo.setErrorId(Constants.CODE.get("ERROR_FD"));
-						 responseVo = setFaiiMsg(responseVo, vo);
-				  		
-						 return responseVo;
-					 }
-					 else
-					 {
-						 logger.debug("##### BIKE RETURN ## GPS STATION FIND START! #####");
-						 logger.debug("##### BIKE RETURN ## GPS STATION ID[" + String.valueOf(stationInfo.get("STATION_ID")) + "] ENTERED");;
-							 
-					 }
-				} 
+				info.setGPS_X(new CommonUtil().GetGPS(vo.getLatitude()));
+	    		info.setGPS_Y(new CommonUtil().GetGPS(vo.getLongitude()));
+				String latitude = new CommonUtil().GetGPS(vo.getLatitude());
+		        String longitude = new CommonUtil().GetGPS(vo.getLongitude());
+				
+				logger.debug("GPS INFO ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
 				 
-			}	//stationInfo is null : gps 체크 안함....
-     		
+				Map<String, String> GPS = new HashMap<String, String>();
+				GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
+				GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
+				GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
+				stationInfo = commonService.CheckStation_ForGPS(GPS);
+				
+				if(stationInfo == null )
+				{
+				}
+				else
+				{
+					logger.debug("##### BIKE RETURN ## GPS STATION FIND START! #####");
+					logger.debug("##### BIKE RETURN ## GPS STATION ID[" + String.valueOf(stationInfo.get("STATION_ID")) + "] ENTERED");;	 
+				}
+			}
+			else
+			{
+				Map<String, Object> return_GPS = bikeService.getBikeRETURN_GPS(info.getRENT_SEQ());
+				String latitude = String.valueOf(return_GPS.get("BIKE_LATITUDE"));
+		        String longitude = String.valueOf(return_GPS.get("BIKE_LONGITUDE"));
+		        
+		        info.setGPS_X(latitude);
+	    		info.setGPS_Y(longitude);
+		        
+		        logger.debug("GPS INFO2 ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
+		        
+		        
+		        Map<String, String> GPS = new HashMap<String, String>();
+				GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
+				GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
+				GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
+				stationInfo = commonService.CheckStation_ForGPS(GPS);
+				
+				if(stationInfo == null )
+				{
+				}
+				else
+				{
+					logger.debug("##### BIKE RETURN ## GPS STATION FIND START! #####");
+					logger.debug("##### BIKE RETURN ## GPS STATION ID[" + String.valueOf(stationInfo.get("STATION_ID")) + "] ENTERED");;
+		 
+				}
+			}
+
      		
 		
      		if(stationInfo != null)
@@ -221,16 +231,17 @@ public class ReturnService  {
      		else
      		{
      			
-     			logger.error("stationInfo is NULL : beconID is not find NO RETURN : {} ", vo.getBeaconId());
+     			logger.error("stationInfo is NULL : beconID is not GPS : DEFAULT STATION INSERT" );
+     			com.setStationId("ST-999");
+     			if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
+     			{
+     				com.setRockId("45800099900000");
+     			}
+     			else
+     				com.setRockId("45800099900099");
      			
-     			QRLog.setResAck("RBF");
-     			bikeService.updateQRLog(QRLog);
-     			
-     			responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_03"));
-     			responseVo.setErrorId(Constants.CODE.get("ERROR_FD"));
-     			responseVo = setFaiiMsg(responseVo, vo);
-     			 
-     			return responseVo;
+     			info.setRETURN_STATION_ID(com.getStationId());
+     			info.setRETURN_RACK_ID(com.getRockId());
      			
      		}
 
