@@ -358,7 +358,7 @@ public class ReturnService  {
 		}
         else
         {
-        	
+        	/*
         	if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
         	{
         		logger.error("RentHistVo is NOT EXIST : BIKE_TEST SUCCESS");
@@ -399,8 +399,9 @@ public class ReturnService  {
                 return responseVo;
         		
         	}
-        	else
-        	{
+        	*/
+        	
+        	
 	        	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
 		        	
 	        	
@@ -414,7 +415,7 @@ public class ReturnService  {
 	    		bikeService.updateQRLog(QRLog);
 	        	
 	        	return responseVo;
-        	}
+        	
         }
         
         

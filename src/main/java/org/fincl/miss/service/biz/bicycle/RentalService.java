@@ -234,7 +234,7 @@ public class RentalService {
 		  				 
   					if(voucher == null)
   					{
-  						//test
+  						/*
   						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
   						{
   							
@@ -280,8 +280,9 @@ public class RentalService {
   					        return responseVo;
   					  							
   						}
-  						else
-  						{
+  						*/
+  						
+  						
 	  						logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
 	  						QRLog.setResAck("VOUNO");
 	  						bikeService.updateQRLog(QRLog);
@@ -289,7 +290,7 @@ public class RentalService {
 	  						responseVo = setFaiiMsg(responseVo, vo);
 									 
 	  						return responseVo;
-  						}
+  						
   					}
 	 
 					Map<String, Object> useBike = bikeService.getUseBikeInfoFULL(com);
