@@ -119,19 +119,7 @@ public class PeriodService{
 		 	QRLog.setUserType(vo.getUsrType());
 		 	QRLog.setLock(vo.getLockState());
 		 	QRLog.setBiketype(vo.getBikeType());
-		 	
-		 	
-		 	if(!vo.getBattery().equals(null) && !vo.getBattery().equals(""))
-     		{
-     			int beacon_battery = Integer.parseInt(vo.getBeaconbatt(), 16);
-         		Map<String, String> beacon_battery_map = new HashMap<String, String>();
-         		beacon_battery_map.put("BATTERY", String.valueOf(beacon_battery));
-         		beacon_battery_map.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
-         		
-
-				//commonService.updateBeaconBatteryInfo(beacon_battery_map);
-     		}
-		 	
+		 
 		 	QRLog.setDev_BATT(String.valueOf(Integer.parseInt(vo.getBattery(), 16)));
 		 	QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconbatt(), 16)));
 		 	QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getElecbatt(), 16)));
@@ -186,6 +174,25 @@ public class PeriodService{
 			 
 			 return responseVo;
 		 }
+		 
+		 
+		 if(!vo.getBattery().equals(null) && !vo.getBattery().equals(""))
+		 {
+			 logger.debug("##### PERIOD UPDATE ## BATTERY UPDATE START #####");
+			 int battery = Integer.parseInt(vo.getBattery(), 16);
+			 String battery_info = null;
+
+			 battery_info = new CommonUtil().getBattery_Info(vo.getBattery());
+     		
+     		Map<String, String> battery_map = new HashMap<String, String>();
+     		battery_map.put("BATTERY", String.valueOf(battery));
+     		battery_map.put("BATTERY_INFO", String.valueOf(battery_info));
+     		battery_map.put("BICYCLE_ID", vo.getBicycleId());
+     		
+     		commonService.updateBatteryInfo(battery_map);
+     		//전기 자전거 BATT UPDATE 추가 필요?
+     		logger.debug("##### PERIOD UPDATE ## BATTERY UPDATE END #####");
+     	}
 		 
 		 int Bike_Speed = Integer.parseInt( vo.getCurrent_speed(), 16 );
 		 logger.debug("current Speed Is " + Bike_Speed);
@@ -409,58 +416,6 @@ public class PeriodService{
 			 // 충전상태 이상 UPdate
 			 commonService.updateBatteryDischarge(com);
 		 }
-     	
-     	/**
-     	 * 주기적인 상태보고를 통한 자전거 배터리 정보 UPDATE_20160808_JJH
-     	 */
-     	
-		 if(!vo.getBattery().equals(null) && !vo.getBattery().equals(""))
-		 {
-			 logger.debug("##### PERIOD UPDATE ## BATTERY UPDATE START #####");
-			 int battery = Integer.parseInt(vo.getBattery(), 16);
-			 String battery_info = null;
-
-			 battery_info = new CommonUtil().getBattery_Info(vo.getBattery());
-     		
-     		Map<String, String> battery_map = new HashMap<String, String>();
-     		battery_map.put("BATTERY", String.valueOf(battery));
-     		battery_map.put("BATTERY_INFO", String.valueOf(battery_info));
-     		battery_map.put("BICYCLE_ID", vo.getBicycleId());
-     		
-     		commonService.updateBatteryInfo(battery_map);
-     		
-     		if(!vo.getBeaconbatt().equals(null) && !vo.getBeaconbatt().equals("")
-     				&& !vo.getBeaconId().equals(null) && !vo.getBeaconId().equals(""))
-     		{
-     			int beacon_battery = Integer.parseInt(vo.getBeaconbatt(), 16);
-         		Map<String, String> beacon_battery_map = new HashMap<String, String>();
-         		beacon_battery_map.put("BATTERY", String.valueOf(beacon_battery));
-         		beacon_battery_map.put("BEACON_ID", String.valueOf(vo.getBeaconId()));
-         		
-				//commonService.updateBeaconBatteryInfo(beacon_battery_map);
-     		}
-     		
-     		
-     		//vo.getBikeType()
-     		/*  새싹 따릉이 로 수정
-     		if(vo.getBikeType().equals("01"))
-     		{
-     			logger.debug("##### PERIOD ELECTRONIC_BIKE {} ## BATTERY UPDATE END #####",vo.getBicycleId());
-     			
-	     		if(!vo.getElecbatt().equals(null) && !vo.getElecbatt().equals(""))
-	     		{
-	     			int beacon_battery = Integer.parseInt(vo.getElecbatt(), 16);
-	         		Map<String, String> elec_battery_map = new HashMap<String, String>();
-	         		elec_battery_map.put("ELEC_BATTERY", String.valueOf(beacon_battery));
-	         		elec_battery_map.put("BICYCLE_ID", vo.getBicycleId());
-	         		
-					commonService.updateElecBatteryInfo(elec_battery_map);
-	     		}
-     		}
-     		*/
-     		//전기 자전거 BATT UPDATE 추가 필요?
-     		logger.debug("##### PERIOD UPDATE ## BATTERY UPDATE END #####");
-     	}
      	
       	/**
       	 * 기존 주차정보를 조회...현재 전송된 데이타와 비교하기 위해서...
