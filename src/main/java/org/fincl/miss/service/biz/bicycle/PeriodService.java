@@ -192,7 +192,10 @@ public class PeriodService{
      		commonService.updateBatteryInfo(battery_map);
      		//전기 자전거 BATT UPDATE 추가 필요?
      		logger.debug("##### PERIOD UPDATE ## BATTERY UPDATE END #####");
-     	}
+		 }
+		 
+		 logger.debug("BIKE STATE UPDATE ::::::::::::: ");
+		 commonService.updatePeriodState(com);
 		 
 		 int Bike_Speed = Integer.parseInt( vo.getCurrent_speed(), 16 );
 		 logger.debug("current Speed Is " + Bike_Speed);
@@ -430,7 +433,7 @@ public class PeriodService{
      	{
      		logger.debug("QR_BIKE is RENTING_PERIOD REPORT STATE {} ###################",vo.getBicycleState());
      		
-     		commonService.updatePeriodState(com);
+     		
      		     		
      		//SESSAK 네이버 연동은 GPS 가 올라왔을때 시도...
      		//2020.10.06
@@ -1258,9 +1261,6 @@ public class PeriodService{
 				 }
 			 }
 		 }
-			
-		 logger.debug("BIKE STATE UPDATE ::::::::::::: ");
-		 commonService.updatePeriodState(com);
 		 
 		 //데이타 없으면 디폴트오  Y,Y ,Y 세팅함. 2020.07.21
 		 Map<String, Object> serverVersion = fileService.getVersion(com);
