@@ -527,7 +527,7 @@ public class AdministratorService {
 		 responseVo.setBle_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_00"));
 		 if(responseVo.getBle_firmwareUpdate().equals(Constants.CODE.get("WIFI_UPDATE_00")))  //BLE UPDATE 대상이므로 MODEM 진행 안함
 		 {
-			 logger.debug("##### Admin Mount : MODEM firmware_time_update=> " + serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN"));
+			 logger.debug("##### Admin Mount : MODEL firmware_time_update=> " + serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN"));
 			 
 			 if(serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") != null )
 			 {
@@ -547,24 +547,24 @@ public class AdministratorService {
 					{
 						if(requsetFw <  serverFw )
 						{
-							logger.debug("### YES : Admin Mount MODEM FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+							logger.debug("### YES : Admin Mount MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 							responseVo.setModem_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_01")); //  f/w 무선 업데이트 진행
 						}
 						else
 						{
-							logger.debug("### NO2 : Admin Mount MODEM FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+							logger.debug("### NO2 : Admin Mount MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 							responseVo.setModem_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 						}
 					}
 					else	//2019.12.18 추가 
 					{
-						logger.debug("### NO3 : Admin Mount MODEM FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+						logger.debug("### NO3 : Admin Mount MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 						responseVo.setModem_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 					}
 				}
 				else
 				{
-					logger.debug("### NO4 : Admin Mount MODEM FIRMWARE UPDATE2 ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+					logger.debug("### NO4 : Admin Mount MODEL FIRMWARE UPDATE2 ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 					responseVo.setModem_firmwareUpdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 				}
 			 }

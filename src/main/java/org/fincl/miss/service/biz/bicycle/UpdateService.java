@@ -131,10 +131,10 @@ public class UpdateService {
         }
         else */if((requsetModemFw < serverModemFw) && fwmodemUseYn)
         {
-        	logger.debug("### YES : FIRMWARE UPDATE ###  MODEM FIRMWARE UPATE START BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID")) + ", COMPANY_CD : " + String.valueOf(com.getCompany_cd()));
+        	logger.debug("### YES : FIRMWARE UPDATE ###  MODEL FIRMWARE UPATE START BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID")) + ", COMPANY_CD : " + String.valueOf(com.getCompany_cd()));
 			
         	fileSeq = serverVersion.get("FIRMWARE_MODEM_SEQ").toString();
-        	responseVo.setUpdate(Constants.CODE.get("UPDATE_02")); // MODEM FIRMWARE UPDATE
+        	responseVo.setUpdate(Constants.CODE.get("UPDATE_02")); // MODEL FIRMWARE UPDATE
         	responseVo.setVersion(versionToHex(String.valueOf(serverModemFw)));
         }
         else

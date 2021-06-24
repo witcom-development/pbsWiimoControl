@@ -21,7 +21,7 @@ public class PeriodicStateReportsRequestVo  extends BicycleVo{
         requestFields.put("battery", 1);
         requestFields.put("beaconbatt", 1);	//비콘 밧데리 
         requestFields.put("elecbatt", 1);	//전기 밧데리 
-        requestFields.put("ble_firmwareVs", 2);
+        requestFields.put("distance", 2);
         requestFields.put("modem_firmwareVs", 2);
         requestFields.put("latitude", 4);
         requestFields.put("longitude", 4);
@@ -40,7 +40,7 @@ public class PeriodicStateReportsRequestVo  extends BicycleVo{
     private String battery;
     private String beaconbatt;
     private String elecbatt;
-    private String ble_firmwareVs;
+    private String distance;
     private String modem_firmwareVs;
     private String latitude;
     private String longitude;
@@ -123,11 +123,12 @@ public class PeriodicStateReportsRequestVo  extends BicycleVo{
 	public void setElecbatt(String elecbatt) {
 		this.elecbatt = elecbatt;
 	}
-	public String getBle_firmwareVs() {
-		return ble_firmwareVs;
+	
+	public String getDistance() {
+		return distance;
 	}
-	public void setBle_firmwareVs(String ble_firmwareVs) {
-		this.ble_firmwareVs = ble_firmwareVs;
+	public void setDistance(String distance) {
+		this.distance = distance;
 	}
 	public String getModem_firmwareVs() {
 		return modem_firmwareVs;

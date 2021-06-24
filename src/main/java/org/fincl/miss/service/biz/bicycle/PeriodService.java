@@ -135,7 +135,7 @@ public class PeriodService{
 		 	QRLog.setDev_BATT(String.valueOf(Integer.parseInt(vo.getBattery(), 16)));
 		 	QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconbatt(), 16)));
 		 	QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getElecbatt(), 16)));
-		 	QRLog.setFirm_fw(vo.getBle_firmwareVs());
+		 	QRLog.setFirm_fw("0");
 		 	QRLog.setModem_fw(vo.getModem_firmwareVs());
 		 	
 		 	if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
@@ -171,7 +171,7 @@ public class PeriodService{
 			 QRLog.setDev_BATT(String.valueOf(Integer.parseInt(vo.getBattery(), 16)));
 			 QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconbatt(), 16)));
 			 QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getElecbatt(), 16)));
-			 QRLog.setFirm_fw(vo.getBle_firmwareVs());
+			 QRLog.setFirm_fw("0");
 			 QRLog.setModem_fw(vo.getModem_firmwareVs());
 			 QRLog.setMessage(vo.getReqMessage());
 			 QRLog.setQr_frame("주기 보고");
@@ -1366,7 +1366,7 @@ public class PeriodService{
 		 
 		 if(responseVo.getBle_fwupdate().equals(Constants.CODE.get("WIFI_UPDATE_00")))  //BLE UPDATE 대상이므로 MODEM 진행 안함
 		 {
-			 logger.debug("##### period status : MODEM firmware_time_update=> " + serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN"));
+			 logger.debug("##### period status : MODEL firmware_time_update=> " + serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") + " firmware_bike_update=> " + serverVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN"));
 			 
 			 if(serverVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") != null )
 			 {
@@ -1388,30 +1388,30 @@ public class PeriodService{
 						if(requsetFw <  serverFw )	//작으면 받아야하는데 다르면 받는걸로 
 				//		if(requsetFw !=  serverFw )	//작으면 받아야하는데 다르면 받는걸로 
 						{
-							logger.debug("### YES : PERIOD UPDATE MODEM FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+							logger.debug("### YES : PERIOD UPDATE MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 							responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_01")); //  f/w 무선 업데이트 진행
 						}
 						else
 						{
-							logger.debug("### NO2 : PERIOD UPDATE MODEM FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+							logger.debug("### NO2 : PERIOD UPDATE MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 							responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 						}
 					}
 					else	//2019.12.18 추가 
 					{
-						logger.debug("### NO3 : PERIOD UPDATE MODEM FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+						logger.debug("### NO3 : PERIOD UPDATE MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 						responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 					}
 				}
 				else
 				{
-					logger.debug("### NO4 : PERIOD UPDATE MODEM FIRMWARE UPDATE2 ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+					logger.debug("### NO4 : PERIOD UPDATE MODEL FIRMWARE UPDATE2 ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
 					responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 				}
 			 }
 			 else
 			 {	 
-				 logger.debug("##### PERIOD UPDATE MODEM FIRMWARE UPDATE : FIRM VERSION IS NO GET#####");
+				 logger.debug("##### PERIOD UPDATE MODEL FIRMWARE UPDATE : FIRM VERSION IS NO GET#####");
 		         responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
 			 }
 		 }
