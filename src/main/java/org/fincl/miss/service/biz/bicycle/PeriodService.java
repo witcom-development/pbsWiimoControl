@@ -247,14 +247,12 @@ public class PeriodService{
 		 
 		 if(vo.getBicycleState().equals("01") || vo.getBicycleState().equals("02") )	//반납/초기 주기보고
 		 {
-			 
 			 logger.debug("QR_BIKE is RETURN_STATE_PERIOD");
 			
 			 //정거장 체크...
 			 Map<String, Object> stationInfo = null;
 			 if(stationInfo == null)
 			 {
-				 
 				 if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
 						 && !vo.getLatitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
 				 {
@@ -284,10 +282,6 @@ public class PeriodService{
 				 }
 				 
 			 }
-			 
-		
-		
-		
 		 
 			 if(stationInfo != null)
 			 {
@@ -296,25 +290,12 @@ public class PeriodService{
 			 }
 			 else
 			 {
-				 //test 2019.12.11
-				 /*
-				 double serverFw = 30.11;
-				 
-				 double blefw  = Double.parseDouble(vo.getBle_firmwareVs().substring(0,2) + "." + vo.getBle_firmwareVs().substring(2, 4));
-				 double modemFw  = Double.parseDouble(vo.getModem_firmwareVs().substring(0,2) + "." + vo.getModem_firmwareVs().substring(2, 4));
-				 */
+
 				 logger.error("QR_PERIOD : RETURN_AREA IS NOT PLACE : BUT FORCE TO SUCCESS");
 		  		
 	  			 responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
-	  			 /*
-	  			 if(modemFw < serverFw)
-	  			 {
-	  				 logger.error("QR_PERIOD : RETURN_AREA IS NOT PLACE : BUT FORCE TO UPDATE!!!!");
-	  				 responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_01")); //  f/w 무선 업데이트 진행
-	  			 }
-	  			 else
-	  			 */
-	  			responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
+
+	  			 responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
 	  			 
 	    		 responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
 	    		 responseVo.setSeqNum(vo.getSeqNum());
@@ -438,9 +419,9 @@ public class PeriodService{
      		//SESSAK 네이버 연동은 GPS 가 올라왔을때 시도...
      		//2020.10.06
      		
-     		 if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
-					 && !vo.getLatitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
-     		 {
+     		if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
+     				&& !vo.getLatitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
+     		{
      			 //대여 일때  새싹 02 
      			 /* NAVER 루틴*/
      			if(vo.getBicycleState().equals("03"))	//
@@ -1207,8 +1188,8 @@ public class PeriodService{
 		  */
 		 if(vo.getBicycleState().equals(Constants.CODE.get("BIKE_STATE_02")))
 		 {
-			 //BIK_001 자전거     BIK_002 킥보드 01 반납 
-			 // 
+			 /*
+
 			 if(vo.getLockState().equals("00"))
 			 {
 	     			//대여 상태인데 잠금 장치가 잠겨 있다면
@@ -1260,6 +1241,7 @@ public class PeriodService{
 				 
 				 }
 			 }
+			 */
 		 }
 		 
 		 //데이타 없으면 디폴트오  Y,Y ,Y 세팅함. 2020.07.21
