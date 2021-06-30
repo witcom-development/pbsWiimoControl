@@ -418,21 +418,24 @@ public class PeriodService{
 			//com.setRockId(bikeInfo.getRent_rack_id());
 			Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
      		
-     		if(rentInfo.get("RENT_YN").equals("Y"))
-     		{
-     			
-     		//	String  end_time = rentInfo.get("END_DTTM").toString();
-     			logger.debug("QR_BIKE RENT_STATE : RETURN_TIME ");
-     			
-     			if(rentInfo.get("END_DTTM").equals("") )
-     			{
-     				logger.debug("QR_BIKE RENTING_STATE");
-     				
-     			}
-     			else
-     				logger.debug("QR_BIKE RETURN_TIME {}",rentInfo.get("END_DTTM"));
-     			
-     		}
+			if(rentInfo != null)
+			{
+	     		if(rentInfo.get("RENT_YN").equals("Y"))
+	     		{
+	     			
+	     		//	String  end_time = rentInfo.get("END_DTTM").toString();
+	     		//	logger.debug("QR_BIKE RENT_STATE : RETURN_TIME ",rentInfo.get("END_DTTM"));
+	     			
+	     			if(rentInfo.get("END_DTTM") != null && rentInfo.get("END_DTTM").equals("") )
+	     			{
+	     				logger.debug("QR_BIKE RENTING_STATE : ");
+	     				
+	     			}
+	     			else
+	     				logger.debug("QR_BIKE REQUEST_RETURN_TIME {}",rentInfo.get("END_DTTM"));
+	     			
+	     		}
+			}
      		//SESSAK 네이버 연동은 GPS 가 올라왔을때 시도...
      		//2020.10.06
      		
