@@ -409,13 +409,30 @@ public class PeriodService{
      	
 		sBike_status = commonService.checkdBikeStateInfo(com);
 		 
+		
      	//대여 상태이면 강제반납, 업데이트 확인 없이 리턴....
      	if(vo.getBicycleState().equals("03") || vo.getBicycleState().equals("04") )
      	{
-     		logger.debug("QR_BIKE is RENTING_PERIOD REPORT STATE {} ###################",vo.getBicycleState());
+     		logger.debug("QR_BIKE is RENTING_PERIOD REPORT STATE {} LOCK {} BIKE_STATE {} ###################",vo.getBicycleState(),vo.getLockState(),sBike_status);
+     		com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+			//com.setRockId(bikeInfo.getRent_rack_id());
+			Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
      		
-     		
-     		     		
+     		if(rentInfo.get("RENT_YN").equals("Y"))
+     		{
+     			
+     		//	String  end_time = rentInfo.get("END_DTTM").toString();
+     			logger.debug("QR_BIKE RENT_STATE : RETURN_TIME ");
+     			
+     			if(rentInfo.get("END_DTTM").equals("") )
+     			{
+     				logger.debug("QR_BIKE RENTING_STATE");
+     				
+     			}
+     			else
+     				logger.debug("QR_BIKE RETURN_TIME {}",rentInfo.get("END_DTTM"));
+     			
+     		}
      		//SESSAK 네이버 연동은 GPS 가 올라왔을때 시도...
      		//2020.10.06
      		
@@ -501,9 +518,9 @@ public class PeriodService{
     					 {
 		     				
 		     				//BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);
-		     				com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+		     			//	com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
 	     					//com.setRockId(bikeInfo.getRent_rack_id());
-		     				Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
+		     			//	Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
 		     				
 		     				if(rentInfo != null)
 	     					{
