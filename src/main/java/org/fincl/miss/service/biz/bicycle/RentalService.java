@@ -463,7 +463,12 @@ public class RentalService {
 		     					}
 		     					else
 		     					{
-		     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
+		     						if(voucher.getRent_cls_cd().equals("RCC_004"))
+		     						{
+		     							Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 160원 발생합니다.";
+		     						}
+		     						else
+		     							Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
 		     					}
 		     					sms.setDestno(destno);
 		     					sms.setMsg(Message.toString());

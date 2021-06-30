@@ -289,13 +289,13 @@ public class ReturnService  {
 				ACC_DIST = new Double(bikeData.get("ACC_DIST").toString()); //현재까지 누적 데이터 db에서 추출
         		logger.debug("getBikeMoveDist_COUNT BICYCLE_ID {}, USE_SEQ {}" ,vo.getBicycleId(), USE_SEQ);
         		
-        		String latp = new CommonUtil().GetGPS(vo.getLatitude());
-        		String lonp = new CommonUtil().GetGPS(vo.getLongitude());
-        		GPS_DATA.put("BIKE_LATITUDE", String.valueOf(latp));
-	         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(lonp));
+        		//String latp = new CommonUtil().GetGPS(vo.getLatitude());
+        		//String lonp = new CommonUtil().GetGPS(vo.getLongitude());
+        		GPS_DATA.put("BIKE_LATITUDE", String.valueOf(info.getGPS_X()));
+	         	GPS_DATA.put("BIKE_LONGITUDE", String.valueOf(info.getGPS_Y()));
         		
-	         	double dlatp =  Double.parseDouble( latp);
-	         	double dlonp = Double.parseDouble( lonp);
+	         	double dlatp =  Double.parseDouble( info.getGPS_X());
+	         	double dlonp = Double.parseDouble( info.getGPS_Y());
         		if(dlatp != 0.0 && dlonp != 0.0)
         		{
         			double USE_DIST = bikeService.getBikeMoveDist_Last(GPS_DATA);  //db 데이터 최종과 현재 첫번째 데이터와 비교
