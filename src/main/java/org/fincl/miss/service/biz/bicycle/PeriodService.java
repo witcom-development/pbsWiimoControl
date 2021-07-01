@@ -414,8 +414,9 @@ public class PeriodService{
      	if(vo.getBicycleState().equals("03") || vo.getBicycleState().equals("04") )
      	{
      		logger.debug("QR_BIKE is RENTING_PERIOD REPORT STATE {} LOCK {} BIKE_STATE {} ###################",vo.getBicycleState(),vo.getLockState(),sBike_status);
+     		
+     		/* 스케쥬려에서 반납 처리 함.
      		com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
-			//com.setRockId(bikeInfo.getRent_rack_id());
 			Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
      		
 			if(rentInfo != null)
@@ -426,7 +427,7 @@ public class PeriodService{
 	     		//	String  end_time = rentInfo.get("END_DTTM").toString();
 	     		//	logger.debug("QR_BIKE RENT_STATE : RETURN_TIME ",rentInfo.get("END_DTTM"));
 	     			
-	     			if(rentInfo.get("END_DTTM") != null && rentInfo.get("END_DTTM").equals("") )
+	     			if(rentInfo.get("END_DTTM") != null && !rentInfo.get("END_DTTM").equals("") )
 	     			{
 	     				logger.debug("QR_BIKE RENTING_STATE : ");
 	     				
@@ -436,6 +437,7 @@ public class PeriodService{
 	     			
 	     		}
 			}
+			*/
      		//SESSAK 네이버 연동은 GPS 가 올라왔을때 시도...
      		//2020.10.06
      		
@@ -521,9 +523,9 @@ public class PeriodService{
     					 {
 		     				
 		     				//BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);
-		     			//	com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
+		     				com.setUserSeq(String.valueOf(Integer.parseInt(vo.getUsrseq())));
 	     					//com.setRockId(bikeInfo.getRent_rack_id());
-		     			//	Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
+		     				Map<String, Object> rentInfo = bikeService.getUseBikeInfoFULL(com);
 		     				
 		     				if(rentInfo != null)
 	     					{
@@ -614,10 +616,12 @@ public class PeriodService{
      		{
      			logger.debug("QR_BIKE is Status " + sBike_status);
      			
-     			if(sBike_status.equals("BKS_003") || sBike_status.equals("BKS_012"))
+     			//킥보드 , 자전거 열림 lock 00  , 닫힘  01 
+     			if(sBike_status.equals("BKS_012") && vo.getLockState().equals("00"))	//스케줄러 강제반납
      			{
      				logger.debug("QR_BIKE is RENTING_PERIOD AND LOCKSTATE IS ON BIKE IS WAIT PERIOD : ENFORE PROCESS #########################");
      				
+     				/*
      		     	if(sBike_status != null)
      		     	{
      		     		//if(bike_status.equals("BKS_012") || bike_status.equals("BKS_016") ||bike_status.equals("BKS_017"))
@@ -628,7 +632,10 @@ public class PeriodService{
      		     			logger.debug("QR_START : TB_SVC_ENFRC_RETURN_PROCESSING is BLOCKING ");
      		     		}
      		     	}
-     		     	
+     		     	*/
+     				
+     				logger.debug("QR_START : TB_SVC_ENFRC_RETURN_PROCESSING is BLOCKING ");
+     				
      				QRLog.setResAck("SETRT");
      	 			bikeService.updateQRLog(QRLog);
      	 			
