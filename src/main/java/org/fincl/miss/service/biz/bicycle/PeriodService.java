@@ -633,6 +633,7 @@ public class PeriodService{
      		     		}
      		     	}
      		     	*/
+     				commonService.changeValidBike(com);
      				
      				logger.debug("QR_START : TB_SVC_ENFRC_RETURN_PROCESSING is BLOCKING ");
      				
@@ -699,7 +700,7 @@ public class PeriodService{
 	     	  			 
      	    		}
      	    		return responseVo;
-     			}	//강제반납 시 
+     			}	//강제반납 시  BIS_012 일대 반납 처리 시킴.
      		}
      		else if(vo.getLockState().equals("01"))
      		{
