@@ -290,12 +290,64 @@ public class PeriodService{
 			 }
 			 else
 			 {
-
+				 Map<String, Object> serVersion = fileService.getVersion(com);
+				 
+				 
 				 logger.error("QR_PERIOD : RETURN_AREA IS NOT PLACE : BUT FORCE TO SUCCESS");
 		  		
 	  			 responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
 
-	  			 responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
+	  			responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
+	  			 
+	  			 if(responseVo.getBle_fwupdate().equals(Constants.CODE.get("WIFI_UPDATE_00")))  //BLE UPDATE 대상이므로 MODEM 진행 안함
+	  			 {
+	  				 logger.debug("##### period status : MODEL firmware_time_update=> " + serVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") + " firmware_bike_update=> " + serVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN"));
+	  				 
+	  				 if(serVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN") != null )
+	  				 {
+	  					 double serverFw = Double.parseDouble(serVersion.get("FIRMWARE_MODEM_VER").toString());
+	  					 
+	  					 boolean fwUseYn = serVersion.get("FIRMWARE_MODEM_USE_YN").equals("Y");
+	  					 
+	  					 boolean fwTimeCanDown = serVersion.get("FIRMWARE_MODEM_TIME_CAN_DOWN").equals("Y");
+	  					 boolean fwBikeCanDown = serVersion.get("FIRMWARE_MODEM_BIKE_CAN_DOWN").equals("Y");
+	  					 double requsetFw  = Double.parseDouble(vo.getModem_firmwareVs().substring(0,2) + "." + vo.getModem_firmwareVs().substring(2, 4));
+	  							 
+	  					if(fwTimeCanDown && fwBikeCanDown)
+	  					{
+	  						if(fwUseYn)
+	  						{
+	  							if(requsetFw <  serverFw )	//작으면 받아야하는데 다르면 받는걸로 
+	  							{
+	  								logger.debug("### YES : PERIOD UPDATE MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+	  								responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_01")); //  f/w 무선 업데이트 진행
+	  							}
+	  							else
+	  							{
+	  								logger.debug("### NO2 : PERIOD UPDATE MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+	  								responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
+	  							}
+	  						}
+	  						else	//2019.12.18 추가 
+	  						{
+	  							logger.debug("### NO3 : PERIOD UPDATE MODEL FIRMWARE UPDATE ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+	  							responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
+	  						}
+	  					}
+	  					else
+	  					{
+	  						logger.debug("### NO4 : PERIOD UPDATE MODEL FIRMWARE UPDATE2 ###  BIKE IS  " + com.getCompany_cd() + "!! BIKE NO : " + String.valueOf(ourBikeMap.get("BIKE_NO")) + ", BIKE ID : " + String.valueOf(ourBikeMap.get("BIKE_ID"))); 
+	  						responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
+	  					}
+	  				 }
+	  				 else
+	  				 {	 
+	  					 logger.debug("##### PERIOD UPDATE MODEL FIRMWARE UPDATE : FIRM VERSION IS NO GET#####");
+	  			         responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); // 업데이트 진행 안함
+	  				 }
+	  			 }
+	  			 
+	  //			 responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
 	  			 
 	    		 responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
 	    		 responseVo.setSeqNum(vo.getSeqNum());
@@ -1001,11 +1053,11 @@ public class PeriodService{
      		
      		
      		logger.debug("RENTING_PERIOD BIKE STATE UPDATE ::::::::::::: ");
-    	
+    	   
     		 
     		responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
-    		 
-    		responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
+    		
+    //		responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
     	
     		responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
     		responseVo.setSeqNum(vo.getSeqNum());
