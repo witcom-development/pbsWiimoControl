@@ -1157,7 +1157,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	
 	
 	@Override
-	public Map<String, Object> getBikeRETURN_GPS(String RENT_SEQ)
+	public Map<String, String> getBikeRETURN_GPS(String RENT_SEQ)
 	{
 		return bicycleMapper.getBikeRETURN_GPS(RENT_SEQ);
 	}

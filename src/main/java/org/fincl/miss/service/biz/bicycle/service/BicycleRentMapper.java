@@ -192,6 +192,6 @@ public interface BicycleRentMapper {
 	
 	void updateKickCnt(String voucherseq);
 	
-	Map<String, Object> getBikeRETURN_GPS(String RENT_SEQ);
+	Map<String, String> getBikeRETURN_GPS(String RENT_SEQ);
 }
 

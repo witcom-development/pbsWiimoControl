@@ -191,7 +191,7 @@ public class ReturnService  {
 			}
 			else
 			{
-				Map<String, Object> return_GPS = bikeService.getBikeRETURN_GPS(info.getRENT_SEQ());
+				Map<String, String> return_GPS = bikeService.getBikeRETURN_GPS(info.getRENT_SEQ());
 				String latitude = String.valueOf(return_GPS.get("BIKE_LATITUDE"));
 		        String longitude = String.valueOf(return_GPS.get("BIKE_LONGITUDE"));
 		        
