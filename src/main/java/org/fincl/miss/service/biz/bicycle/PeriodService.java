@@ -1057,7 +1057,7 @@ public class PeriodService{
     		 
     		responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
     		
-    //		responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
+    		responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
     	
     		responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
     		responseVo.setSeqNum(vo.getSeqNum());
