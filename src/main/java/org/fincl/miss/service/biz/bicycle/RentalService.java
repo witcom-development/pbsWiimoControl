@@ -317,8 +317,10 @@ public class RentalService {
 					{
 						// 대여 주기시 이벤트시 대여 이력 없으면 대여 완료 넣어주기.
 						// 킥보드는 이력 안넣어주고 에러 로 표시  , 자전거는 bluetooh 로 넣어주기...2021.05.18
+						/*
 						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))	//킥보드
 						{
+						*/
 							
 							logger.error("RENT_INFO is NULL  USR_SEQ {} is rent failed ",com.getUserSeq());
 							
@@ -328,7 +330,7 @@ public class RentalService {
 	  						responseVo = setFaiiMsg(responseVo, vo);
 									 
 	  						return responseVo;
-	  						
+	  					/*	
 						}
 						else
 						{
@@ -343,6 +345,7 @@ public class RentalService {
 								
 							logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO : INSERT_RESERVATION ");
 						}
+						*/
 					}
 		     			 
 					// 대여 정보 
