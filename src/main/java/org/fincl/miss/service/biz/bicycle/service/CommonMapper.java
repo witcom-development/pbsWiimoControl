@@ -31,6 +31,8 @@ public interface CommonMapper {
 
 	public int updatePeriodState(CommonVo com);
 	
+	public int updateblebike(CommonVo com);
+	
 	public int updateBatteryDischarge(CommonVo com);
 
 	public Map<String, Object> checkMount(CommonVo com);

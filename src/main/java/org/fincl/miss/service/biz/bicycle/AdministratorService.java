@@ -199,8 +199,10 @@ public class AdministratorService {
 		 	String  ENTRPS_CD = ourBikeMap.get("ENTRPS_CD");
 		 	String BIKE_SE_CD = ourBikeMap.get("BIKE_SE_CD");
 		 	com.setCompany_cd("CPN_" + BIKE_SE_CD.substring(4,BIKE_SE_CD.length()));
+	//	 	Integer.parseInt(str);
+		 	Integer nVer = Integer.parseInt(vo.getModem_firmwareVersion().substring(2, 4));
 		 	
-		 	logger.debug("QR_437C ##### => bike {} ,state {} , company {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd());
+		 	logger.debug("QR_437C ##### => bike {} ,state {} , company {} , VER {} ",vo.getBicycleId(),vo.getBicycleState(),com.getCompany_cd(),nVer);
 		 	
 		 	QRLog.setBicycleId(vo.getBicycleId());
 		 	QRLog.setBicycleNo(bikeNo);
@@ -242,7 +244,17 @@ public class AdministratorService {
 		 	QRLog.setTimeStamp(vo.getRegDttm());
 			QRLog.setMessage(vo.getReqMessage());
 			QRLog.setQr_frame("관리자 설치");
-		 	
+			
+			if(nVer >= 3 && ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001") )
+			{
+				logger.debug("bike firmware is Only BLE_CMD !!!!!!!");
+				commonService.updateblebike(com);
+			}
+			else if(nVer < 3 && ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001"))
+			{
+				logger.debug("bike firmware is Only SMS_CMD !!!!!!!");
+			}
+			
 		 	bikeService.insertQRLog(QRLog);
 		 }
 		 else

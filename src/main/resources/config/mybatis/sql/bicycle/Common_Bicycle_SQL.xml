@@ -91,6 +91,15 @@
 		
 	</update>
 	
+	<update id="updateblebike"		parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo">
+	
+		UPDATE TB_OPR_BIKE
+			SET 
+				COMPANY_CD = 'BLE'
+		WHERE TERMINAL_ID = #{bicycleId}
+		
+	</update>
+	
 	<update id="updateBatteryDischarge"		parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo">
 	
 		UPDATE TB_OPR_BIKE

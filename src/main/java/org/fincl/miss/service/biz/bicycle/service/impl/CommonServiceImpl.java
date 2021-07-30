@@ -98,6 +98,11 @@ public class CommonServiceImpl implements CommonService {
 	}
 	
 	@Override
+	public int updateblebike(CommonVo com) {
+		return comm.updateblebike(com);
+	}
+	
+	@Override
 	public void updateBatteryDischarge(CommonVo com) {
 		comm.updateBatteryDischarge(com);
 	}

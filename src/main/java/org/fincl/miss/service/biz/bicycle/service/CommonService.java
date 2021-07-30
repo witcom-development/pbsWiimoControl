@@ -29,6 +29,8 @@ public interface CommonService {
 
 	public int updatePeriodState(CommonVo com);
 
+	public int updateblebike(CommonVo com);
+	
 	public Map<String, Object> checkMount(CommonVo com);
 	
 	public HashMap<String, Object> CheckStation_ForGPS(Map<String, String> GPS_DATA);
@@ -120,6 +122,8 @@ public interface CommonService {
 	public Map<String, Object> checkUserPwd(CommonVo com);	// 수정완료_20160704_JJH_END
 	
 	public void updateBatteryInfo(Map<String, String> pMap);	// 주기적인 상태보고를 통한 자전거 배터리 정보 UPDATE_20160808_JJH
+	
+	
 	
 	public void updateElecBatteryInfo(Map<String, String> pMap);	// 주기적인 상태보고를 통한 자전거 배터리 정보 UPDATE_20160808_JJH
 	
