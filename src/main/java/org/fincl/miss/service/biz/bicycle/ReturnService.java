@@ -415,10 +415,10 @@ public class ReturnService  {
         			 bikeService.insertPeriodParkingInfo(info);
         			 
         			 // 자전거 정보 UPDATE BIKE
-        			 bicycleMapper.updateBike(info);
+        	//		 bicycleMapper.updateBike(info);
         			 
         		 }
-                
+        		bicycleMapper.updateBike(info);
                 return responseVo;
         		
         	}
