@@ -245,12 +245,12 @@ public class AdministratorService {
 			QRLog.setMessage(vo.getReqMessage());
 			QRLog.setQr_frame("관리자 설치");
 			
-			if(nVer >= 4 && ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001") )
+			if(nVer >= 3 && ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001") )
 			{
 				logger.debug("bike firmware is Only BLE_CMD !!!!!!!");
 				commonService.updateblebike(com);
 			}
-			else if(nVer < 4 && ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001"))
+			else if(nVer < 3 && ourBikeMap.get("BIKE_SE_CD").toString().equals("BIK_001"))
 			{
 				logger.debug("bike firmware is Only SMS_CMD !!!!!!!");
 			}
