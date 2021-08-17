@@ -358,7 +358,9 @@ public class ReturnService  {
 		}
         else
         {
-        	/*
+        	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
+        	
+        	
         	if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
         	{
         		logger.error("RentHistVo is NOT EXIST : BIKE_TEST SUCCESS");
@@ -395,16 +397,33 @@ public class ReturnService  {
          			}
          		}
                 
+         		 QRLog.setResAck("EN:RTN");
+    	    	
+	    		 bikeService.updateQRLog(QRLog);
+	    		
+         		 Map<String, Object> parkingMap = commonService.checkParkingInfo(com);
+	        		
+        		 if(parkingMap == null)	//주기 보고 시 파깈정보 없으면 ...
+        		 {
+        			 com.setStationId("ST-999");
+          			 com.setRockId("45800099900000");
+          			          			         			
+          			info.setRETURN_STATION_ID(com.getStationId());
+          			info.setRETURN_RACK_ID(com.getRockId());
+          			
+        			 // 자전거 주차 정보 INSERT PARKING
+        			 bikeService.insertPeriodParkingInfo(info);
+        			 
+        			 // 자전거 정보 UPDATE BIKE
+        			 bicycleMapper.updateBike(info);
+        			 
+        		 }
                 
                 return responseVo;
         		
         	}
-        	*/
-        	
-        	
-	        	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
-		        	
-	        	
+        	else
+        	{
 	    		responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_03"));
 	    	
 	    		responseVo.setErrorId(Constants.CODE.get("ERROR_F6"));
@@ -415,7 +434,7 @@ public class ReturnService  {
 	    		bikeService.updateQRLog(QRLog);
 	        	
 	        	return responseVo;
-        	
+        	}
         }
         
         
