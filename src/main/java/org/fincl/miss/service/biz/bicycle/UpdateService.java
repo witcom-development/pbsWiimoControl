@@ -761,10 +761,15 @@ public class UpdateService {
     	com.setVersion(vo.getFirmwareVersion());
     	
     	//BLE
-    	if(vo.getUpdateType().equals(Constants.CODE.get("UPDATE_01"))){
+    	if(vo.getUpdateType().equals(Constants.CODE.get("UPDATE_00"))){
     		com.setFirmwareClsCd("FWD_001");
-    	}else if(vo.getUpdateType().equals(Constants.CODE.get("UPDATE_02"))){
+    	}else if(vo.getUpdateType().equals(Constants.CODE.get("UPDATE_01"))){
     		com.setFirmwareClsCd("FWD_002");
+    	}
+    	else
+    	{
+    		com.setFirmwareClsCd("FWD_002");
+    		
     	}
 
     	Map<String, String> ourBikeMap = new HashMap<String, String>();
