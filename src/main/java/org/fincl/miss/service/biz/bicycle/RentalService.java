@@ -370,6 +370,7 @@ public class RentalService {
 						if(!rentInfo.get("BIKE_VOUCHER_CNT").equals("99"))
 						//if(!voucher.getBike_voucher_cnt().equals("99"))
 						{
+							/*
 							if((Integer.parseInt(String.valueOf(rentInfo.get("BIKE_USE_CNT")))) >= (Integer.parseInt(String.valueOf(rentInfo.get("BIKE_VOUCHER_CNT")))))
 							//if((Integer.parseInt(voucher.getBike_use_cnt())) >= (Integer.parseInt(voucher.getBike_voucher_cnt())))
 							{
@@ -384,9 +385,10 @@ public class RentalService {
 							}
 							else
 							{
+							*/
 								//대여 성공
 								bikeService.updateBikeCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
-							}
+							/*}*/
 						}
 						else
 						{
@@ -401,6 +403,7 @@ public class RentalService {
 						if(!rentInfo.get("KICK_VOUCHER_CNT").equals("99"))
 						//if(!voucher.getKick_voucher_cnt().equals("99"))
 						{
+							/*
 							if((Integer.parseInt(String.valueOf(rentInfo.get("KICK_USE_CNT")))) >= (Integer.parseInt(String.valueOf(rentInfo.get("KICK_VOUCHER_CNT")))))
 							//if((Integer.parseInt(voucher.getKick_use_cnt())) >= (Integer.parseInt(voucher.getKick_voucher_cnt())))
 							{
@@ -415,10 +418,11 @@ public class RentalService {
 							}
 							else
 							{
+							*/
 								//대여 성공
 								bikeService.updateKickCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 								//bikeService.updateKickCnt(voucher.getVoucher_seq());
-							}
+							/*}*/
 						}
 						else
 						{
