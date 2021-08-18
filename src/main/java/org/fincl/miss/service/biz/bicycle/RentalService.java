@@ -230,6 +230,7 @@ public class RentalService {
 	  				 
   					// 로그 추가..2020.04.12 
   					logger.debug("QR_BIKE IS RENTAL_EVENT  usr_seq{} is request ",com.getUserSeq());
+  					/*
   					BikeRentInfoVo voucher = bikeService.getUseVoucherInfo(com);	//2020.02. 단체권 포함되도록 수정...
 		  				 
   					if(voucher == null)
@@ -280,7 +281,7 @@ public class RentalService {
   					        return responseVo;
   					  							
   						}
-  						*/
+  						
   						
   						
 	  						logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
@@ -292,6 +293,7 @@ public class RentalService {
 	  						return responseVo;
   						
   					}
+  					*/
 	 
 					Map<String, Object> useBike = bikeService.getUseBikeInfoFULL(com);
 					if(useBike != null)
@@ -365,9 +367,11 @@ public class RentalService {
 					
 					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
 					{
-						if(!voucher.getBike_voucher_cnt().equals("99"))
+						if(!rentInfo.get("BIKE_VOUCHER_CNT").equals("99"))
+						//if(!voucher.getBike_voucher_cnt().equals("99"))
 						{
-							if((Integer.parseInt(voucher.getBike_use_cnt())) >= (Integer.parseInt(voucher.getBike_voucher_cnt())))
+							if((Integer.parseInt(String.valueOf(rentInfo.get("BIKE_USE_CNT")))) >= (Integer.parseInt(String.valueOf(rentInfo.get("BIKE_VOUCHER_CNT")))))
+							//if((Integer.parseInt(voucher.getBike_use_cnt())) >= (Integer.parseInt(voucher.getBike_voucher_cnt())))
 							{
 								//대여 실패
 								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
@@ -381,22 +385,24 @@ public class RentalService {
 							else
 							{
 								//대여 성공
-								bikeService.updateBikeCnt(voucher.getVoucher_seq());
+								bikeService.updateBikeCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 							}
 						}
 						else
 						{
 							//대여 성공
-							bikeService.updateBikeCnt(voucher.getVoucher_seq());
+							//bikeService.updateBikeCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 						
 						}
 					}
 					else
 					{
 						
-						if(!voucher.getKick_voucher_cnt().equals("99"))
+						if(!rentInfo.get("KICK_VOUCHER_CNT").equals("99"))
+						//if(!voucher.getKick_voucher_cnt().equals("99"))
 						{
-							if((Integer.parseInt(voucher.getKick_use_cnt())) >= (Integer.parseInt(voucher.getKick_voucher_cnt())))
+							if((Integer.parseInt(String.valueOf(rentInfo.get("KICK_USE_CNT")))) >= (Integer.parseInt(String.valueOf(rentInfo.get("KICK_VOUCHER_CNT")))))
+							//if((Integer.parseInt(voucher.getKick_use_cnt())) >= (Integer.parseInt(voucher.getKick_voucher_cnt())))
 							{
 								//대여 실패
 								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
@@ -410,12 +416,14 @@ public class RentalService {
 							else
 							{
 								//대여 성공
-								bikeService.updateKickCnt(voucher.getVoucher_seq());
+								bikeService.updateKickCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
+								//bikeService.updateKickCnt(voucher.getVoucher_seq());
 							}
 						}
 						else
 						{
 							//대여 성공
+							//bikeService.updateKickCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 							//bikeService.updateKickCnt(voucher.getVoucher_seq());
 						
 						}
@@ -466,7 +474,8 @@ public class RentalService {
 		     					}
 		     					else
 		     					{
-		     						if(voucher.getRent_cls_cd().equals("RCC_004"))
+		     						if(String.valueOf(rentInfo.get("RENT_CLS_CD")).equals("RCC_004"))
+		     						//if(voucher.getRent_cls_cd().equals("RCC_004"))
 		     						{
 		     							Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 160원 발생합니다.";
 		     						}
