@@ -192,20 +192,24 @@ public class ReturnService  {
 			else
 			{
 				Map<String, String> return_GPS = bikeService.getBikeRETURN_GPS(info.getRENT_SEQ());
-				String latitude = String.valueOf(return_GPS.get("BIKE_LATITUDE"));
-		        String longitude = String.valueOf(return_GPS.get("BIKE_LONGITUDE"));
-		        
-		        info.setGPS_X(latitude);
-	    		info.setGPS_Y(longitude);
-		        
-		        logger.debug("GPS INFO2 ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
-		        
-		        
-		        Map<String, String> GPS = new HashMap<String, String>();
-				GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
-				GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
-				GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
-				stationInfo = commonService.CheckStation_ForGPS(GPS);
+				
+				if(return_GPS != null)
+				{
+					String latitude = String.valueOf(return_GPS.get("BIKE_LATITUDE"));
+			        String longitude = String.valueOf(return_GPS.get("BIKE_LONGITUDE"));
+			        
+			        info.setGPS_X(latitude);
+		    		info.setGPS_Y(longitude);
+			        
+			        logger.debug("GPS INFO2 ##### => : {} , {} ",String.valueOf(latitude),String.valueOf(longitude));
+			        
+			        
+			        Map<String, String> GPS = new HashMap<String, String>();
+					GPS.put("BIKE_LATITUDE", String.valueOf(latitude));
+					GPS.put("BIKE_LONGITUDE", String.valueOf(longitude));
+					GPS.put("BIKE_ID", String.valueOf(vo.getBicycleId()));
+					stationInfo = commonService.CheckStation_ForGPS(GPS);
+				}
 				
 				if(stationInfo == null )
 				{
