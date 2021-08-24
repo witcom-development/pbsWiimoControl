@@ -51,6 +51,17 @@ public class RentHistVo {
 	private String STATION_CLOSE_DATE;
 	private String GPS_X;
 	private String GPS_Y;
+	private String RENT_YN;
+	
+	
+
+	public String getRENT_YN() {
+		return RENT_YN;
+	}
+
+	public void setRENT_YN(String rENT_YN) {
+		RENT_YN = rENT_YN;
+	}
 
 	public String getRENT_SEQ() {
 		return RENT_SEQ;

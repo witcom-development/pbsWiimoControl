@@ -117,6 +117,16 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 
 		return true;
 	}
+	
+	@Override
+	public boolean rentUpdateCancel(String RENT_SEQ) 
+	{
+		bicycleMapper.rentCancleInsert(RENT_SEQ);
+		
+		bicycleMapper.rentDelete(RENT_SEQ);
+		
+		return true;
+	}
 
 	@Override
 	public BikeRentInfoVo getVoucher(CommonVo com) 

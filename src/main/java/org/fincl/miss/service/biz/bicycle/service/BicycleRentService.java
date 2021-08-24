@@ -16,6 +16,8 @@ public interface BicycleRentService {
 
 
 	public boolean rentProcUpdate(CommonVo com, Map<String, Object> userInfo);
+	
+	public boolean rentUpdateCancel(String RENT_SEQ);
 
 	public boolean reservationInsert(CommonVo com, BikeRentInfoVo info);
 
@@ -127,4 +129,5 @@ public interface BicycleRentService {
 	void updateKickCnt(String voucherseq);
 	
 	Map<String, String> getBikeRETURN_GPS(String RENT_SEQ);
+	
 }

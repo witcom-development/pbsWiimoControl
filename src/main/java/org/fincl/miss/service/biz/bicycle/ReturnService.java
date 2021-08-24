@@ -159,6 +159,18 @@ public class ReturnService  {
         
         if(info != null)
         {
+        	
+        	if(info.getRENT_YN().equals("N"))
+        	{
+        		bikeService.rentUpdateCancel(info.getRENT_SEQ());
+        		responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
+                responseVo.setSeqNum(vo.getSeqNum());
+                responseVo.setCommandId(Constants.CID_RES_RETURNBIKE);
+                responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_02"));
+                responseVo.setBicycleId(vo.getBicycleId());
+                return responseVo;
+        	}
+        	
     		Map<String, Object> stationInfo = null;
     		
     	

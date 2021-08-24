@@ -1309,4 +1309,22 @@
 	</select>
 	
 	
+	<insert id="rentCancleInsert"		parameterType="string">
+		INSERT INTO wiigo.TB_SVC_RENT_CANCLE
+			( RENT_SEQ, USR_SEQ, RENT_DTTM, STATION_ID, RACK_ID, BIKE_ID,RENT_MTH_CD, VOUCHER_SEQ,RENT_CLS_CD )
+			SELECT RENT_SEQ, USR_SEQ, RENT_DTTM, RENT_STATION_ID, RENT_RACK_ID, RENT_BIKE_ID,RENT_MTH_CD,VOUCHER_SEQ,RENT_CLS_CD
+			FROM wiigo.TB_SVC_RENT A
+			WHERE A.RENT_YN ='N'
+			AND A.RENT_SEQ = #{RENT_SEQ}
+	</insert>
+	
+	
+	<delete id="rentDelete"		parameterType="string">
+		DELETE 
+			FROM wiigo.TB_SVC_RENT 
+			WHERE RENT_YN ='N'
+			AND A.RENT_SEQ =  #{RENT_SEQ}
+	</delete>
+	
+	
 </mapper>
