@@ -159,7 +159,7 @@ public class ReturnService  {
         
         if(info != null)
         {
-        	
+        	/*
         	if(info.getRENT_YN().equals("N"))
         	{
         		bikeService.rentUpdateCancel(info.getRENT_SEQ());
@@ -168,8 +168,39 @@ public class ReturnService  {
                 responseVo.setCommandId(Constants.CID_RES_RETURNBIKE);
                 responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_02"));
                 responseVo.setBicycleId(vo.getBicycleId());
+                
+                List<HashMap<String, String>> PeriodList = commonService.CheckPeriodTime();
+        		
+                QRLog.setResAck("NSUC");
+                bikeService.updateQRLog(QRLog);
+                
+         		if(PeriodList.size() == 0 )
+         		{
+        	  			 logger.error("Period Information Find Error");
+        	  			 responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
+        	  			 responseVo = setFaiiMsg(responseVo, vo);
+        	           	
+        	  			 return responseVo;
+         		}
+         		else
+         		{
+         			for(HashMap<String, String> PeriodMap : PeriodList)
+         			{
+         				if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
+         				{
+          					 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+          					 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+          					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+          					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+          					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+          					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+         				}
+         			}
+         		}
+         		
                 return responseVo;
         	}
+        	*/
         	
     		Map<String, Object> stationInfo = null;
     		
@@ -296,7 +327,9 @@ public class ReturnService  {
          	
          	double ACC_DIST = 0.0;
          	
+         	/* 2021.09.06 막음
          	Map<String, Object> bikeData = bikeService.getBikeMoveDist_COUNT(GPS_DATA);
+         	
          	
 			if(bikeData != null)
 			{
@@ -323,7 +356,8 @@ public class ReturnService  {
         	}
 			else
 				info.setUSE_DIST("0");	//gps 로 거리 하는 함수 막음.
-         	
+         	*/
+         	info.setUSE_DIST("0");
 
         	info.setUSE_MI(sysTime+"");
         	
@@ -431,7 +465,7 @@ public class ReturnService  {
         			 bikeService.insertPeriodParkingInfo(info);
         			 
         			 // 자전거 정보 UPDATE BIKE
-        	//		 bicycleMapper.updateBike(info);
+        			 bicycleMapper.updateBike(info);
         			 
         		 }
         		bicycleMapper.updateBike(info);
