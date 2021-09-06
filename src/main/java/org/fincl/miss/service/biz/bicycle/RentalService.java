@@ -198,6 +198,8 @@ public class RentalService {
 		 
         if(vo.getLockState().equals("00") ||vo.getLockState().equals("01") ||vo.getLockState().equals("02") )
         {
+        	//킥보드 는 거치정보 보고 
+        	//대여 완료 이면 
         	BikeRentInfoVo bikeInfo = bicycleMapper.getBikeInfo(com);	//거치정보 체크 
   			if(bikeInfo == null)
   			{
@@ -303,8 +305,10 @@ public class RentalService {
 						//add
 						String	rack_id = String.valueOf(useBike.get("RENT_RACK_ID"));
 						String	bike_id = String.valueOf(useBike.get("RENT_BIKE_ID"));
-							
-						logger.debug("RENT_EVENT  getUseBikeInfoFULL CHECK_RENT usr_seq {} ,{},{} ",com.getUserSeq(),rack_id,bike_id);
+						String  rentYn = String.valueOf(useBike.get("RENT_YN"));
+						
+						logger.debug("RENT_EVENT  getUseBikeInfoFULL  usr_seq {} ,{},{},{} ",com.getUserSeq(),rack_id,bike_id,rentYn);
+						
 							
 						if(rack_id == null || rack_id.equals("") || bike_id == null || bike_id.equals(""))
 						{
