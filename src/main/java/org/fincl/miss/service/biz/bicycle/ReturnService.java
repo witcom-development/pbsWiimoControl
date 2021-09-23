@@ -59,7 +59,7 @@ public class ReturnService  {
         
         CommonVo com = new CommonVo();
         com.setBicycleId(vo.getBicycleId());
-        
+        com.setBikeId(vo.getBicycleId());
         //MOUNT ID 가 어떻게 될지 몰라 비워둠
        // com.setRockId(vo.getBeaconId());
        
@@ -452,7 +452,15 @@ public class ReturnService  {
 	    		 bikeService.updateQRLog(QRLog);
 	    		
          		 Map<String, Object> parkingMap = commonService.checkParkingInfo(com);
-	        		
+	        	
+         	//	 info.setBIKE_NO(vo.getBicycleId());
+         		 
+         		logger.error("info : set bike ID {} , {} !!! ",vo.getBicycleId(),com.getBicycleId());
+         		
+         	//	info.setRENT_BIKE_ID(com.getBicycleId());
+         	//	info.setUSE_DIST("0");
+         		commonService.changeValidBike(com);
+         		
         		 if(parkingMap == null)	//주기 보고 시 파깈정보 없으면 ...
         		 {
         			 com.setStationId("ST-999");
@@ -465,10 +473,10 @@ public class ReturnService  {
         			 bikeService.insertPeriodParkingInfo(info);
         			 
         			 // 자전거 정보 UPDATE BIKE
-        			 bicycleMapper.updateBike(info);
+        		//	 bicycleMapper.updateBike(info);
         			 
         		 }
-        		bicycleMapper.updateBike(info);
+        	//	bicycleMapper.updateBike(info);
                 return responseVo;
         		
         	}
