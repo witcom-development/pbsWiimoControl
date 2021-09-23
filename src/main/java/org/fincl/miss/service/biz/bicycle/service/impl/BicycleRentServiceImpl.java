@@ -331,6 +331,7 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 				} 
 				catch (Exception e)
 				{
+					e.printStackTrace();
 				}
 			}
 			
