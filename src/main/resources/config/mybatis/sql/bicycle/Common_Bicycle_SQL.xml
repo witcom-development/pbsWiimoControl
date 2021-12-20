@@ -143,19 +143,22 @@
 			RENT_RACK_ID, 
 			RENT_BIKE_ID, 
 			RENT_CLS_CD, 
-			IFNULL(TERMINAL_CARD_REG_YN,'N') as 'TERMINAL_CARD_REG_YN', 
+			IFNULL(TERMINAL_CARD_REG_YN,'N') as 'TERMINAL_CARD_REG_YN',
 			RENT_YN, RENT_DTTM,
 			BIKE.BIKE_SE_CD,
 			VOUCHER.BIKE_USE_CNT,
 			VOUCHER.KICK_USE_CNT, 
 			VOUCHER.BIKE_VOUCHER_CNT, 
-			VOUCHER.KICK_VOUCHER_CNT
-		FROM TB_SVC_RENT RENT, TB_SVC_MB MB, TB_OPR_BIKE BIKE, TB_SVC_VOUCHER VOUCHER
+			VOUCHER.KICK_VOUCHER_CNT,
+			VOUCHER.PAYMENT_CLS_CD,
+			PAY.BILLING_KEY
+		FROM TB_SVC_RENT RENT, TB_SVC_MB MB, TB_OPR_BIKE BIKE, TB_SVC_VOUCHER VOUCHER, TB_SVC_PAYMENT_METHOD PAY
 		WHERE RENT_RACK_ID = #{rockId} AND RENT_YN IN('N','R')
 		AND RENT.USR_SEQ = #{userSeq}
 		AND RENT.USR_SEQ = MB.USR_SEQ
 		AND RENT.RENT_BIKE_ID = BIKE.BIKE_ID
 		AND RENT.VOUCHER_SEQ = VOUCHER.VOUCHER_SEQ
+		AND RENT.USR_SEQ = PAY.USR_SEQ
 		limit 1
 	
 	</select>
@@ -1173,6 +1176,13 @@
                ,#{rentHistSeq}
         )
     </insert>
+    
+    <update id="setPaymentBillingKey" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
+        UPDATE TB_SVC_PAYMENT
+         SET PAYMENT_CONFM_NO = #{mb_serial_no},
+         ORDER_CERTIFY_KEY = #{order_certify_key}
+         WHERE PAYMENT_SEQ = (SELECT PAYMENT_SEQ FROM TB_SVC_VOUCHER WHERE VOUCHER_SEQ = #{voucher_seq})
+    </update>
     
     <update id="setOverFeePayComplete" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
         UPDATE TB_SVC_RENT_OVER_FEE

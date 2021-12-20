@@ -53,6 +53,8 @@ public interface CommonService {
 	
 	public OverFeeVO getOverFeeRETURN(String USR_SEQ);
 	
+	int setPaymentBillingKey(OverFeeVO fee);
+	
 	int setOverFeePayComplete(OverFeeVO fee);
 
 	int addTicketPayment(OverFeeVO fee);

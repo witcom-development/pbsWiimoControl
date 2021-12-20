@@ -57,6 +57,8 @@ public interface CommonMapper {
 	public OverFeeVO getOverFeeRETURN(String USR_SEQ);
 	
 	int addTicketPayment(OverFeeVO fee);
+	
+	int setPaymentBillingKey(OverFeeVO fee);
 
 	int setOverFeePayComplete(OverFeeVO fee);
 

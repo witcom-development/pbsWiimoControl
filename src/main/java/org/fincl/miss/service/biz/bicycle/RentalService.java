@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import org.fincl.miss.server.annotation.RPCService;
 import org.fincl.miss.server.annotation.RPCServiceGroup;
 import org.fincl.miss.server.message.MessageHeader;
+import org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO;
 import org.fincl.miss.server.scheduler.job.sms.SmsMessageVO;
 import org.fincl.miss.server.scheduler.job.sms.TAPPMessageVO;
 import org.fincl.miss.server.sms.SendType;
@@ -26,6 +27,7 @@ import org.fincl.miss.service.biz.bicycle.common.Constants;
 import org.fincl.miss.service.biz.bicycle.common.QRLogVo;
 import org.fincl.miss.service.biz.bicycle.service.BicycleRentMapper;
 import org.fincl.miss.service.biz.bicycle.service.BicycleRentService;
+import org.fincl.miss.service.biz.bicycle.service.CommonMapper;
 import org.fincl.miss.service.biz.bicycle.service.CommonService;
 import org.fincl.miss.service.biz.bicycle.vo.BikeRentInfoVo;
 import org.fincl.miss.service.biz.bicycle.vo.PeriodicStateReportsRequestVo;
@@ -41,6 +43,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.fincl.miss.server.sms.vo.SendSMSVo;
+import org.fincl.miss.server.util.MainPayUtil;
+
+import com.mainpay.sdk.utils.ParseUtils;
 
 @RPCServiceGroup(serviceGroupName = "대여")
 @Service
@@ -50,6 +55,9 @@ public class RentalService {
 	
 	@Autowired
 	CommonService commonService;
+	
+	@Autowired
+	private CommonMapper comm;
 	
 	@Autowired
 	BicycleRentService bikeService;
@@ -373,6 +381,59 @@ public class RentalService {
 					
 					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
 					{
+						if((rentInfo.get("RENT_YN").equals("R")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_006"))))
+						{
+							MainPayUtil MainPayutil = new MainPayUtil();
+							HashMap<String, String> parameters = new HashMap<String, String>();
+							String billkey = (String) rentInfo.get("BILLING_KEY") ;
+				    		if( billkey != null && !"".equals(billkey)) 
+				    		{	// 빌링키 없음 실패		
+				    			parameters.put("billkey", billkey);	// 정기결제 인증 키
+				    		}
+				    		parameters.put("goodsId", "BIL_006");
+				    		parameters.put("goodsName", "일회 자전거 잠금해제");
+				    		parameters.put("amount", "100");
+				        	
+				        	
+				    		String responseJson = MainPayutil.approve(parameters,"Y");
+				    		
+				    		
+				    		
+				    		Map responseMap = ParseUtils.fromJson(responseJson, Map.class);
+							String resultCode = (String) responseMap.get("resultCode");
+							String resultMessage = (String) responseMap.get("resultMessage");
+						    
+							if(!"200".equals(resultCode)) {	// API 호출 실패
+								logger.debug("Return Pay Fail-->> ["+resultMessage + "]");
+								//comm.setOverFeePayReset(fee);
+							}
+							else
+							{	// API 호출 성공
+								try 
+								{
+									OverFeeVO fee = new OverFeeVO();
+									fee.setPaymentMethodCd("BIM_001");
+									fee.setResultCD("0000");
+									fee.setPaymentStusCd("BIS_001");
+									fee.setMb_serial_no(parameters.get("mbrRefNo"));
+									Map dataMap = (Map)responseMap.get("data");
+									fee.setPaymentConfmNo((String) dataMap.get("refNo"));
+									fee.setTotAmt(fee.getOverFee());
+									fee.setOrder_certify_key((String)responseMap.get("applNo"));
+									fee.setProcessReasonDesc(resultMessage);
+									fee.setVoucher_seq((String)rentInfo.get("VOUCHER_SEQ"));
+									//mbrRefNo PAYMENT_CONFM_NO
+									//applNo ORDER_CERTIFY_KEY
+									int result = comm.setPaymentBillingKey(fee);
+									
+								} 
+								catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+							}
+						}
+						
 						if(!rentInfo.get("BIKE_VOUCHER_CNT").equals("99"))
 						//if(!voucher.getBike_voucher_cnt().equals("99"))
 						{
@@ -405,6 +466,61 @@ public class RentalService {
 					}
 					else
 					{
+						
+						
+						if((rentInfo.get("RENT_YN").equals("R")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_007"))))
+						{
+							MainPayUtil MainPayutil = new MainPayUtil();
+							HashMap<String, String> parameters = new HashMap<String, String>();
+							String billkey = (String) rentInfo.get("BILLING_KEY") ;
+				    		if( billkey != null && !"".equals(billkey)) 
+				    		{	// 빌링키 없음 실패		
+				    			parameters.put("billkey", billkey);	// 정기결제 인증 키
+				    		}
+				    		parameters.put("goodsId", "BIL_007");
+				    		parameters.put("goodsName", "일회 킥보드 잠금해제");
+				    		parameters.put("amount", "800");
+				        	
+				        	
+				    		String responseJson = MainPayutil.approve(parameters,"Y");
+				    		
+				    		
+				    		
+				    		Map responseMap = ParseUtils.fromJson(responseJson, Map.class);
+							String resultCode = (String) responseMap.get("resultCode");
+							String resultMessage = (String) responseMap.get("resultMessage");
+						    
+							if(!"200".equals(resultCode)) {	// API 호출 실패
+								logger.debug("Return Pay Fail-->> ["+resultMessage + "]");
+								//comm.setOverFeePayReset(fee);
+							}
+							else
+							{	// API 호출 성공
+								try 
+								{
+									OverFeeVO fee = new OverFeeVO();
+									fee.setPaymentMethodCd("BIM_001");
+									fee.setResultCD("0000");
+									fee.setPaymentStusCd("BIS_001");
+									fee.setMb_serial_no(parameters.get("mbrRefNo"));
+									Map dataMap = (Map)responseMap.get("data");
+									fee.setPaymentConfmNo((String) dataMap.get("refNo"));
+									fee.setTotAmt(fee.getOverFee());
+									fee.setOrder_certify_key((String)responseMap.get("applNo"));
+									fee.setProcessReasonDesc(resultMessage);
+									//mbrRefNo PAYMENT_CONFM_NO
+									//applNo ORDER_CERTIFY_KEY
+									fee.setVoucher_seq((String)rentInfo.get("VOUCHER_SEQ"));
+									int result = comm.setPaymentBillingKey(fee);
+									
+								} 
+								catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+							}
+						}
+						
 						
 						if(!rentInfo.get("KICK_VOUCHER_CNT").equals("99"))
 						//if(!voucher.getKick_voucher_cnt().equals("99"))
