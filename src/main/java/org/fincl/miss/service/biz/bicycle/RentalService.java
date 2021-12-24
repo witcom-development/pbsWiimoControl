@@ -425,6 +425,7 @@ public class RentalService {
 									//mbrRefNo PAYMENT_CONFM_NO
 									//applNo ORDER_CERTIFY_KEY
 									int result = comm.setPaymentBillingKey(fee);
+									logger.debug("BIKE OPEN PAY OK ! ",fee.getVoucher_seq());
 									
 								} 
 								catch (Exception e)
@@ -512,6 +513,7 @@ public class RentalService {
 									//applNo ORDER_CERTIFY_KEY
 									fee.setVoucher_seq((String)rentInfo.get("VOUCHER_SEQ"));
 									int result = comm.setPaymentBillingKey(fee);
+									logger.debug("KICKBOARD OPEN PAY OK ! ",fee.getVoucher_seq());
 									
 								} 
 								catch (Exception e)
