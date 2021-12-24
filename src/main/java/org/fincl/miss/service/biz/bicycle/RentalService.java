@@ -381,7 +381,7 @@ public class RentalService {
 					
 					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
 					{
-						if((rentInfo.get("RENT_YN").equals("R")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_006"))))
+						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_006"))))
 						{
 							MainPayUtil MainPayutil = new MainPayUtil();
 							HashMap<String, String> parameters = new HashMap<String, String>();
@@ -468,7 +468,7 @@ public class RentalService {
 					{
 						
 						
-						if((rentInfo.get("RENT_YN").equals("R")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_007"))))
+						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_007"))))
 						{
 							MainPayUtil MainPayutil = new MainPayUtil();
 							HashMap<String, String> parameters = new HashMap<String, String>();
