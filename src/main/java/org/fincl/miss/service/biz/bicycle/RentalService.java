@@ -381,7 +381,7 @@ public class RentalService {
 					
 					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
 					{
-						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_006"))))
+						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("PAYMENT_CLS_CD").equals("BIL_006"))))
 						{
 							MainPayUtil MainPayutil = new MainPayUtil();
 							HashMap<String, String> parameters = new HashMap<String, String>();
@@ -417,11 +417,11 @@ public class RentalService {
 									fee.setPaymentStusCd("BIS_001");
 									fee.setMb_serial_no(parameters.get("mbrRefNo"));
 									Map dataMap = (Map)responseMap.get("data");
-									fee.setPaymentConfmNo((String) dataMap.get("refNo"));
+									fee.setPaymentConfmNo(String.valueOf(dataMap.get("refNo")));
 									fee.setTotAmt(fee.getOverFee());
-									fee.setOrder_certify_key((String)responseMap.get("applNo"));
+									fee.setOrder_certify_key(String.valueOf(responseMap.get("applNo")));
 									fee.setProcessReasonDesc(resultMessage);
-									fee.setVoucher_seq((String)rentInfo.get("VOUCHER_SEQ"));
+									fee.setVoucher_seq(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 									//mbrRefNo PAYMENT_CONFM_NO
 									//applNo ORDER_CERTIFY_KEY
 									int result = comm.setPaymentBillingKey(fee);
@@ -469,7 +469,7 @@ public class RentalService {
 					{
 						
 						
-						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("BIKE_SE_CD").equals("BIL_007"))))
+						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("PAYMENT_CLS_CD").equals("BIL_007"))))
 						{
 							MainPayUtil MainPayutil = new MainPayUtil();
 							HashMap<String, String> parameters = new HashMap<String, String>();
@@ -505,13 +505,13 @@ public class RentalService {
 									fee.setPaymentStusCd("BIS_001");
 									fee.setMb_serial_no(parameters.get("mbrRefNo"));
 									Map dataMap = (Map)responseMap.get("data");
-									fee.setPaymentConfmNo((String) dataMap.get("refNo"));
+									fee.setPaymentConfmNo(String.valueOf(dataMap.get("refNo")));
 									fee.setTotAmt(fee.getOverFee());
-									fee.setOrder_certify_key((String)responseMap.get("applNo"));
+									fee.setOrder_certify_key(String.valueOf(dataMap.get("applNo")));
 									fee.setProcessReasonDesc(resultMessage);
 									//mbrRefNo PAYMENT_CONFM_NO
 									//applNo ORDER_CERTIFY_KEY
-									fee.setVoucher_seq((String)rentInfo.get("VOUCHER_SEQ"));
+									fee.setVoucher_seq(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 									int result = comm.setPaymentBillingKey(fee);
 									logger.debug("KICKBOARD OPEN PAY OK ! ",fee.getVoucher_seq());
 									

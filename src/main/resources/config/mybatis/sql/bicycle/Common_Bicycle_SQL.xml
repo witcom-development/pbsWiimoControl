@@ -1180,7 +1180,8 @@
     
     <update id="setPaymentBillingKey" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
         UPDATE TB_SVC_PAYMENT
-         SET PAYMENT_CONFM_NO = #{mb_serial_no},
+         SET PAYMENT_CONFM_NO = #{paymentConfmNo},
+         MB_SERIAL_NO = #{mb_serial_no},
          ORDER_CERTIFY_KEY = #{order_certify_key}
          WHERE PAYMENT_SEQ = (SELECT PAYMENT_SEQ FROM TB_SVC_VOUCHER WHERE VOUCHER_SEQ = #{voucher_seq})
     </update>
