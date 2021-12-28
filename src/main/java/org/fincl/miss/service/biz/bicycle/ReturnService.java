@@ -410,6 +410,7 @@ public class ReturnService  {
         {
         	logger.error("RentHistVo is NOT EXIST : no_getForReturnUse ");
         	
+        	RentHistVo info1 = new RentHistVo();
         	
         	if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
         	{
@@ -457,7 +458,7 @@ public class ReturnService  {
          		 
          		logger.error("info : set bike ID {} , {} !!! ",vo.getBicycleId(),com.getBicycleId());
          		
-         	//	info.setRENT_BIKE_ID(com.getBicycleId());
+         		info1.setRENT_BIKE_ID(com.getBicycleId());
          	//	info.setUSE_DIST("0");
          		commonService.changeValidBike(com);
          		
@@ -466,11 +467,11 @@ public class ReturnService  {
         			 com.setStationId("ST-999");
           			 com.setRockId("45800099900000");
           			          			         			
-          			info.setRETURN_STATION_ID(com.getStationId());
-          			info.setRETURN_RACK_ID(com.getRockId());
+          			info1.setRETURN_STATION_ID(com.getStationId());
+          			info1.setRETURN_RACK_ID(com.getRockId());
           			
         			 // 자전거 주차 정보 INSERT PARKING
-        			 bikeService.insertPeriodParkingInfo(info);
+        			 bikeService.insertPeriodParkingInfo(info1);
         			 
         			 // 자전거 정보 UPDATE BIKE
         		//	 bicycleMapper.updateBike(info);
