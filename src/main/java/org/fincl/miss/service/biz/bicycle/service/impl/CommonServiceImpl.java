@@ -86,6 +86,12 @@ public class CommonServiceImpl implements CommonService {
 	public Map<String, Object> checkParkingInfo(CommonVo com) {
 		return comm.checkParkingInfo(com);
 	}
+	
+	@Override
+	public int setPaymentBillingKey(OverFeeVO fee)
+	{
+		return comm.setPaymentBillingKey(fee);
+	}
 
 	@Override
 	public int deleteFaultInfo(CommonVo com) {
