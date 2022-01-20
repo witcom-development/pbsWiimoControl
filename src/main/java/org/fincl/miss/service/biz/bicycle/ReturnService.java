@@ -1,5 +1,6 @@
 package org.fincl.miss.service.biz.bicycle;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,10 +23,16 @@ import org.fincl.miss.service.biz.bicycle.vo.RentHistVo;
 import org.fincl.miss.service.biz.bicycle.vo.QRReturnResultRequestVo;
 import org.fincl.miss.service.biz.bicycle.vo.QRReturnDistResultRequestVo;
 import org.fincl.miss.service.biz.bicycle.vo.QRReturnResponseVo;
+import org.fincl.miss.service.util.NaverGPSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 @RPCServiceGroup(serviceGroupName = "반납")
 @Service
@@ -99,6 +106,75 @@ public class ReturnService  {
 		 	{
 		 		QRLog.setXpos(new CommonUtil().GetGPS(vo.getLatitude()));
 		 		QRLog.setYpos(new CommonUtil().GetGPS(vo.getLongitude()));
+		 		
+		 		
+		 		
+		 		
+		 		String NAVER_API_KEY ;
+			    String NAVER_SECRET_KEY;	
+
+     			//zgyaca9y6t    , JbaXg9LvYDkHHPmeGi2r0DsL20KhhvOIkfJMfEOd
+     			// 양재영 과장  : a88veypaz2 , kg5bLoJkxE1KcFUURqgjdyf5x0ztBMKRY46y4Med
+     			NAVER_API_KEY 			= "zgyaca9y6t";     			// 가맹점 코드
+     			NAVER_SECRET_KEY			= "JbaXg9LvYDkHHPmeGi2r0DsL20KhhvOIkfJMfEOd";  // billing Key
+     			
+     			
+			   
+     			
+     			ObjectMapper mapper = new ObjectMapper(); 		  			//jackson json object
+     			NaverGPSUtil util = new NaverGPSUtil();  
+     			
+
+     			String XPos = new CommonUtil().GetGPS(vo.getLatitude());
+     			String YPos = new CommonUtil().GetGPS(vo.getLongitude());
+     			
+     			
+     			  			
+     			String info_String = "coords="+ YPos + "," + XPos +"&output=json&orders=legalcode";
+     			
+     			logger.debug("NAVER API_BASIC " + info_String);
+     			
+     			
+     			String info_result = util.GPSSend(info_String, NAVER_API_KEY, NAVER_SECRET_KEY);
+     			String Data_Result =null;
+     			JsonNode node;
+     			try 
+     			{	
+     				node = mapper.readTree(info_result);
+     				logger.debug("SESSAK GPS CHECK POINT 1 " + info_result);
+     				if(node.has("results"))
+     				{
+     					ArrayNode  memberArray = (ArrayNode) node.get("results");
+     					
+     					if(memberArray.isArray())
+     					{
+     						for(JsonNode jsonNode : memberArray)
+     						{
+     							logger.debug("SESSAK NODE " + jsonNode);
+     							logger.debug("SESSAK GPS CHECK POINT 2 = " + jsonNode.get("region").get("area3").get("name").asText().toString());
+     							Data_Result = jsonNode.get("region").get("area3").get("name").asText().toString();
+     						}
+     					}
+     					//logger.debug("NAVER GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").toString());
+     				}
+     				else 
+     				{
+     					logger.debug("SESSAK GPS CHECK POINT 3");
+     				}
+     			} 
+     			catch (JsonProcessingException e) 
+     			{
+     				logger.debug("SESSAK GPS JsonProcessingException");
+     			} 
+     			catch (IOException e) 
+     			{
+     				logger.debug("SESSAK GPS IOException");
+     			}
+     			catch (Exception e)
+     			{
+     				logger.debug("SESSAK GPS Exception");
+     				e.printStackTrace();
+     			}
 		 	}
 		 	else
             {
