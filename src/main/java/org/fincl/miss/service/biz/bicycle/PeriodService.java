@@ -370,21 +370,34 @@ public class PeriodService{
 	    		 }
 	    		 else
 	    		 {
-	     	  			 for(HashMap<String, String> PeriodMap : PeriodList)
-	     	  			 {
-	     	  				 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
-	     	  				 {
-	     	  					 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
-	     	  					 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
-	     	  					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
-	     	  					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
-	     	  					responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
-	     	  					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
-	     	  				 }
-	     	  			 }
-	     	  		 }
-	    		 
-	    		 
+	    			 for(HashMap<String, String> PeriodMap : PeriodList)
+	    			 {
+	    				 if(!vo.getUsrType().equals("02"))
+	    				 {
+	    					 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
+	    					 {
+	    						 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+	    						 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+	    						 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+	    						 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+	    						 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+	    						 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+	    					 }
+	    				 }
+	    				 else
+	    				 {
+	    					 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_038"))
+	    					 {
+	    						 logger.debug("######################## MSI_038 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+	    						 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+	    						 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+	    						 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+	    						 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+	    					 }
+	    				 }
+	     	  					 
+	    			 }
+	    		 }
 	    		 return responseVo;
 			 }
 		    
@@ -1457,19 +1470,33 @@ public class PeriodService{
 		 }
 		 else
 		 {
-	  			 for(HashMap<String, String> PeriodMap : PeriodList)
-	  			 {
-	  				 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
-	  				 {
-	  					 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
-	  					 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
-	  					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
-	  					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
-	  					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
-	  					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
-	  				 }
-	  			 }
-	  		 }
+			 for(HashMap<String, String> PeriodMap : PeriodList)
+			 {
+				 if(!vo.getUsrType().equals("02"))
+				 {
+   					 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
+   					 {
+   						 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+   						 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
+   						 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+   						 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+   						 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+   						 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+   					 }
+   				 }
+   				 else
+   				 {
+   					 if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_038"))
+   					 {
+   						 logger.debug("######################## MSI_038 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
+   						 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
+   						 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
+   						 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
+   						 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
+   					 }
+   				 }
+			 }
+		 }
 		 
 		 return responseVo;
 		 
