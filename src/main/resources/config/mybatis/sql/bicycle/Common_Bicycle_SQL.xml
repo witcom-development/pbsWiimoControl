@@ -829,7 +829,9 @@
 		UPDATE	TB_OPR_BIKE
 		SET 
 			BIKE_STUS_CD =  'BKS_001',
-			CENTER_ID = null
+			CENTER_ID = null,
+			GPS_X = #{GPS_X},
+			GPS_Y = #{GPS_Y}
 		WHERE 
 			TERMINAL_ID =  #{bikeId}
 		
