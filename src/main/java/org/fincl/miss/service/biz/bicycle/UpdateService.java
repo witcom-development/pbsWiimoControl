@@ -760,6 +760,8 @@ public class UpdateService {
     	com.setBicycleId(vo.getBicycleId());
     	com.setVersion(vo.getFirmwareVersion());
     	
+    	com.setFirmwareClsCd("FWD_001");
+    	/*
     	//BLE
     	if(vo.getUpdateType().equals(Constants.CODE.get("UPDATE_00"))){
     		com.setFirmwareClsCd("FWD_001");
@@ -771,6 +773,7 @@ public class UpdateService {
     		com.setFirmwareClsCd("FWD_002");
     		
     	}
+    	*/
 
     	Map<String, String> ourBikeMap = new HashMap<String, String>();
 		ourBikeMap = bikeService.chkOurBike(com);
