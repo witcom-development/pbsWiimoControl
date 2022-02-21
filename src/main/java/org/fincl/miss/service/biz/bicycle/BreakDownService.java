@@ -234,7 +234,7 @@ public class BreakDownService{
 			 /**
 			  * Locker 불량으로 장애 등록.
 			  */
-			 commonService.insertBrokenBikeErr_H(com);
+			 commonService.insertBrokenBikeErr(com);
 			 commonService.insertBrokenThift(com);
 			 commonService.insertBrokenBikeReport(com);
 		 }

@@ -428,7 +428,18 @@ public class PeriodService{
 			 }
 			 
 			 int battery = Integer.parseInt(vo.getBattery(), 16);
-			 if(battery >= 30)
+			 int battery_cap = 0;
+			 //자전거는 30 킥보드는 60 일 때 배터리 알람 해제
+			 if(BIKE_SE_CD.equals("BIK_001"))
+			 {
+				 battery_cap = 30;
+			 }
+			 else 
+			 {
+				 battery_cap = 60;
+			 }
+			 
+			 if(battery >= battery_cap)
 			 {
 				 //Battery Alarm 정상화 
 				 Integer FAULT_SEQ = 0;
