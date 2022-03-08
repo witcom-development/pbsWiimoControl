@@ -491,11 +491,23 @@
 		UPDATE	TB_OPR_BIKE
 		SET 
 			GPS_X =  #{GPS_X},
-			GPS_Y = #{GPS_Y}
+			GPS_Y = #{GPS_Y},
+			LAST_GPS_DTTM = NOW(),
+			GPS_NO_CNT = 0
 		WHERE 
 			BIKE_ID = #{RENT_BIKE_ID}
-		
 	</update>
+	
+	<update id="updateBike_NOGPS"		parameterType="org.fincl.miss.service.biz.bicycle.vo.RentHistVo">	
+	
+		UPDATE	TB_OPR_BIKE
+		SET 
+			GPS_NO_CNT = GPS_NO_CNT+1
+		WHERE 
+			BIKE_ID = #{RENT_BIKE_ID}
+	</update>
+	
+	
 
 	<update id="updateBikeBreakDowon"		parameterType="org.fincl.miss.service.biz.bicycle.vo.RentHistVo">	
 	

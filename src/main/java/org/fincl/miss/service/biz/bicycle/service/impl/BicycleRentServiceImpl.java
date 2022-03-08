@@ -984,6 +984,12 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	{
 		bicycleMapper.updateBikeGPS(info);
 	}
+	
+	@Override
+	public void updateBike_NOGPS(RentHistVo info) 
+	{
+		bicycleMapper.updateBike_NOGPS(info);
+	}
 
 	@Override
 	public void deleteDuplicatedParkingInfo(RentHistVo info) 

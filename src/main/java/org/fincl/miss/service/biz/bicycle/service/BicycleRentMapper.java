@@ -63,6 +63,8 @@ public interface BicycleRentMapper {
 	void updateBike(RentHistVo info);
 	
 	void updateBikeGPS(RentHistVo info);
+	
+	void updateBike_NOGPS(RentHistVo info);
 
 	void updateBikeBreakDowon(RentHistVo info);
 	

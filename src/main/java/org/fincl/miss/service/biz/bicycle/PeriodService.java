@@ -68,9 +68,7 @@ public class PeriodService{
 		 
 		 logger.debug("######################## 435F_Bicycle_11 ");
 		 logger.debug("QR_PeriodicStateReportsRequestVo vo :::::::::::{} " , vo);
-		 
-		 
-		 	
+
 		// double latitude = 0.0d, longitude = 0.0d;
 		 String latitude = null;
 		 String longitude = null;
@@ -232,6 +230,15 @@ public class PeriodService{
 			 
 			 bicycleMapper.updateBikeGPS(gps);
 			 
+		 }
+		 else
+		 {
+			 RentHistVo gps = new RentHistVo();
+			 gps.setRETURN_RACK_ID(com.getRockId());
+			 gps.setRENT_BIKE_ID(com.getBicycleId());
+			 gps.setGPS_X(latitude);
+			 gps.setGPS_Y(longitude);
+			 bicycleMapper.updateBike_NOGPS(gps);
 		 }
 		 if(vo.getBicycleState().equals("00") || vo.getBicycleState().equals("FF"))
 		 {
