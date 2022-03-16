@@ -1199,7 +1199,7 @@ public class PeriodService{
 		if(faultSeq == null)//수리중, 폐기 추가..2020.11.20 c
 		{	
 		//	if(!bike_status.equals("BKS_005") && !bike_status.equals("BKS_009"))	//수리중 , 수리완료
-			if(!bike_status.equals("BKS_005") && !bike_status.equals("BKS_002"))	//수리중 , 폐기 
+			if(!bike_status.equals("BKS_005") && !bike_status.equals("BKS_004") && !bike_status.equals("BKS_002"))	//수리중 ,센터보관,폐기 
 			{
 				logger.debug("PERIOD : BIKE_ID: {} BIKE_STATUS: {}",vo.getBicycleId(),bike_status);
 				
