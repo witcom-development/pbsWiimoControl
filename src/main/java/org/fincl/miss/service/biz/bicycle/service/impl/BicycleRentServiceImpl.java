@@ -1178,4 +1178,10 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	{
 		return bicycleMapper.getBikeRETURN_GPS(RENT_SEQ);
 	}
+	
+	@Override
+	public void updateRENTGPS_CLS_CD(Map<String, String> GPS_DATA) 
+	{
+		bicycleMapper.updateRENTGPS_CLS_CD(GPS_DATA);
+	}
 }

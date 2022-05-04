@@ -151,8 +151,8 @@ public class ReturnService  {
      						for(JsonNode jsonNode : memberArray)
      						{
      							logger.debug("SESSAK NODE " + jsonNode);
-     							logger.debug("SESSAK GPS CHECK POINT 2 = " + jsonNode.get("region").get("area3").get("name").asText().toString());
-     							Data_Result = jsonNode.get("region").get("area3").get("name").asText().toString();
+     							logger.debug("SESSAK GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").asText().toString());
+     							Data_Result = jsonNode.get("region").get("area2").get("name").asText().toString();
      						}
      					}
      					//logger.debug("NAVER GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").toString());
@@ -175,6 +175,14 @@ public class ReturnService  {
      				logger.debug("SESSAK GPS Exception");
      				e.printStackTrace();
      			}
+     			
+     			if(!Data_Result.equals("하남시"))
+     			{
+     				Map<String, String> UPDATE_BIKE_CLS_CD = new HashMap<String, String>();
+    		 		UPDATE_BIKE_CLS_CD.put("GPS_CLS_CD", "F_GPS02");
+    		 		UPDATE_BIKE_CLS_CD.put("RENT_BIKE_ID", vo.getBicycleId());
+    		 		bikeService.updateRENTGPS_CLS_CD(UPDATE_BIKE_CLS_CD);
+     			}
 		 	}
 		 	else
             {
@@ -185,6 +193,10 @@ public class ReturnService  {
 		 		QRLog.setXpos("00000000");
 		 		QRLog.setYpos("00000000");
 		 		
+		 		Map<String, String> UPDATE_BIKE_CLS_CD = new HashMap<String, String>();
+		 		UPDATE_BIKE_CLS_CD.put("GPS_CLS_CD", "F_GPS01");
+		 		UPDATE_BIKE_CLS_CD.put("RENT_BIKE_ID", vo.getBicycleId());
+		 		bikeService.updateRENTGPS_CLS_CD(UPDATE_BIKE_CLS_CD);
             }
 		 	
 		 	
@@ -193,6 +205,9 @@ public class ReturnService  {
 			QRLog.setQr_frame("반납 완료");
 		 	
 		 	bikeService.insertQRLog(QRLog);
+		 	
+		 	
+		 	
         }
         else
         {
@@ -234,50 +249,7 @@ public class ReturnService  {
         
         
         if(info != null)
-        {
-        	/*
-        	if(info.getRENT_YN().equals("N"))
-        	{
-        		bikeService.rentUpdateCancel(info.getRENT_SEQ());
-        		responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
-                responseVo.setSeqNum(vo.getSeqNum());
-                responseVo.setCommandId(Constants.CID_RES_RETURNBIKE);
-                responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_02"));
-                responseVo.setBicycleId(vo.getBicycleId());
-                
-                List<HashMap<String, String>> PeriodList = commonService.CheckPeriodTime();
-        		
-                QRLog.setResAck("NSUC");
-                bikeService.updateQRLog(QRLog);
-                
-         		if(PeriodList.size() == 0 )
-         		{
-        	  			 logger.error("Period Information Find Error");
-        	  			 responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
-        	  			 responseVo = setFaiiMsg(responseVo, vo);
-        	           	
-        	  			 return responseVo;
-         		}
-         		else
-         		{
-         			for(HashMap<String, String> PeriodMap : PeriodList)
-         			{
-         				if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_036"))
-         				{
-          					 logger.debug("######################## MSI_036 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
-          					 //responseVo.setReturnPeriod(String.valueOf(PeriodMap.get("ADD_VAL1")));
-          					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
-          					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
-          					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
-          					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
-         				}
-         			}
-         		}
-         		
-                return responseVo;
-        	}
-        	*/
-        	
+        {	
     		Map<String, Object> stationInfo = null;
     		
     	

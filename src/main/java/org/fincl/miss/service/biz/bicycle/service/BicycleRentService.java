@@ -132,4 +132,6 @@ public interface BicycleRentService {
 	
 	Map<String, String> getBikeRETURN_GPS(String RENT_SEQ);
 	
+	void updateRENTGPS_CLS_CD(Map<String, String> GPS_DATA);
+	
 }

@@ -878,7 +878,7 @@
 		FROM TB_SVC_MB
 		WHERE 1=1
 		AND USR_SEQ = #{USR_SEQ}
-		AND LEAVE_YN = 'N';
+		AND LEAVE_YN = 'N'
 	</select>
 	
 	<!-- 탄소절감 등록 대여/반납 대여소 정보 가져오기_20170121 -->
@@ -1019,7 +1019,7 @@
 		INSERT INTO TB_SVC_MILEAGE
 			(USR_SEQ, MILEAGE_CLS_CD, MILEAGE_POINT, RENT_HIST_SEQ)
 		VALUES
-			(#{USR_SEQ}, #{MILEAGE_CD}, (SELECT ADD_VAL1 FROM TB_SYS_COM_CD WHERE COM_CD = #{MILEAGE_DAY_CD}), #{RENT_HIST_SEQ});
+			(#{USR_SEQ}, #{MILEAGE_CD}, (SELECT ADD_VAL1 FROM TB_SYS_COM_CD WHERE COM_CD = #{MILEAGE_DAY_CD}), #{RENT_HIST_SEQ})
 	</insert>
 	
 	<update id="setRecommendTimePolicy" parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo">
@@ -1178,7 +1178,7 @@
    <![CDATA[
       select B.FIRMWARE_VER, A.ENTRPS_CD 
       from TB_IOT_DEVICE A, TB_IOT_FIRMWARE B 
-      WHERE A.SW_FIRMWARE_SEQ = B.FIRMWARE_SEQ AND DEVICE_ID = #{bicycleId};
+      WHERE A.SW_FIRMWARE_SEQ = B.FIRMWARE_SEQ AND DEVICE_ID = #{bicycleId}
    ]]>
    </select>
    
@@ -1337,6 +1337,14 @@
 			WHERE RENT_YN ='N'
 			AND A.RENT_SEQ =  #{RENT_SEQ}
 	</delete>
+	
+	
+	<update id="updateRENTGPS_CLS_CD" parameterType="java.util.HashMap">
+		UPDATE TB_SVC_RENT 
+		SET 
+			GPS_CLS_CD = #{GPS_CLS_CD}
+		WHERE RENT_BIKE_ID = #{RENT_BIKE_ID}
+	</update>
 	
 	
 </mapper>

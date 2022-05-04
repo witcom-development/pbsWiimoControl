@@ -199,5 +199,7 @@ public interface BicycleRentMapper {
 	void rentCancleInsert(String RENT_SEQ);
 	
 	void rentDelete(String RENT_SEQ);
+	
+	void updateRENTGPS_CLS_CD(Map<String, String> GPS_DATA);
 }
 
