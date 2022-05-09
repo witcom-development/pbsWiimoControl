@@ -141,7 +141,7 @@ public class ReturnService  {
      			try 
      			{	
      				node = mapper.readTree(info_result);
-     				logger.debug("SESSAK GPS CHECK POINT 1 " + info_result);
+     				logger.debug("WIIGO_GPS CHECK POINT 1 " + info_result);
      				if(node.has("results"))
      				{
      					ArrayNode  memberArray = (ArrayNode) node.get("results");
@@ -150,8 +150,8 @@ public class ReturnService  {
      					{
      						for(JsonNode jsonNode : memberArray)
      						{
-     							logger.debug("SESSAK NODE " + jsonNode);
-     							logger.debug("SESSAK GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").asText().toString());
+     							logger.debug("WIIGO NODE " + jsonNode);
+     							logger.debug("WIIGO GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").asText().toString());
      							Data_Result = jsonNode.get("region").get("area2").get("name").asText().toString();
      						}
      					}
@@ -159,20 +159,20 @@ public class ReturnService  {
      				}
      				else 
      				{
-     					logger.debug("SESSAK GPS CHECK POINT 3");
+     					logger.debug("WIIGO_GPS CHECK POINT 3");
      				}
      			} 
      			catch (JsonProcessingException e) 
      			{
-     				logger.debug("SESSAK GPS JsonProcessingException");
+     				logger.debug("WIIGO_GPS JsonProcessingException");
      			} 
      			catch (IOException e) 
      			{
-     				logger.debug("SESSAK GPS IOException");
+     				logger.debug("WIIGO_GPS IOException");
      			}
      			catch (Exception e)
      			{
-     				logger.debug("SESSAK GPS Exception");
+     				logger.debug("WIIGO_GPS Exception");
      				e.printStackTrace();
      			}
      			
@@ -434,7 +434,7 @@ public class ReturnService  {
 			
 			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
 			//Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
-			baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());
+			baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());	//baseTime 31 로 수정됨
 			
 			if(sysTime - baseRentTime > 0)
 			{
