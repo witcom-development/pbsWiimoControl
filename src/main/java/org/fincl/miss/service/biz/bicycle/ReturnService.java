@@ -432,7 +432,7 @@ public class ReturnService  {
 			
 			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
 			//Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
-			
+
 			baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());
 			logger.debug(" #####  server_time is baseRentTime {}  sysTime {}"  , baseRentTime, sysTime);
 			
