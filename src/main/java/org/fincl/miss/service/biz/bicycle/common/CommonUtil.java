@@ -30,20 +30,21 @@ public class CommonUtil {
     	//tmp = max.get("ADD_FEE_INTER_MI")==null?"30":max.get("ADD_FEE_INTER_MI").toString();
     	//int intervalMax = Integer.parseInt(tmp);
     	
-    	logger.debug(" getPay overtime {} minStr {} minPay {} maxStr {} maxPay {}" , overFee,minStr,minPay);	//log 수정 
+    	logger.debug(" getPay overtime {} minStr {} minPay {}" , overFee-minStr,minStr,minPay);	//log 수정 
     	
     	/**
     	 * 기본초과요금 부과
     	 */
-    	if(overFee - (minStr-1)>0){
+    	if(overFee - (minStr)>0){
     		/**
     		 * 추과요금 부과
     		 */
     		//int overTime = overFee;
-    		if(overFee > 0){
+    		int overTime = overFee - (minStr) ;
+    		if(overTime > 0){
     			// 추과 요금 부과시간
-    			int payCount = overFee/intervalMin;
-    			if(overFee%intervalMin>0){
+    			int payCount = overTime/intervalMin;
+    			if(overTime%intervalMin>0){
     				payCount++;
     			}
     			pay = (minPay * payCount);
