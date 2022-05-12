@@ -141,7 +141,7 @@ public class ReturnService  {
      			try 
      			{	
      				node = mapper.readTree(info_result);
-     				logger.debug("SESSAK GPS CHECK POINT 1 " + info_result);
+     				logger.debug("WIIGO_GPS CHECK POINT 1 " + info_result);
      				if(node.has("results"))
      				{
      					ArrayNode  memberArray = (ArrayNode) node.get("results");
@@ -150,8 +150,8 @@ public class ReturnService  {
      					{
      						for(JsonNode jsonNode : memberArray)
      						{
-     							logger.debug("SESSAK NODE " + jsonNode);
-     							logger.debug("SESSAK GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").asText().toString());
+     							logger.debug("WIIGO NODE " + jsonNode);
+     							logger.debug("WIIGO GPS CHECK POINT 2 = " + jsonNode.get("region").get("area2").get("name").asText().toString());
      							Data_Result = jsonNode.get("region").get("area2").get("name").asText().toString();
      						}
      					}
@@ -159,20 +159,20 @@ public class ReturnService  {
      				}
      				else 
      				{
-     					logger.debug("SESSAK GPS CHECK POINT 3");
+     					logger.debug("WIIGO_GPS CHECK POINT 3");
      				}
      			} 
      			catch (JsonProcessingException e) 
      			{
-     				logger.debug("SESSAK GPS JsonProcessingException");
+     				logger.debug("WIIGO_GPS JsonProcessingException");
      			} 
      			catch (IOException e) 
      			{
-     				logger.debug("SESSAK GPS IOException");
+     				logger.debug("WIIGO_GPS IOException");
      			}
      			catch (Exception e)
      			{
-     				logger.debug("SESSAK GPS Exception");
+     				logger.debug("WIIGO_GPS Exception");
      				e.printStackTrace();
      			}
      			
@@ -423,8 +423,6 @@ public class ReturnService  {
         	// 프리미엄 이용권 자전거 기본대여시간 가져오기 (일반권 포함)_20160630_JJH_END
         	
         	int baseRentTime = 0;
-        	
-        	logger.debug(" #####  server_time is baseRentTime {}  sysTime {}"  , baseRentTime, sysTime);
     		
     		
 			Map<String, Object> fee = new HashMap<String, Object>();
@@ -434,12 +432,15 @@ public class ReturnService  {
 			
 			Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(fee);	//TB_SVC_ADD_FEE  
 			//Map<String, Object> maxPolicy = bikeService.getOverFeeMaxPolicy(fee);
+			
 			baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());
+			logger.debug(" #####  server_time is baseRentTime {}  sysTime {}"  , baseRentTime, sysTime);
 			
 			if(sysTime - baseRentTime > 0)
 			{
-				info.setOVER_FEE_YN("Y");		
-				overPay = new CommonUtil().getPay(minPolicy, (sysTime- baseRentTime));
+				info.setOVER_FEE_YN("Y");
+				overPay = new CommonUtil().getPay(minPolicy, (sysTime));
+				//overPay = new CommonUtil().getPay(minPolicy, (sysTime- baseRentTime));
 				//overPay = new CommonUtil().getPay(minPolicy, maxPolicy, (sysTime - baseRentTime));
 				info.setOVER_FEE(overPay+"");
 				baseRentTime = Integer.parseInt(minPolicy.get("OVER_STR_MI").toString());
