@@ -392,7 +392,9 @@ public class RentalService {
 				    		}
 				    		parameters.put("goodsId", "BIL_006");
 				    		parameters.put("goodsName", "일회 자전거 잠금해제");
-				    		parameters.put("amount", "100");
+				    		String rent_fee = comm.getLockOffPay(parameters);
+				    		//parameters.put("amount", "100");
+				    		parameters.put("amount", rent_fee);
 				        	
 				        	
 				    		String responseJson = MainPayutil.approve(parameters,"Y");
@@ -480,7 +482,9 @@ public class RentalService {
 				    		}
 				    		parameters.put("goodsId", "BIL_007");
 				    		parameters.put("goodsName", "일회 킥보드 잠금해제");
-				    		parameters.put("amount", "800");
+				    		String rent_fee = comm.getLockOffPay(parameters);
+				    		//parameters.put("amount", "800");
+				    		parameters.put("amount", rent_fee);
 				        	
 				        	
 				    		String responseJson = MainPayutil.approve(parameters,"Y");

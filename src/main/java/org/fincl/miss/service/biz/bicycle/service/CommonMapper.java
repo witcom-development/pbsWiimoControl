@@ -64,6 +64,8 @@ public interface CommonMapper {
 
 	java.util.Map<String, String> getPaymentInfoExist(OverFeeVO fee);
 	
+	String getLockOffPay(Map<String, String> LockOff);
+	
 	int setOverFeePayReset(OverFeeVO fee);
 
 	public int checkBreakDown(CommonVo com);

@@ -768,6 +768,11 @@ public class CommonServiceImpl implements CommonService {
 		return comm.getPaymentInfoExist(fee);
 	}
 	
+	public String getLockOffPay(Map<String, String> LockOff)
+	{
+		return comm.getLockOffPay(LockOff);
+	}
+	
 	@Override
 	@Transactional(readOnly=false, propagation= Propagation.REQUIRED, rollbackFor={Exception.class, SQLException.class})
 	public int setOverFeePayReset(OverFeeVO fee) {

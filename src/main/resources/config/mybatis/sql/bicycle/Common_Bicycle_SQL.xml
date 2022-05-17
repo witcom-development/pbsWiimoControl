@@ -1054,23 +1054,7 @@
 			AND RACK.RACK_SE_CD = CONCAT('RAK_',SUBSTRING(BIKE.BIKE_SE_CD,5,3))
 			LIMIT 1
 	</select>
-	<!-- 
-	<select id="CheckBeaconID_Shoot"		parameterType="java.util.HashMap"	resultType="java.util.HashMap">
-		SELECT STA.STATION_ID, RACK.RACK_ID
-			FROM TB_OPR_QR_BEACON BEACON,
-			TB_OPR_STATION STA,
-			TB_OPR_RACK RACK,
-			TB_OPR_BIKE BIKE
-			WHERE BEACON.BEACON_ID = #{BEACON_ID}
-			AND STA.STATION_ID = BEACON.NOW_LOCATE_ID
-			AND RACK.NOW_LOCATE_ID = STA.STATION_ID
-			AND STA.STATION_USE_YN IN ('Y','T','R')
-			AND STA.STATION_SE_CD  IN ('RAK_004','RAK_003')
-			AND BIKE.TERMINAL_ID = #{BIKE_ID}
-			AND RACK.RACK_SE_CD = CONCAT('RAK_',SUBSTRING(BIKE.BIKE_SE_CD,5,3))
-			LIMIT 1
-	</select>
-	-->
+
 	<select id="CheckBeaconID_Shoot"		parameterType="java.util.HashMap"	resultType="java.util.HashMap">
 		SELECT STA.STATION_ID, RACK.RACK_ID, STA.STATION_USE_YN
 			FROM TB_OPR_QR_BEACON BEACON,
@@ -1224,5 +1208,12 @@
          SET PAYMENT_ATT_CNT = 0
          WHERE RENT_HIST_SEQ = #{rentHistSeq}
     </update>
+    
+    
+    <select id="getLockOffPay" parameterType="java.util.Map" resultType="string">
+		SELECT RENT_FEE
+		FROM TB_SVC_RENT_FEE
+		WHERE PAYMENT_CLS_CD = #{goodsId}
+    </select>
 	
 </mapper>
