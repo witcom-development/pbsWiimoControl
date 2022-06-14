@@ -55,6 +55,10 @@ public interface CommonService {
 	
 	int setPaymentBillingKey(OverFeeVO fee);
 	
+	String getPaymentStus(OverFeeVO fee);
+
+	int setPaymentStus(OverFeeVO fee);
+	
 	int setOverFeePayComplete(OverFeeVO fee);
 
 	int addTicketPayment(OverFeeVO fee);
@@ -192,5 +196,6 @@ public interface CommonService {
 	public boolean bicycleStopChkProc(BicycleStopChkRequestVo vo);	// 정차 자전거 자동확인 Proc_20170731_JJH
 
 	public List<HashMap<String, String>> CheckPeriodTime();
+
 
 }

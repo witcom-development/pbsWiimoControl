@@ -1175,6 +1175,18 @@
          WHERE PAYMENT_SEQ = (SELECT PAYMENT_SEQ FROM TB_SVC_VOUCHER WHERE VOUCHER_SEQ = #{voucher_seq})
     </update>
     
+    
+    <select id="getPaymentStus" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"  resultType="string"> 
+        SELECT PAYMENT_STUS_CD FROM TB_SVC_PAYMENT
+			WHERE PAYMENT_SEQ = (SELECT PAYMENT_SEQ FROM TB_SVC_VOUCHER WHERE VOUCHER_SEQ = #{voucher_seq})
+    </select>
+    
+    <update id="setPaymentStus" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
+        UPDATE TB_SVC_PAYMENT SET
+			PAYMENT_STUS_CD = #{paymentStusCd}
+			WHERE PAYMENT_SEQ = (SELECT PAYMENT_SEQ FROM TB_SVC_VOUCHER WHERE VOUCHER_SEQ = #{voucher_seq})
+    </update>
+    
     <update id="setOverFeePayComplete" parameterType="org.fincl.miss.server.scheduler.job.overFeePayScheuler.vo.OverFeeVO"> 
         UPDATE TB_SVC_RENT_OVER_FEE
            SET PAYMENT_SEQ = #{paymentSeq}

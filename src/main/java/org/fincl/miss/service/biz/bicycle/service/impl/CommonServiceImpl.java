@@ -92,6 +92,18 @@ public class CommonServiceImpl implements CommonService {
 	{
 		return comm.setPaymentBillingKey(fee);
 	}
+	
+	@Override
+	public String getPaymentStus(OverFeeVO fee)
+	{
+		return comm.getPaymentStus(fee);
+	}
+	
+	@Override
+	public int setPaymentStus(OverFeeVO fee)
+	{
+		return comm.setPaymentStus(fee);
+	}
 
 	@Override
 	public int deleteFaultInfo(CommonVo com) {

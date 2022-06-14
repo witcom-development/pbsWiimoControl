@@ -59,6 +59,10 @@ public interface CommonMapper {
 	int addTicketPayment(OverFeeVO fee);
 	
 	int setPaymentBillingKey(OverFeeVO fee);
+	
+	String getPaymentStus(OverFeeVO fee);
+	
+	int setPaymentStus(OverFeeVO fee);
 
 	int setOverFeePayComplete(OverFeeVO fee);
 

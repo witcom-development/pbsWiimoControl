@@ -242,70 +242,6 @@ public class RentalService {
 	  				 
   					// 로그 추가..2020.04.12 
   					logger.debug("QR_BIKE IS RENTAL_EVENT  usr_seq{} is request ",com.getUserSeq());
-  					/*
-  					BikeRentInfoVo voucher = bikeService.getUseVoucherInfo(com);	//2020.02. 단체권 포함되도록 수정...
-		  				 
-  					if(voucher == null)
-  					{
-  						/*
-  						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_001"))
-  						{
-  							
-  							logger.debug("QR_BIKE IS RENTAL_EVENT  BIKE_TEST  ");
-  							
-  							responseVo.setBle_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
-  							 
-  							responseVo.setModem_fwupdate(Constants.CODE.get("WIFI_UPDATE_00")); //  f/w 무선 업데이트 진행
-  						
-  							responseVo.setFrameControl(Constants.SUCC_CMD_CONTROL_FIELD);
-  							responseVo.setSeqNum(vo.getSeqNum());
-  							responseVo.setCommandId(Constants.CID_RES_RENTWAIT);
-  							responseVo.setBicycleState(vo.getBicycleState());
-  							responseVo.setBicycleId(vo.getBicycleId());
-  							responseVo.setDayAndNight("00");
-  							
-  					
-  							List<HashMap<String, String>> PeriodList = commonService.CheckPeriodTime();
-  					  		 
-  					 		if(PeriodList.size() == 0 )
-  					 		{
-  						  			 logger.error("Period Information Find Error");
-  						  			 responseVo.setErrorId(Constants.CODE.get("ERROR_D7"));
-  						  			 responseVo = setFaiiMsg(responseVo, vo);
-  						           	
-  						  			 return responseVo;
-  					 		}
-  					 		else
-  					 		{
-  					 			for(HashMap<String, String> PeriodMap : PeriodList)
-  					 			{
-  					 				if(String.valueOf(PeriodMap.get("COM_CD")).equals("MSI_039"))	//2020.04.14
-  					 				{
-  					  					 logger.debug("######################## MSI_039 " + String.valueOf(PeriodMap.get("ADD_VAL1")));
-  					  					 int Hour = Integer.parseInt(PeriodMap.get("ADD_VAL1"))/60;
-  					  					 int Minute = Integer.parseInt(PeriodMap.get("ADD_VAL1"))%60;
-  					  					 responseVo.setPeriodHour(getToString(String.valueOf(Hour),2));
-  					  					 responseVo.setPeriodMinute(getToString(String.valueOf(Minute),2));
-  					 				}
-  					 			}
-  					 		}
-
-  					        return responseVo;
-  					  							
-  						}
-  						
-  						
-  						
-	  						logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
-	  						QRLog.setResAck("VOUNO");
-	  						bikeService.updateQRLog(QRLog);
-	  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-	  						responseVo = setFaiiMsg(responseVo, vo);
-									 
-	  						return responseVo;
-  						
-  					}
-  					*/
 	 
 					Map<String, Object> useBike = bikeService.getUseBikeInfoFULL(com);
 					if(useBike != null)
@@ -333,35 +269,16 @@ public class RentalService {
 					{
 						// 대여 주기시 이벤트시 대여 이력 없으면 대여 완료 넣어주기.
 						// 킥보드는 이력 안넣어주고 에러 로 표시  , 자전거는 bluetooh 로 넣어주기...2021.05.18
-						/*
-						if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))	//킥보드
-						{
-						*/
 							
-							logger.error("RENT_INFO is NULL  USR_SEQ {} is rent failed ",com.getUserSeq());
+						logger.error("RENT_INFO is NULL  USR_SEQ {} is rent failed ",com.getUserSeq());
 							
-							QRLog.setResAck("RFAIL");
-	  						bikeService.updateQRLog(QRLog);
-	  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-	  						responseVo = setFaiiMsg(responseVo, vo);
+						QRLog.setResAck("RFAIL");
+	  					bikeService.updateQRLog(QRLog);
+	  					responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
+	  					responseVo = setFaiiMsg(responseVo, vo);
 									 
-	  						return responseVo;
-	  					/*	
-						}
-						else
-						{
-							if(ourBikeMap.get("BIKE_SE_CD").equals("BIK_002"))
-							{
-								if(voucher.getRent_cls_cd().equals("RCC_001"))
-								{
-									voucher.setRent_cls_cd("RCC_002");
-								}
-							}
-							bikeService.reservationInsert(com, voucher);
-								
-							logger.error("RENTAL_EVENT USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT INFO : INSERT_RESERVATION ");
-						}
-						*/
+	  					return responseVo;
+	  					
 					}
 		     			 
 					// 대여 정보 
@@ -381,7 +298,7 @@ public class RentalService {
 					
 					if(rentInfo.get("BIKE_SE_CD").equals("BIK_001"))
 					{
-						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("PAYMENT_CLS_CD").equals("BIL_006"))))
+						if((rentInfo.get("PARTCLR_MATTER") != null) && (rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("PAYMENT_CLS_CD").equals("BIL_006"))))
 						{
 							MainPayUtil MainPayutil = new MainPayUtil();
 							HashMap<String, String> parameters = new HashMap<String, String>();
@@ -438,40 +355,19 @@ public class RentalService {
 						}
 						
 						if(!rentInfo.get("BIKE_VOUCHER_CNT").equals("99"))
-						//if(!voucher.getBike_voucher_cnt().equals("99"))
 						{
-							/*
-							if((Integer.parseInt(String.valueOf(rentInfo.get("BIKE_USE_CNT")))) >= (Integer.parseInt(String.valueOf(rentInfo.get("BIKE_VOUCHER_CNT")))))
-							//if((Integer.parseInt(voucher.getBike_use_cnt())) >= (Integer.parseInt(voucher.getBike_voucher_cnt())))
-							{
-								//대여 실패
-								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
-		  						QRLog.setResAck("VOUNO2");
-		  						bikeService.updateQRLog(QRLog);
-		  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-		  						responseVo = setFaiiMsg(responseVo, vo);
-										 
-		  						return responseVo;
-							}
-							else
-							{
-							*/
-								//대여 성공
-								bikeService.updateBikeCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
-							/*}*/
+							
+							//대여 성공
+							bikeService.updateBikeCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 						}
 						else
 						{
 							//대여 성공
-							//bikeService.updateBikeCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
-						
 						}
 					}
 					else
 					{
-						
-						
-						if((rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("PAYMENT_CLS_CD").equals("BIL_007"))))
+						if((rentInfo.get("PARTCLR_MATTER") != null) && (rentInfo.get("PARTCLR_MATTER").equals("PAY")) &&  ((rentInfo.get("PAYMENT_CLS_CD").equals("BIL_007"))))
 						{
 							MainPayUtil MainPayutil = new MainPayUtil();
 							HashMap<String, String> parameters = new HashMap<String, String>();
@@ -531,26 +427,8 @@ public class RentalService {
 						if(!rentInfo.get("KICK_VOUCHER_CNT").equals("99"))
 						//if(!voucher.getKick_voucher_cnt().equals("99"))
 						{
-							/*
-							if((Integer.parseInt(String.valueOf(rentInfo.get("KICK_USE_CNT")))) >= (Integer.parseInt(String.valueOf(rentInfo.get("KICK_VOUCHER_CNT")))))
-							//if((Integer.parseInt(voucher.getKick_use_cnt())) >= (Integer.parseInt(voucher.getKick_voucher_cnt())))
-							{
-								//대여 실패
-								logger.error("USR_SEQ[" + com.getUserSeq() + "] HAS NO RENT POSSIBLE VOUCHER");
-		  						QRLog.setResAck("VOUNO3");
-		  						bikeService.updateQRLog(QRLog);
-		  						responseVo.setErrorId(Constants.CODE.get("ERROR_E5"));
-		  						responseVo = setFaiiMsg(responseVo, vo);
-										 
-		  						return responseVo;
-							}
-							else
-							{
-							*/
-								//대여 성공
-								bikeService.updateKickCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
-								//bikeService.updateKickCnt(voucher.getVoucher_seq());
-							/*}*/
+							//대여 성공
+							bikeService.updateKickCnt(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
 						}
 						else
 						{
@@ -560,6 +438,16 @@ public class RentalService {
 						
 						}
 					
+					}
+					
+					OverFeeVO fee = new OverFeeVO();
+					fee.setPaymentStusCd("BIS_001");
+					fee.setVoucher_seq(String.valueOf(rentInfo.get("VOUCHER_SEQ")));
+					String PaymentStus = commonService.getPaymentStus(fee);
+					
+					if(PaymentStus.equals("BIS_005"))
+					{
+						commonService.setPaymentStus(fee);
 					}
 	 
 					if(!bikeService.rentProcUpdate(com, rentInfo))
@@ -598,21 +486,26 @@ public class RentalService {
 							String destno = String.valueOf(msgInfo.get("DEST_NO"));
 							if(destno != null && !destno.equals(""))
 							{
+								Map<String, Object> Policyfee = new HashMap<String, Object>();
+								
+								Policyfee.put("ADD_FEE_CLS", rentInfo.get("PAYMENT_CLS_CD"));
+								Policyfee.put("BIKE_SE_CD", msgInfo.get("BIKE_SE_CD"));
+								
+								Map<String, Object> minPolicy = bikeService.getOverFeeMinPolicy(Policyfee);	//TB_SVC_ADD_FEE  
 		     					String Message = null;
 		     					if(msgInfo.get("BIKE_SE_CD").equals("BIK_001"))
 		     					{
-	
-		     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 자전거 대여완료. 10분마다 추가요금 200원 발생합니다.";
+		     						Message = "<위고> " + msgInfo.get("BIKE_NO") + " 자전거 대여완료. " + minPolicy.get("ADD_FEE_INTER_MI") + "분마다 추가요금 " + minPolicy.get("ADD_FEE") + "원 발생합니다.";
 		     					}
 		     					else
 		     					{
-		     						if(String.valueOf(rentInfo.get("RENT_CLS_CD")).equals("RCC_004"))
+		     						//if(String.valueOf(rentInfo.get("RENT_CLS_CD")).equals("RCC_004"))
 		     						//if(voucher.getRent_cls_cd().equals("RCC_004"))
-		     						{
-		     							Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 160원 발생합니다.";
-		     						}
-		     						else
-		     							Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
+		     						//{
+		     							Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. " + minPolicy.get("ADD_FEE_INTER_MI") + "분마다  추가요금 " + minPolicy.get("ADD_FEE") + "원 발생합니다.";
+		     					//	}
+		     					//	else
+		     					//		Message = "<위고> " + msgInfo.get("BIKE_NO") + " 킥보드 대여완료. 1분마다  추가요금 120원 발생합니다.";
 		     					}
 		     					sms.setDestno(destno);
 		     					sms.setMsg(Message.toString());
