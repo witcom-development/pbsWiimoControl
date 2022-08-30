@@ -75,6 +75,17 @@ public class ReturnService  {
 		 
         String	 nBikeSerial;
         QRLogVo QRLog = new QRLogVo();
+        /*
+        if(com.getBicycleId().equals("19B00B000000B0"))
+        {
+        	logger.debug("TEST BIKE MAKE RETURN FAIL");
+        	ourBikeMap = null;
+        	Map<String, String> UPDATE_BIKE_CLS_CD = new HashMap<String, String>();
+	 		UPDATE_BIKE_CLS_CD.put("GPS_CLS_CD", "F_GPS02");
+	 		UPDATE_BIKE_CLS_CD.put("RENT_BIKE_ID", vo.getBicycleId());
+	 		bikeService.updateRENTGPS_CLS_CD(UPDATE_BIKE_CLS_CD);
+        }
+        */
         if(ourBikeMap != null)
         {
 			//add 자전거 번호 가져오기 2018.09.01
@@ -101,7 +112,12 @@ public class ReturnService  {
 		 	QRLog.setBeacon_BATT(String.valueOf(Integer.parseInt(vo.getBeaconBattery(), 16)));
 		 	QRLog.setBike_BATT(String.valueOf(Integer.parseInt(vo.getElectbatt(), 16)));
 		 	
-		 	if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
+		 	
+		 	if(bikeNo.equals("KA3127A"))
+		 	{
+		 		logger.debug("TEST BIKE KA3127A GPS ERROR PASS");
+		 	}
+		 	else if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
 					 && !vo.getLongitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
 		 	{
 		 		QRLog.setXpos(new CommonUtil().GetGPS(vo.getLatitude()));
@@ -176,20 +192,39 @@ public class ReturnService  {
      				e.printStackTrace();
      			}
      			
+     			
      			if(!Data_Result.equals("하남시"))
      			{
      				Map<String, String> UPDATE_BIKE_CLS_CD = new HashMap<String, String>();
     		 		UPDATE_BIKE_CLS_CD.put("GPS_CLS_CD", "F_GPS02");
     		 		UPDATE_BIKE_CLS_CD.put("RENT_BIKE_ID", vo.getBicycleId());
     		 		bikeService.updateRENTGPS_CLS_CD(UPDATE_BIKE_CLS_CD);
+    		 		
+    		 		responseVo.setErrorId(Constants.CODE.get("ERROR_FF"));
+    		 		responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_FF"));
+    				 
+    		 		responseVo = setFaiiMsg(responseVo, vo);
+    		 		
+    		 		QRLog.setTimeStamp(vo.getRegDttm());
+    				QRLog.setMessage(vo.getReqMessage());
+    				QRLog.setQr_frame("반납 완료");
+    			 	
+    			 	bikeService.insertQRLog(QRLog);
+    			 	
+    			 	QRLog.setResAck("F_GPS02");
+        	    	
+    			 	bikeService.updateQRLog(QRLog);
+    		 		
+    				 
+    		 		return responseVo;
      			}
 		 	}
 		 	else
             {
 		 		
-		 	//	02181D1B 07A69BCD 	
+		 	//	02181D1B 07A69BCD
 		 	//	QRLog.setXpos(vo.getLatitude());
-		 	//	QRLog.setYpos(vo.getLongitude());    
+		 	//	QRLog.setYpos(vo.getLongitude());
 		 		QRLog.setXpos("00000000");
 		 		QRLog.setYpos("00000000");
 		 		
@@ -197,6 +232,26 @@ public class ReturnService  {
 		 		UPDATE_BIKE_CLS_CD.put("GPS_CLS_CD", "F_GPS01");
 		 		UPDATE_BIKE_CLS_CD.put("RENT_BIKE_ID", vo.getBicycleId());
 		 		bikeService.updateRENTGPS_CLS_CD(UPDATE_BIKE_CLS_CD);
+		 		
+		 		responseVo.setErrorId(Constants.CODE.get("ERROR_FF"));
+		 		responseVo.setBicycleState(Constants.CODE.get("BIKE_STATE_FF"));
+				 
+		 		responseVo = setFaiiMsg(responseVo, vo);
+		 		
+		 		
+		 		QRLog.setTimeStamp(vo.getRegDttm());
+				QRLog.setMessage(vo.getReqMessage());
+				QRLog.setQr_frame("반납 완료");
+			 	
+			 	bikeService.insertQRLog(QRLog);
+			 	
+			 	
+			 	QRLog.setResAck("F_GPS01");
+    	    	
+			 	bikeService.updateQRLog(QRLog);
+		 		
+				 
+		 		return responseVo;
             }
 		 	
 		 	

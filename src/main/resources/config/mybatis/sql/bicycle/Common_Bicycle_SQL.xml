@@ -459,12 +459,12 @@
 	<insert id="insertBrokenBikeErr"	parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo">
 		INSERT INTO TB_MTC_FAULT_INFO
 		(
-			EQUIPMENT_ID, EQUIPMENT_CLS_CD, READ_CLS_CD, MOD_ID,GPS_X,GPS_Y
+			EQUIPMENT_ID, EQUIPMENT_CLS_CD, READ_CLS_CD, MOD_ID,GPS_X,GPS_Y, GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
 			( SELECT  BIKE_ID FROM TB_OPR_BIKE WHERE TERMINAL_ID = #{bikeId})
-			,'DEV_001', 'S', 'IFS',#{GPS_X},#{GPS_Y}
+			,'DEV_001', 'S', 'IFS',#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'),  AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		) 
 		<selectKey resultType="string" keyProperty="userSeq" order="AFTER">
         	SELECT LAST_INSERT_ID() 
@@ -492,11 +492,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM, GPS_X, GPS_Y, GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_002', SYSDATE(),#{GPS_X},#{GPS_Y}
+			#{userSeq} ,'ERB_002', SYSDATE(),#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'), AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		)
 	</insert>
 	
@@ -733,11 +733,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y,GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_007', SYSDATE(),#{GPS_X},#{GPS_Y}
+			#{userSeq} ,'ERB_007', SYSDATE(),#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'),AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		)
 	</insert>
 	
@@ -745,11 +745,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y, GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_008', SYSDATE(),#{GPS_X},#{GPS_Y}
+			#{userSeq} ,'ERB_008', SYSDATE(),#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'),AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		)
 	</insert>
 	
@@ -758,11 +758,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y, GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_005', SYSDATE(),#{GPS_X},#{GPS_Y}
+			#{userSeq} ,'ERB_005', SYSDATE(),#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'),AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		)
 	</insert>
 	
@@ -770,11 +770,11 @@
 	
 		INSERT INTO TB_MTC_FAULT_DETL
 		(
-			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y
+			FAULT_SEQ, FAULT_CLS_CD, REG_DTTM,GPS_X,GPS_Y, GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
-			#{userSeq} ,'ERB_003', SYSDATE(),#{GPS_X},#{GPS_Y}
+			#{userSeq} ,'ERB_003', SYSDATE(),#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'),AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		)
 	</insert>
 	
@@ -832,6 +832,8 @@
 			<if test='GPS_X != null' >
 			GPS_X = #{GPS_X},
 			GPS_Y = #{GPS_Y},
+			GPS_X_ENCRYPT = AES_ENCRYPT(#{GPS_X},'WITCOM'),
+			GPS_Y_ENCRYPT = AES_ENCRYPT(#{GPS_Y},'WITCOM'),
 			</if>
 			CENTER_ID = null
 		WHERE 
