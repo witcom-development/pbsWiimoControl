@@ -475,16 +475,16 @@
 	<insert id="insertBrokenBikeErr_H"	parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo">
 		INSERT INTO TB_MTC_FAULT_INFO
 		(
-			EQUIPMENT_ID, EQUIPMENT_CLS_CD, READ_CLS_CD, MOD_ID
+			EQUIPMENT_ID, EQUIPMENT_CLS_CD, READ_CLS_CD, MOD_ID,GPS_X,GPS_Y, GPS_X_ENCRYPT, GPS_Y_ENCRYPT
 		)
 		VALUES
 		(
 			( SELECT  BIKE_ID FROM TB_OPR_BIKE WHERE TERMINAL_ID = #{bikeId})
-			,'DEV_001', 'H', 'IFS'
+			,'DEV_001', 'H', 'IFS',#{GPS_X},#{GPS_Y}, AES_ENCRYPT(#{GPS_X},'WITCOM'),  AES_ENCRYPT(#{GPS_Y},'WITCOM')
 		) 
 		<selectKey resultType="string" keyProperty="userSeq" order="AFTER">
         	SELECT LAST_INSERT_ID() 
-   		</selectKey>  
+   		</selectKey> 
 	</insert>
 	
 	

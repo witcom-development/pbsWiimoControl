@@ -234,7 +234,7 @@ public class BreakDownService{
 			 /**
 			  * Locker 불량으로 장애 등록.
 			  */
-			 commonService.insertBrokenBikeErr(com);
+			 commonService.insertBrokenBikeErr_H(com);
 			 commonService.insertBrokenThift(com);
 			 commonService.insertBrokenBikeReport(com);
 		 }
@@ -257,9 +257,9 @@ public class BreakDownService{
 				if(commonService.isBrokenReport(com) == 0 ){
 					commonService.insertBrokenBikeReport(com);
 				}
+				// 자전거 정보를 고장상태로 UPDATE BIKE
+				commonService.changeBikeBreakDowon(com);
 		 }
-		 // 자전거 정보를 고장상태로 UPDATE BIKE
-		 commonService.changeBikeBreakDowon(com);
 	 }
 	 
 	 
