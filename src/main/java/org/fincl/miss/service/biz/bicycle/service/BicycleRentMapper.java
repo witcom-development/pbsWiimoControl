@@ -179,6 +179,8 @@ public interface BicycleRentMapper {
 	
 	double getBikeMoveDist(CommonVo com);
 	
+	void updateMANAGE_SEND(Map<String, String> MANAGE_SEND_YN);
+	
 	double getBikeMoveDist_Last(Map<String, String> GPS_DATA);
 	double getCalcDistance(Map<String, String> GPS_DATA);
 	

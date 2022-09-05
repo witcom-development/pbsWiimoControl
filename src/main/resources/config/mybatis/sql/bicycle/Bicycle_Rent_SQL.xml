@@ -1115,7 +1115,7 @@
 	
 	<select id="chkOurBike" parameterType="org.fincl.miss.service.biz.bicycle.common.CommonVo" resultType="java.util.Map">
 	<![CDATA[
-		SELECT  DEVICE.ENTRPS_CD,BIKE.BIKE_ID, BIKE.BIKE_NO ,BIKE.BIKE_SE_CD, BIKE.BIKE_STUS_CD
+		SELECT  DEVICE.ENTRPS_CD,BIKE.BIKE_ID, BIKE.BIKE_NO ,BIKE.BIKE_SE_CD, BIKE.BIKE_STUS_CD, BIKE.MANAGE_SEND_YN
 		FROM TB_IOT_DEVICE DEVICE, TB_OPR_BIKE BIKE 
 		WHERE DEVICE_ID = #{bicycleId}
 		AND DEVICE_MODL_CD = 'DM4'
@@ -1123,6 +1123,13 @@
 		LIMIT 1
 	]]>
 	</select>
+	
+	<update id="updateMANAGE_SEND" parameterType="java.util.Map">
+		UPDATE TB_OPR_BIKE 
+		SET 
+			MANAGE_SEND_YN = #{SEND_YN}
+		WHERE TERMINAL_ID = #{bicycleId}
+	</update>
 	
 	<select id="getSerialNumberInfo" parameterType="org.fincl.miss.service.biz.bicycle.vo.SerialNumberRentalRequestVo" resultType="java.util.Map">
 	<![CDATA[

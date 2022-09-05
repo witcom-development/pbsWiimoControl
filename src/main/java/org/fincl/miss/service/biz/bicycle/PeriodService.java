@@ -124,6 +124,47 @@ public class PeriodService{
 		 	QRLog.setFirm_fw("0");
 		 	QRLog.setModem_fw(vo.getModem_firmwareVs());
 		 	
+		 	
+		 	if(Integer.parseInt(QRLog.getDev_BATT()) >= 30)
+		 	{
+		 		
+		 		if(ourBikeMap.get("MANAGE_SEND_YN").equals("Y"))
+		 		{
+		 			//TB_OPR_BIKE MANAGE_SEND_YN = 'N' 처리
+		 			Map<String, String> MANAGE_SEND_YN = new HashMap<String, String>();
+		 			MANAGE_SEND_YN.put("SEND_YN", "N");
+		 			MANAGE_SEND_YN.put("bicycleId", vo.getBicycleId());
+		 			bikeService.updateMANAGE_SEND(MANAGE_SEND_YN);
+		 		}
+		 	}
+		 	else if(Integer.parseInt(QRLog.getDev_BATT()) <= 10)
+		 	{
+		 		//SELECT 해서 N이면 문자 보내고 Y처리
+		 		if(ourBikeMap.get("MANAGE_SEND_YN").equals("N"))
+		 		{
+		 			//SEND MESSAGE
+		 			//TB_OPR_BIKE MANAGE_SEND_YN = 'Y' 처리
+		 			Map<String, String> MANAGE_SEND_YN = new HashMap<String, String>();
+		 			MANAGE_SEND_YN.put("SEND_YN", "Y");
+		 			MANAGE_SEND_YN.put("bicycleId", vo.getBicycleId());
+		 			bikeService.updateMANAGE_SEND(MANAGE_SEND_YN);
+		 			
+		 			SmsMessageVO smsVo = new SmsMessageVO();
+		 	
+		 			smsVo.setDestno("01028217799");
+		 			
+		 			if(BIKE_SE_CD.equals("BIK_001"))
+					{
+		 				smsVo.setMsg("<위고> " + bikeNo +" 자전거가  배터리 " + Integer.parseInt(QRLog.getDev_BATT()) + "%입니다. 확인 부탁 드립니다.");
+					}
+					else
+					{
+						smsVo.setMsg("<위고> " + bikeNo +" 킥보드가  배터리 " + Integer.parseInt(QRLog.getDev_BATT()) + "%입니다. 확인 부탁 드립니다.");
+					}
+
+					SmsSender.sender(smsVo);
+		 		}
+		 	}
 		 	if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")
 					 && !vo.getLongitude().equals("00000000") && !vo.getLongitude().subSequence(0, 6).equals("FFFFFF"))
 		 	{

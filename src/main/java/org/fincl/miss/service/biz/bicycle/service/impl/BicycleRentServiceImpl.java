@@ -1123,6 +1123,12 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	{
 		return bicycleMapper.getBikeMoveDist_Last(GPS_DATA);
 	}
+	
+	@Override
+	public void updateMANAGE_SEND(Map<String, String> MANAGE_SEND_YN) 
+	{
+		bicycleMapper.updateMANAGE_SEND(MANAGE_SEND_YN);
+	}
 
 	@Override
 	public double getCalcDistance(Map<String, String> GPS_DATA) 
