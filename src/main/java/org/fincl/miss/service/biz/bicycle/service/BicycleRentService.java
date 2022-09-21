@@ -117,6 +117,9 @@ public interface BicycleRentService {
 	
 	
 	void updateMANAGE_SEND(Map<String, String> MANAGE_SEND_YN);
+	
+	void updatePERIOD_MANAGE_SEND(Map<String, String> MANAGE_SEND_YN);
+	
 	double getBikeMoveDist_Last(Map<String, String> GPS_DATA);
 	double getCalcDistance(Map<String, String> GPS_DATA);
 	

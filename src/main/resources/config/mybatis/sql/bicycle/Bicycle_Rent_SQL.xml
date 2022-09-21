@@ -490,9 +490,7 @@
 	
 		UPDATE	TB_OPR_BIKE
 		SET 
-			GPS_X =  #{GPS_X},
 			GPS_X_ENCRYPT = AES_ENCRYPT(#{GPS_X},'WITCOM'),
-			GPS_Y = #{GPS_Y},
 			GPS_Y_ENCRYPT = AES_ENCRYPT(#{GPS_Y},'WITCOM'),
 			LAST_GPS_DTTM = NOW(),
 			GPS_NO_CNT = 0
@@ -1131,6 +1129,13 @@
 		WHERE TERMINAL_ID = #{bicycleId}
 	</update>
 	
+	<update id="updatePERIOD_MANAGE_SEND" parameterType="java.util.Map">
+		UPDATE TB_OPR_BIKE 
+		SET 
+			PERIOD_MANAGE_SEND_YN = #{SEND_YN}
+		WHERE TERMINAL_ID = #{bicycleId}
+	</update>
+	
 	<select id="getSerialNumberInfo" parameterType="org.fincl.miss.service.biz.bicycle.vo.SerialNumberRentalRequestVo" resultType="java.util.Map">
 	<![CDATA[
 		SELECT CASE
@@ -1192,8 +1197,8 @@
    </select>
    
 	<insert id="insertQRLog" parameterType="org.fincl.miss.service.biz.bicycle.common.QRLogVo">
-		INSERT INTO TB_OPR_QR_LOG (BIKE_NO,DEVICE_ID,MESSAGE,QR_FRAME,BIKE_STATUS,BIKE_LOCK,TIME_STAMP,USER_TYPE,USERSEQ,BIKE_TYPE,BEACON_ID,DEV_BATT,BEACON_BATT,BIKE_BATT,FIRM_FW,MODEM_FW,XPOS,YPOS,XPOS_ENCRYPT,YPOS_ENCRYPT) 
-			VALUES (#{bicycleNo},#{bicycleId},#{message},#{qr_frame},#{bicycleState},#{Lock},#{timeStamp},#{userType},#{userSeq},#{biketype},#{beaconid},#{dev_BATT},#{beacon_BATT},#{bike_BATT},#{firm_fw},#{modem_fw},#{xpos},#{ypos}, AES_ENCRYPT(#{xpos},'WITCOM'),AES_ENCRYPT(#{ypos},'WITCOM'))
+		INSERT INTO TB_OPR_QR_LOG (BIKE_NO,DEVICE_ID,MESSAGE,QR_FRAME,BIKE_STATUS,BIKE_LOCK,TIME_STAMP,USER_TYPE,USERSEQ,BIKE_TYPE,BEACON_ID,DEV_BATT,BEACON_BATT,BIKE_BATT,FIRM_FW,MODEM_FW,XPOS_ENCRYPT,YPOS_ENCRYPT) 
+			VALUES (#{bicycleNo},#{bicycleId},#{message},#{qr_frame},#{bicycleState},#{Lock},#{timeStamp},#{userType},#{userSeq},#{biketype},#{beaconid},#{dev_BATT},#{beacon_BATT},#{bike_BATT},#{firm_fw},#{modem_fw}, AES_ENCRYPT(#{xpos},'WITCOM'),AES_ENCRYPT(#{ypos},'WITCOM'))
 	
 		<selectKey resultType="string" keyProperty="QR_LOG_SEQ" order="AFTER">
         	SELECT LAST_INSERT_ID() 
@@ -1276,11 +1281,11 @@
 	
 		INSERT INTO TB_OPR_GPS_DATA_DIST
 		(
-			RENT_SEQ,USE_SEQ,BIKE_ID,GPS_X,GPS_Y,GPS_X_ENCRYPT, GPS_Y_ENCRYPT, USE_DIST,ACC_DIST
+			RENT_SEQ,USE_SEQ,BIKE_ID,GPS_X_ENCRYPT, GPS_Y_ENCRYPT, USE_DIST,ACC_DIST
 		)
 		VALUES
 		(
-			#{RENT_SEQ}, #{USE_SEQ}, #{BIKE_ID}, #{BIKE_LATITUDE}, #{BIKE_LONGITUDE}, AES_ENCRYPT(#{BIKE_LATITUDE},'WITCOM'), AES_ENCRYPT(#{BIKE_LONGITUDE},'WITCOM'), #{USE_DIST}, #{ACC_DIST}
+			#{RENT_SEQ}, #{USE_SEQ}, #{BIKE_ID}, AES_ENCRYPT(#{BIKE_LATITUDE},'WITCOM'), AES_ENCRYPT(#{BIKE_LONGITUDE},'WITCOM'), #{USE_DIST}, #{ACC_DIST}
 		)
 	
 	</insert>

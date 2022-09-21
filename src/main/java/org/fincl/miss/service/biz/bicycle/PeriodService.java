@@ -125,6 +125,11 @@ public class PeriodService{
 		 	QRLog.setModem_fw(vo.getModem_firmwareVs());
 		 	
 		 	
+		 	Map<String, String> PERIOD_MANAGE_SEND_YN = new HashMap<String, String>();
+		 	PERIOD_MANAGE_SEND_YN.put("SEND_YN", "N");
+		 	PERIOD_MANAGE_SEND_YN.put("bicycleId", vo.getBicycleId());
+ 			bikeService.updatePERIOD_MANAGE_SEND(PERIOD_MANAGE_SEND_YN);
+		 	
 		 	if(Integer.parseInt(QRLog.getDev_BATT()) >= 30)
 		 	{
 		 		
@@ -161,8 +166,24 @@ public class PeriodService{
 					{
 						smsVo.setMsg("<위고> " + bikeNo +" 킥보드가  배터리 " + Integer.parseInt(QRLog.getDev_BATT()) + "%입니다. 확인 부탁 드립니다.");
 					}
-
-					SmsSender.sender(smsVo);
+		 			SmsSender.sender(smsVo);
+		 			
+		 			if(BIKE_SE_CD.equals("BIK_002"))
+		 			{
+		 				if(!ourBikeMap.get("BIKE_STUS_CD").equals("BKS_004") && 
+		 						!ourBikeMap.get("BIKE_STUS_CD").equals("BKS_005") &&
+		 						!ourBikeMap.get("BIKE_STUS_CD").equals("BKS_007") &&
+		 						!ourBikeMap.get("BIKE_STUS_CD").equals("BKS_008") &&
+		 						!ourBikeMap.get("BIKE_STUS_CD").equals("BKS_016"))
+		 				{
+		 					smsVo.setDestno("01037085499");
+		 					SmsSender.sender(smsVo);
+		 					smsVo.setDestno("01035061859");
+		 					SmsSender.sender(smsVo);
+		 					
+		 					
+		 				}
+		 			}
 		 		}
 		 	}
 		 	if(!vo.getLatitude().equals("00000000") && !vo.getLatitude().substring(0,6).equals("FFFFFF")

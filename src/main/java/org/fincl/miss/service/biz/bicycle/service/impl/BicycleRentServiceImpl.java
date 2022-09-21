@@ -1129,6 +1129,12 @@ public class BicycleRentServiceImpl implements BicycleRentService {
 	{
 		bicycleMapper.updateMANAGE_SEND(MANAGE_SEND_YN);
 	}
+	
+	@Override
+	public void updatePERIOD_MANAGE_SEND(Map<String, String> MANAGE_SEND_YN) 
+	{
+		bicycleMapper.updatePERIOD_MANAGE_SEND(MANAGE_SEND_YN);
+	}
 
 	@Override
 	public double getCalcDistance(Map<String, String> GPS_DATA) 
